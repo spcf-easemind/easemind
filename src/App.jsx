@@ -2,6 +2,7 @@ import classes from "./App.module.css";
 
 // Mantine Components
 import { AppShell, Container } from "@mantine/core";
+import { useMatches } from "@mantine/core";
 
 // Components
 import Header from "./components/Header.jsx";
@@ -12,13 +13,18 @@ import { Outlet } from "react-router-dom";
 const containerBreakpoint = 1280;
 
 function App() {
+  const mainHeight = useMatches({
+    base: "100%",
+    sm: "90dvh",
+  });
+
   return (
     <AppShell
       padding="md"
       header={{ height: { base: 60, sm: 70 } }}
       styles={{
         main: {
-          height: "90dvh",
+          height: mainHeight,
         },
       }}
     >

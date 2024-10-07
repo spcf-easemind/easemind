@@ -38,6 +38,7 @@ export default function Header() {
 
   const menuLinks = data.map((item) => (
     <Anchor
+      visibleFrom="sm"
       className={classes.mainLink}
       data-active={item.name === active || undefined}
       key={item.name}
@@ -54,13 +55,13 @@ export default function Header() {
 
   return (
     <Group h="100%" justify="space-between" align="center">
-      <Box w="25%">{TitleSection}</Box>
+      <Box maw="200">{TitleSection}</Box>
 
-      <Group justify="center" w="25%">
+      <Group justify="center" maw="200">
         {menuLinks}{" "}
       </Group>
 
-      <Box w="25%" ta="end">
+      <Box maw="200" ta="end">
         {ButtonInstance}
       </Box>
     </Group>
