@@ -29,7 +29,7 @@ const cardForms = {
   ],
 };
 
-export default function AuthCard({ formType }) {
+export default function AuthCard({ formType, onSubmit }) {
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
@@ -46,7 +46,7 @@ export default function AuthCard({ formType }) {
   });
 
   function handleSubmit(formData) {
-    console.log(formData);
+    onSubmit(formData);
   }
 
   const inputInstances = cardForms[formType].map((item) => (
@@ -89,7 +89,7 @@ export default function AuthCard({ formType }) {
         </Button>
       </form>
 
-      <Text c="dimmed" size="sm" ta="center">
+      <Text size="sm" ta="center">
         {"Don’t have an account? "}
         <Anchor size="sm" component="a" underline="never">
           Create Account
