@@ -32,6 +32,7 @@ export default function SignUpModal({ opened, onClose }) {
         header: classes.modal,
         content: classes.modal,
       }}
+      withCloseButton={false}
     >
       <RolePicker />
     </Modal>
