@@ -1,0 +1,8 @@
+.heading {
+  font-family: "Baloo Bhai 2", sans-serif;
+  color: white;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
+  font-size: rem(65px);
+  width: 100%;
+  max-width: 60%;
+}

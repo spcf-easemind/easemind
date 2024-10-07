@@ -1,0 +1,27 @@
+.bgImage {
+  position: relative;
+  overflow: hidden;
+}
+
+.bgImage::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url(./assets/images/bg-image.jpg) no-repeat center center/cover;
+  filter: blur(15px);
+  z-index: -5;
+}
+
+.bgImage::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(74, 144, 226, 0.3); /* 4A90E2 with 30% opacity */
+  z-index: -4;
+}
