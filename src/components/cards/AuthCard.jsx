@@ -29,7 +29,7 @@ const cardForms = {
   ],
 };
 
-export default function AuthCard({ formType, onSubmit }) {
+export default function AuthCard({ formType, onSubmit, onDialogOpen }) {
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
@@ -47,6 +47,10 @@ export default function AuthCard({ formType, onSubmit }) {
 
   function handleSubmit(formData) {
     onSubmit(formData);
+  }
+
+  function handleCreateAccount() {
+    onDialogOpen();
   }
 
   const inputInstances = cardForms[formType].map((item) => (
@@ -91,7 +95,7 @@ export default function AuthCard({ formType, onSubmit }) {
 
       <Text size="sm" ta="center">
         {"Don’t have an account? "}
-        <Anchor size="sm" component="a" underline="never">
+        <Anchor size="sm" component="a" underline="never" onClick={handleCreateAccount}>
           Create Account
         </Anchor>
       </Text>
