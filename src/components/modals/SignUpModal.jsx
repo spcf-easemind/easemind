@@ -17,7 +17,7 @@ export default function SignUpModal({
 }) {
   return (
     <Modal
-      opened={true}
+      opened={opened}
       onClose={onClose}
       size={500}
       padding={0}
