@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@junobuild/core": "^0.0.58",
+    "nanoid": "^5.0.7",
     "@mantine/colors-generator": "^7.13.2",
     "@mantine/core": "^7.13.2",
     "@mantine/dates": "^7.13.2",
@@ -26,6 +28,8 @@
     "zustand": "^5.0.0-rc.2"
   },
   "devDependencies": {
+    "@junobuild/config": "^0.0.14",
+    "@junobuild/vite-plugin": "^0.0.16",
     "@eslint/js": "^9.11.1",
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
