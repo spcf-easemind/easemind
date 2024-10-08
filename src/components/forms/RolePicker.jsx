@@ -1,26 +1,30 @@
 import { Stack, Title, Text, Group, Box } from "@mantine/core";
-import { useMatches } from "@mantine/core";
+
 import classes from "./RolePicker.module.css";
 
-import UserButton from "../buttons/UserButton.jsx";
+import CardButton from "../buttons/CardButton.jsx";
 
-export default function RolePicker() {
-  const marginBottom = useMatches({
-    base: 16,
-    md: 32,
-  });
+import IconManyPeople from "../../assets/icons/IconManyPeople.svg";
+import IconVolunteer from "../../assets/icons/IconVolunteer.svg";
+
+export default function RolePicker({ onClick }) {
+  function handleOnClick(value) {
+    const data = {
+      role: value,
+    };
+    onClick(data);
+  }
+
   return (
     <>
-      <Stack align="center" mb={marginBottom}>
-        <Title className={classes.title}>Choose your Role</Title>
-        <Text className={classes.subTitle}>
-          How would you like to be a part of Easemind?
-        </Text>
-      </Stack>
-
       <Group justify="center" gap={48}>
         <Stack align="center">
-          <UserButton />
+          <CardButton
+            image={IconManyPeople}
+            alt="Interface Icon of 3 People"
+            value="user"
+            onClick={handleOnClick}
+          />
           <Box ta="center" c="white">
             <Title order={3}>User</Title>
             <Text size="xs" maw={150}>
@@ -30,7 +34,12 @@ export default function RolePicker() {
         </Stack>
 
         <Stack align="center">
-          <UserButton />
+          <CardButton
+            image={IconVolunteer}
+            alt="Interface Icon of Volunteer Jacket"
+            value="volunteer"
+            onClick={handleOnClick}
+          />
           <Box ta="center" c="white">
             <Title order={3}>Volunteer</Title>
             <Text size="xs" maw={150}>

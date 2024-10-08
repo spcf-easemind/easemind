@@ -1,23 +1,122 @@
-import { Flex, Title } from "@mantine/core";
+import { Flex, Title, Group, TextInput, Checkbox, Anchor } from "@mantine/core";
 
 import classes from "./LoginPage.module.css";
 
 import { useDisclosure } from "@mantine/hooks";
 import { useMatches } from "@mantine/core";
-import { useCallback } from "react";
+import { useForm } from "@mantine/form";
 
+import SurveyModal from "../components/modals/SurveyModal.jsx";
 import SignUpModal from "../components/modals/SignUpModal.jsx";
 import AuthCard from "../components/cards/AuthCard.jsx";
+import { LOGIN_INPUTS } from "../static/authentication.js";
+import { useNavigate } from "react-router-dom";
+
+import { parse, format } from "date-fns";
 
 const title =
   "In a world filled with hardships, why don't we prioritize our happiness and mental well-being instead?";
 
 export default function LoginPage() {
+  const navigate = useNavigate();
+
   const [opened, { open: handleOpen, close: handleClose }] =
     useDisclosure(false);
+  const [signupOpened, { open: handleSignupOpen, close: handleSignupClose }] =
+    useDisclosure(false);
 
-  function handleSubmit() {
-    console.log("Form submitted");
+  const loginForm = useForm({
+    mode: "uncontrolled",
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validate: {
+      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
+      password: (value) =>
+        value.length < 6
+          ? "Password should be at least 6 characters long"
+          : null,
+    },
+  });
+
+  const signupForm = useForm({
+    mode: "uncontrolled",
+    initialValues: {
+      fullName: "",
+      date: {
+        day: "",
+        month: "",
+        year: "",
+      },
+      mobileNumber: "",
+      email: "",
+      password: "",
+      role: "",
+      survey: {
+        1: "",
+        2: "",
+        3: "",
+        4: "",
+        5: "",
+      },
+    },
+    validate: {
+      fullName: (value) => (!value ? "Full name is required" : null),
+      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
+      mobileNumber: (value) =>
+        value.length === 10
+          ? null
+          : "Mobile number should be exactly 10 characters long",
+      password: (value) =>
+        value.length < 6
+          ? "Password should be at least 6 characters long"
+          : null,
+      "date.day": (value) => (!value ? "Day is required" : null),
+      "date.month": (value) => (!value ? "Month is required" : null),
+      "date.year": (value) => (!value ? "Year is required" : null),
+    },
+  });
+
+  // Sign In Function
+  function handleSignIn(value) {
+    console.log(value);
+    console.log("Sign In Form submitted");
+  }
+
+  function handleSurveyForm(value) {
+    signupForm.setValues({ ...value });
+    handleSignupOpen();
+  }
+
+  // Sign Up Function
+  function handleSignUpForm(value) {
+    console.log(value);
+
+    try {
+      const formData = { ...signupForm.getValues() };
+      const date = format(parse(
+        formData.date.year +
+          "-" +
+          formData.date.month +
+          "-" +
+          formData.date.day,
+        "yyyy-MM-dd",
+        new Date()
+      ), "yyyy-MM-dd");
+
+      formData["dateOfBirth"] = date;
+      delete formData.date;
+
+      console.log(formData);
+      console.log("Sign Up Form submitted");
+    } catch (error) {
+      console.error("Error in Sign Up Form submission", error);
+    }
+  }
+
+  function handleNavigation() {
+    navigate("/login");
   }
 
   const titleFontSize = useMatches({
@@ -31,7 +130,36 @@ export default function LoginPage() {
     md: 0,
   });
 
-  console.log(titleFontSize);
+  const textMarginBottom = useMatches({
+    base: 12,
+    md: 22,
+  });
+
+  const textInputSize = useMatches({
+    base: "sm",
+    md: "md",
+  });
+
+  const marginBottom = useMatches({
+    base: 16,
+    md: 32,
+  });
+
+  const inputInstances = LOGIN_INPUTS.map((item) => (
+    <TextInput
+      styles={{
+        input: {
+          borderColor: "var(--mantine-color-gray-6)",
+        },
+      }}
+      size={textInputSize}
+      mb={textMarginBottom}
+      type={item.type}
+      placeholder={item.placeholder}
+      key={loginForm.key(item.name)}
+      {...loginForm.getInputProps(item.name)}
+    />
+  ));
 
   return (
     <>
@@ -54,13 +182,39 @@ export default function LoginPage() {
           {title}
         </Title>
         <AuthCard
-          formType="login"
-          onSubmit={(formData) => handleSubmit(formData)}
+          form={loginForm}
+          onSubmit={(formData) => handleSignIn(formData)}
           onDialogOpen={handleOpen}
-        ></AuthCard>
+          heading={{
+            title: "Login",
+            description:
+              "Experience welcome and transform into something new as you embark on a journey of self-discovery.",
+          }}
+          buttonLabel="Login"
+        >
+          {inputInstances}
+
+          <Group justify="space-between" mb={marginBottom}>
+            <Checkbox label="Remember me" c="gray.6" />
+            <Anchor size="sm" component="button" underline="never">
+              Forgot Password?
+            </Anchor>
+          </Group>
+        </AuthCard>
       </Flex>
 
-      <SignUpModal opened={opened} onClose={handleClose}></SignUpModal>
+      <SurveyModal
+        opened={opened}
+        onClose={handleClose}
+        onSubmit={handleSurveyForm}
+      />
+      <SignUpModal
+        form={signupForm}
+        opened={signupOpened}
+        onClose={handleSignupClose}
+        onSubmit={handleSignUpForm}
+        onNavigate={handleNavigation}
+      ></SignUpModal>
     </>
   );
 }
