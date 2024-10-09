@@ -5,6 +5,7 @@ import ProtectedRoute from "./ProtectedRoute.jsx";
 import App from "../App";
 import LoginPage from "../pages/LoginPage";
 import InternetIdentityPage from "../pages/InternetIdentityPage";
+import ChatPage from "../components/Navigation.jsx";
 
 import { useAuthenticationStore } from "../store/authentication.js";
 import { useEffect } from "react";
@@ -34,7 +35,7 @@ export default function AppRouter() {
             },
             {
               path: "chat",
-              element: "",
+              element: '',
             },
           ],
         },
