@@ -10,7 +10,11 @@ const router = createBrowserRouter([
       {
         path: "login",
         element: <LoginPage />,
-      }
+      },
+      {
+        path: "chat",
+        element: "",
+      },
     ],
   },
 ]);

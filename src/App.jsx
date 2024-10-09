@@ -6,17 +6,23 @@ import { useMatches } from "@mantine/core";
 
 // Components
 import Header from "./components/headers/Header.jsx";
+import MainHeader from "./components/headers/MainHeader.jsx";
 
 // React Router
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 
 const containerBreakpoint = 1280;
 
 function App() {
+  const location = useLocation();
+
   const mainHeight = useMatches({
     base: "100%",
     sm: "90dvh",
   });
+
+  const whichHeader =
+    location.pathname === "/chat" ? <MainHeader /> : <Header />;
 
   return (
     <AppShell
@@ -30,7 +36,7 @@ function App() {
     >
       <AppShell.Header>
         <Container size={containerBreakpoint} h="inherit">
-          <Header />
+          {whichHeader}
         </Container>
       </AppShell.Header>
       <AppShell.Main className={classes.bgImage}>

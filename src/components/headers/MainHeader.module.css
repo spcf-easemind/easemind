@@ -1,0 +1,9 @@
+.menuIcon {
+  border-bottom: rem(2px) solid transparent;
+  padding: rem(10px) var(--mantine-spacing-sm);
+  transition: border-color 200ms ease;
+
+  &[data-active] {
+    border-bottom-color: var(--mantine-primary-color-6);
+  }
+}
