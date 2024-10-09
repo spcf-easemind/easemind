@@ -7,9 +7,10 @@ import { useMatches } from "@mantine/core";
 // Components
 import Header from "./components/headers/Header.jsx";
 import MainHeader from "./components/headers/MainHeader.jsx";
+import Navigation from "./components/Navigation.jsx";
 
 // React Router
-import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 
 // Constants
 const isBackgroundRoutes = ["/chat", "/internet-identity"];
@@ -35,6 +36,7 @@ function App() {
     <AppShell
       padding="md"
       header={{ height: { base: 60, sm: 70 } }}
+      navbar={{ width: 400 }}
       styles={{
         main: {
           height: mainHeight,
@@ -46,6 +48,9 @@ function App() {
           {whichHeader}
         </Container>
       </AppShell.Header>
+      <AppShell.Navbar>
+        <Navigation />
+      </AppShell.Navbar>
       <AppShell.Main className={isBackground}>
         <Container size={containerBreakpoint} h="100%">
           <Outlet />

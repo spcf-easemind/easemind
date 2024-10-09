@@ -8,6 +8,8 @@ export default function ProtectedRoute() {
   );
   const location = useLocation();
 
+  console.log(location);
+
   if (!user && location.pathname !== "/internet-identity") {
     return <Navigate to="/internet-identity" />;
   }
