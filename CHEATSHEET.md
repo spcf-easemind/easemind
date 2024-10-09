@@ -1,15 +1,25 @@
-# JUNO CHEET SHEET
+# JUNO CHEAT SHEET
+
+> **Important:** Must install wsl if using windows OS to run the project properly.
+
+Here is the installation guide on installing WSL2 on windows: [WSL2 Installation Guide](https://www.linkedin.com/pulse/step-procedure-install-wsl2-windows-run-ubuntu-using-arun-kl)
 
 ### USEFUL COMMANDS
 
 ```
 npm i
 npm ci
-juno dev start
+sudo npm i -g @junobuild/cli
+npm run build
+sudo juno dev start
 npm run dev
-juno dev stop
-juno whoami
+sudo juno dev stop
+sudo juno whoami
 ```
+
+> **Note:** use **_sudo_** if your ubunto account doesn't have super admin permissions. You must have docker installed in your ubuntu to run the **_sudo juno dev start_**.
+
+Link for docker installation guide in ubuntu: [Docker Installation Guide](https://docs.docker.com/engine/install/ubuntu/)
 
 ## CONFIGURING JUNO LOCAL DEVELOPMENT DATABASE
 
@@ -50,6 +60,91 @@ satellite: {
     ],
   },
 ```
+
+---
+
+## JUNO AUTHENTICATION
+
+### Sign-in
+
+> You can authorize an existing or new user with the identity provider using **_signIn_**.
+
+```typescript
+import { signIn } from '@junobuild/core';
+
+await signIn();
+```
+
+OR
+
+```typescript
+import { signIn } from '@junobuild/core';
+import { Button } from './Button';
+
+export const Login = () => {
+  const signInOptions = {
+    windowed: true,
+    maxTimeToLive: BigInt(4 * 60 * 60 * 1000 * 1000 * 1000),
+    allowPin: false,
+  };
+
+  const handleSignIn = () => {
+    signIn(signInOptions).catch((error) => {
+      console.error('Sign-in failed:', error);
+    });
+  };
+
+  return <Button onClick={handleSignIn}>Sign in</Button>;
+};
+```
+
+**The sign-in feature offers customization options for authentication:**
+
+- **maxTimeToLive:** Specifies the duration for the session (defaults to 4 hours, represented as **_BigInt(4 _ 60 _ 60 _ 1000 _ 1000 _ 1000))\***. It's important to note that this duration remains constant, whether the users are active or inactive.
+- **windowed:** By default, the authentication flow is presented in a popup window on desktop that is automatically centered on the browser. This behavior can be turned off by setting the option to **_false_**, causing the authentication flow to happen in a separate tab instead.
+- **derivationOrigin:** The main domain to be used to ensure your users are identified with the same public ID, regardless of which of your satellite’s URLs they use to access your application.
+- **allowPin:** We consider the specific PIN authentication method of **Internet Identity** as "insecure" because users can easily lose their login information if they do not register a passphrase, particularly as Safari clears the browser cache every two weeks in cases of inactivity. This is why we disable it by default.
+
+### Sign-out
+
+> You can end a user's session by logging them out.
+
+```typescript
+import { signOut } from '@junobuild/core';
+
+await signOut();
+```
+
+> **Note:** This will clear the sign-in information stored in IndexedDB.
+
+### Subscription
+
+> You can subscribe to the user state (signed-in or out) by using the subscriber function. This function provides a technical user and will trigger whenever the user's state changes.
+
+```typescript
+import { authSubscribe } from '@junobuild/core';
+
+authSubscribe((user: User | null) => {
+  console.log('User:', user);
+});
+```
+
+If you register the subscriber at the top of your application, it will propagate the user's state accordingly (e.g. **_null_** when a new user opens the app, the new user's entry when they sign in, the existing user when they refresh the browser within the valid duration, and **_null_** again when they sign out).
+
+> Subscribing returns a callback that can be executed to unsubscribe:
+
+```typescript
+import { authSubscribe } from '@junobuild/core';
+
+const unsubscribe = authSubscribe((user: User | null) => {
+  console.log('User:', user);
+});
+
+// Above subscriber ends now
+unsubscribe();
+```
+
+---
 
 ## JUNO DATABASE QUERIES
 
