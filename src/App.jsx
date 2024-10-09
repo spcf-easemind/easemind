@@ -9,7 +9,10 @@ import Header from "./components/headers/Header.jsx";
 import MainHeader from "./components/headers/MainHeader.jsx";
 
 // React Router
-import { Outlet, useLocation } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+
+// Constants
+const isBackgroundRoutes = ["/chat", "/internet-identity"];
 
 const containerBreakpoint = 1280;
 
@@ -23,6 +26,10 @@ function App() {
 
   const whichHeader =
     location.pathname === "/chat" ? <MainHeader /> : <Header />;
+
+  const isBackground = !isBackgroundRoutes.includes(location.pathname)
+    ? classes.bgImage
+    : null;
 
   return (
     <AppShell
@@ -39,7 +46,7 @@ function App() {
           {whichHeader}
         </Container>
       </AppShell.Header>
-      <AppShell.Main className={classes.bgImage}>
+      <AppShell.Main className={isBackground}>
         <Container size={containerBreakpoint} h="100%">
           <Outlet />
         </Container>

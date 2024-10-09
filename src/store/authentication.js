@@ -1,12 +1,17 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { authSubscribe } from "@junobuild/core";
+import { authSubscribe, initSatellite } from "@junobuild/core";
 import { signIn, signOut } from "@junobuild/core";
 
 export const useAuthenticationStore = create(
   persist(
     (set, get) => ({
       user: null,
+
+      initializeJuno: async () => {
+        const response = await initSatellite();
+        console.log("Juno initialized:", response);
+      },
 
       authenticateInternetIdentity: () => {
         // Authenticate Internet Identity
@@ -25,7 +30,18 @@ export const useAuthenticationStore = create(
         handleSignIn();
 
         const sub = authSubscribe((userJuno) =>
-          set(() => ({ user: userJuno }))
+          set(() => {
+            console.log(userJuno);
+            return {
+              user: {
+                [userJuno.data.provider]: {
+                  identity: userJuno.identity,
+                  owner: userJuno.owner,
+                  key: userJuno.key,
+                },
+              },
+            };
+          })
         );
 
         return () => sub();

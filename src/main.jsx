@@ -10,14 +10,13 @@ import { ModalsProvider } from "@mantine/modals";
 import { theme, resolver } from "./plugins/mantine.js";
 
 // React Router
-import { RouterProvider } from "react-router-dom";
-import router from "./router/index.jsx";
+import AppRouter from "./router/AppRouter.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <MantineProvider theme={theme} cssVariablesResolver={resolver}>
       <ModalsProvider>
-        <RouterProvider router={router} />
+        <AppRouter />
       </ModalsProvider>
     </MantineProvider>
   </StrictMode>
