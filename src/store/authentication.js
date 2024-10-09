@@ -1,35 +1,44 @@
-import { create } from 'zustand';
-import { authSubscribe } from '@junobuild/core';
-import { signIn, signOut } from '@junobuild/core';
+import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
+import { authSubscribe } from "@junobuild/core";
+import { signIn, signOut } from "@junobuild/core";
 
-export const useAuthenticationStore = create((set) => ({
-  user: null,
-  authResponse: {},
+export const useAuthenticationStore = create(
+  persist(
+    (set, get) => ({
+      user: null,
 
-  // Functions
-  authenticateInternetIdentity: () => {
-    const signInOptions = {
-      windowed: true,
-      maxTimeToLive: BigInt(4 * 60 * 60 * 1000 * 1000 * 1000),
-      allowPin: false,
-    };
+      authenticateInternetIdentity: () => {
+        // Authenticate Internet Identity
+        const signInOptions = {
+          windowed: true,
+          maxTimeToLive: BigInt(4 * 60 * 60 * 1000 * 1000 * 1000),
+          allowPin: false,
+        };
 
-    const handleSignIn = () => {
-      signIn(signInOptions).catch((error) => {
-        console.error('Sign-in failed:', error);
-      });
-    };
+        const handleSignIn = () => {
+          signIn(signInOptions).catch((error) => {
+            console.error("Sign-in failed:", error);
+          });
+        };
 
-    handleSignIn();
+        handleSignIn();
 
-    console.log('Test');
+        const sub = authSubscribe((userJuno) =>
+          set(() => ({ user: userJuno }))
+        );
 
-    const sub = authSubscribe((userJuno) => set(() => ({ user: userJuno })));
+        return () => sub();
+      },
 
-    return () => sub();
-  },
-  logoutInternetIdentity: () => {
-    console.log("test")
-    signOut();
-  },
-}));
+      logoutInternetIdentity: () => {
+        set(() => ({ user: null }));
+        signOut();
+      },
+    }),
+    {
+      name: "authentication",
+      storage: createJSONStorage(() => sessionStorage),
+    }
+  )
+);

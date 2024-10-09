@@ -5,7 +5,7 @@ import { AppShell, Container } from "@mantine/core";
 import { useMatches } from "@mantine/core";
 
 // Components
-import Header from "./components/Header.jsx";
+import Header from "./components/headers/Header.jsx";
 
 // React Router
 import { Outlet } from "react-router-dom";
