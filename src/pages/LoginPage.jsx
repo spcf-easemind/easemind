@@ -2,15 +2,20 @@ import { Flex, Title, Group, TextInput, Checkbox, Anchor } from "@mantine/core";
 
 import classes from "./LoginPage.module.css";
 
+// Hooks
+import { useEffect } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import { useMatches } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { useDialogStore } from "../store/dialog.js";
+import { useShallow } from "zustand/shallow";
+import { useNavigate } from "react-router-dom";
 
 import SurveyModal from "../components/modals/SurveyModal.jsx";
 import SignUpModal from "../components/modals/SignUpModal.jsx";
 import AuthCard from "../components/cards/AuthCard.jsx";
 import { LOGIN_INPUTS } from "../static/authentication.js";
-import { useNavigate } from "react-router-dom";
+
 
 import { parse, format } from "date-fns";
 
@@ -19,11 +24,25 @@ const title =
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const { dialog, toggleDialog } = useDialogStore(
+    useShallow((state) => ({
+      dialog: state.dialog,
+      toggleDialog: state.toggleDialog,
+    }))
+  );
 
   const [opened, { open: handleOpen, close: handleClose }] =
-    useDisclosure(false);
+    useDisclosure(dialog);
   const [signupOpened, { open: handleSignupOpen, close: handleSignupClose }] =
     useDisclosure(false);
+
+  useEffect(() => {
+    if (dialog) {
+      handleOpen();
+    } else {
+      handleClose();
+    }
+  }, [dialog, handleOpen, handleClose]);
 
   const loginForm = useForm({
     mode: "uncontrolled",
@@ -95,15 +114,18 @@ export default function LoginPage() {
 
     try {
       const formData = { ...signupForm.getValues() };
-      const date = format(parse(
-        formData.date.year +
-          "-" +
-          formData.date.month +
-          "-" +
-          formData.date.day,
-        "yyyy-MM-dd",
-        new Date()
-      ), "yyyy-MM-dd");
+      const date = format(
+        parse(
+          formData.date.year +
+            "-" +
+            formData.date.month +
+            "-" +
+            formData.date.day,
+          "yyyy-MM-dd",
+          new Date()
+        ),
+        "yyyy-MM-dd"
+      );
 
       formData["dateOfBirth"] = date;
       delete formData.date;
@@ -117,6 +139,17 @@ export default function LoginPage() {
 
   function handleNavigation() {
     navigate("/login");
+  }
+
+
+  function handleDialogOpen() {
+    handleOpen();
+    toggleDialog();
+  }
+
+  function handleDialogClose() {
+    handleClose();
+    toggleDialog();
   }
 
   const titleFontSize = useMatches({
@@ -184,7 +217,7 @@ export default function LoginPage() {
         <AuthCard
           form={loginForm}
           onSubmit={(formData) => handleSignIn(formData)}
-          onDialogOpen={handleOpen}
+          onDialogOpen={handleDialogOpen}
           heading={{
             title: "Login",
             description:
@@ -205,7 +238,7 @@ export default function LoginPage() {
 
       <SurveyModal
         opened={opened}
-        onClose={handleClose}
+        onClose={handleDialogClose}
         onSubmit={handleSurveyForm}
       />
       <SignUpModal

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useDialogStore } from "../../store/dialog";
 
 // Mantine Components
 import { Button, Group, Box, Title, Image, Anchor } from "@mantine/core";
@@ -22,10 +23,11 @@ const data = [
 
 export default function Header() {
   const [active, setActive] = useState();
+  const toggleDialogFn = useDialogStore((state) => state.toggleDialog);
 
   const TitleComponent = Title.withProps({
     order: 3,
-    style: { fontFamily: '"Baloo Bhai 2", sans-serif' },
+    style: { fontFamily: "var(--mantine-baloo-bhai-2)" },
     tt: "uppercase",
   });
 
@@ -51,7 +53,9 @@ export default function Header() {
     </Anchor>
   ));
 
-  const ButtonInstance = <Button>Get Started</Button>;
+  const ButtonInstance = (
+    <Button onClick={() => toggleDialogFn()}>Get Started</Button>
+  );
 
   return (
     <Group h="100%" justify="space-between" align="center">

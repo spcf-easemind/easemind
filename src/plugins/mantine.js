@@ -6,7 +6,16 @@ const theme = createTheme({
   colors: {
     "sky-blue": generateColors("#4A90E2"),
   },
-  primaryColor: "sky-blue"
+  primaryColor: "sky-blue",
+  other: {
+    balooBhaiFont: '"Baloo Bhai 2", sans-serif',
+  },
 });
 
-export default theme;
+const resolver = (theme) => ({
+  variables: {
+    "--mantine-baloo-bhai-2": theme.other.balooBhaiFont,
+  },
+});
+
+export { theme, resolver };

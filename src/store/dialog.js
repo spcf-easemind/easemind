@@ -1,8 +1,7 @@
-import { create } from 'zustand'
+import { create } from "zustand";
 
-const useDialogStore = create((set) => ({
+export const useDialogStore = create((set) => ({
   dialog: false,
 
-  increasePopulation: () => set((state) => ({ })),
-  removeAllBears: () => set({ bears: 0 }),
-}))
+  toggleDialog: () => set((state) => ({ dialog: !state.dialog })),
+}));

@@ -1,7 +1,7 @@
 .title {
   color: white;
   font-size: rem(40px);
-  font-family: "Baloo Bhai 2", sans-serif;
+  font-family: var(--mantine-baloo-bhai-2);
 
   @media (max-height: $mantine-breakpoint-sm) {
     font-size: rem(32px);
@@ -11,7 +11,7 @@
 .subTitle {
   color: white;
   font-size: rem(25px);
-  font-family: "Baloo Bhai 2", sans-serif;
+  font-family: var(--mantine-baloo-bhai-2);
 
   @media (max-height: $mantine-breakpoint-sm) {
     font-size: rem(18px);
