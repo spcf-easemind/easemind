@@ -26,6 +26,15 @@ function App() {
     sm: "90dvh",
   });
 
+  const withContainer =
+    location.pathname === "/chat" ? (
+      <Outlet />
+    ) : (
+      <Container size={containerBreakpoint} h="100%">
+        <Outlet />
+      </Container>
+    );
+
   const whichHeader =
     location.pathname === "/chat" ? <MainHeader /> : <Header />;
 
@@ -37,7 +46,6 @@ function App() {
 
   return (
     <AppShell
-      padding="md"
       header={{ height: { base: 60, sm: 70 } }}
       navbar={{
         width: 400,
@@ -59,9 +67,7 @@ function App() {
         <Navigation/>
       </AppShell.Navbar>
       <AppShell.Main className={isBackground}>
-        <Container size={containerBreakpoint} h="100%">
-          <Outlet />
-        </Container>
+        {withContainer}
       </AppShell.Main>
       <AppShell.Footer></AppShell.Footer>
     </AppShell>

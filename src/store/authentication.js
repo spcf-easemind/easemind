@@ -9,8 +9,8 @@ export const useAuthenticationStore = create(
       user: null,
 
       initializeJuno: async () => {
-        const response = await initSatellite();
-        console.log("Juno initialized:", response);
+        await initSatellite();
+        // console.log("Juno initialized:", response);
       },
 
       authenticateInternetIdentity: () => {
