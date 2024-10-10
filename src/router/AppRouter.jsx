@@ -5,7 +5,8 @@ import ProtectedRoute from "./ProtectedRoute.jsx";
 import App from "../App";
 import LoginPage from "../pages/LoginPage";
 import InternetIdentityPage from "../pages/InternetIdentityPage";
-import ChatPage from "../pages/ChatPage.jsx";
+import mainRoutes from "./modules/main-routes.jsx";
+
 import { useAuthenticationStore } from "../store/authentication.js";
 import { useEffect } from "react";
 
@@ -25,17 +26,14 @@ export default function AppRouter() {
           element: <ProtectedRoute />,
           children: [
             {
-              path: "internet-identity",
+              path: "/internet-identity",
               element: <InternetIdentityPage />,
             },
             {
-              path: "login",
+              path: "/login",
               element: <LoginPage />,
             },
-            {
-              path: "chat",
-              element: <ChatPage />,
-            },
+            ...mainRoutes,
           ],
         },
       ],

@@ -10,17 +10,17 @@ import MainHeader from "./components/headers/MainHeader.jsx";
 import Navigation from "./components/Navigation.jsx";
 import AsidePage from "./pages/AsidePage.jsx";
 
-// React Router
-import { Outlet, useLocation } from "react-router-dom";
+// Zustand
 import { useDialogStore } from "./store/dialog.js";
 
-// Constants
-const isBackgroundRoutes = ["/chat", "/internet-identity"];
-const notNavbarRoutes = ["/internet-identity", "/", "/login"];
+// React Router
+import { Outlet, useLocation } from "react-router-dom";
+import mainRoutes from "./router/modules/main-routes.jsx";
 
 const containerBreakpoint = 1280;
 
 function App() {
+  // Hooks
   const location = useLocation();
 
   //Conditionals
@@ -44,10 +44,18 @@ function App() {
       </Container>
     );
 
-  const whichHeader =
-    location.pathname === "/chat" ? <MainHeader /> : <Header />;
+  const whichHeader = mainRoutes
+    .map(({ path }) => path)
+    .includes(location.pathname) ? (
+    <MainHeader />
+  ) : (
+    <Header />
+  );
 
-  const isBackground = !isBackgroundRoutes.includes(location.pathname)
+  const withBackground = ![
+    ...mainRoutes.map(({ path }) => path),
+    "/internet-identity",
+  ].includes(location.pathname)
     ? classes.bgImage
     : null;
 
@@ -92,7 +100,7 @@ function App() {
       <AppShell.Navbar p="md">
         <Navigation />
       </AppShell.Navbar>
-      <AppShell.Main className={isBackground}>{withContainer}</AppShell.Main>
+      <AppShell.Main className={withBackground}>{withContainer}</AppShell.Main>
       <AppShell.Aside
         p="md"
         style={{

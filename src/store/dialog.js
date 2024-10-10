@@ -1,10 +1,7 @@
 import { create } from "zustand";
 
 export const useDialogStore = create((set) => ({
-  dialog: {
-    desktop: true,
-    mobile: false,
-  },
+  dialog: false,
 
   drawer: {
     desktop: true,

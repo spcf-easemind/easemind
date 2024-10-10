@@ -10,6 +10,7 @@ import IconAccountFilled from "../../assets/icons/header/IconAccountFilled.svg";
 import classes from "./MainHeader.module.css";
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const menuLinks = [
   {
@@ -27,16 +28,22 @@ const menuLinks = [
     iconFilled: IconChatFilled,
   },
   {
-    name: "account",
-    label: "Account",
-    route: "/account",
+    name: "profile",
+    label: "Profile",
+    route: "/profile",
     icon: IconAccount,
     iconFilled: IconAccountFilled,
   },
 ];
 
 export default function MainHeader() {
+  const navigate = useNavigate();
   const [active, setActive] = useState("chat");
+
+  function handleMenuClick(name, route) {
+    setActive(name);
+    return navigate(route);
+  }
 
   const menuInstances = menuLinks.map((item) => {
     const isActiveIcon = item.name === active ? item.iconFilled : item.icon;
@@ -44,7 +51,7 @@ export default function MainHeader() {
       <Tooltip label={item.label} key={item.name}>
         <UnstyledButton
           data-active={item.name === active || undefined}
-          onClick={() => setActive(item.name)}
+          onClick={() => handleMenuClick(item.name, item.route)}
           className={classes.menuIcon}
         >
           <Image src={isActiveIcon} w={24} />
