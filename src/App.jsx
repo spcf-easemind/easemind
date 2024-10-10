@@ -8,6 +8,7 @@ import { useMatches } from "@mantine/core";
 import Header from "./components/headers/Header.jsx";
 import MainHeader from "./components/headers/MainHeader.jsx";
 import Navigation from "./components/Navigation.jsx";
+import AsidePage from "./pages/AsidePage.jsx";
 
 // React Router
 import { Outlet, useLocation } from "react-router-dom";
@@ -53,7 +54,7 @@ function App() {
       navbar={{
         width: 400,
         breakpoint: "sm",
-        collapsed: { mobile: !false, desktop:  !true },
+        collapsed: { mobile: !false, desktop: !true },
       }}
       styles={{
         main: {
@@ -75,10 +76,13 @@ function App() {
         <Navigation />
       </AppShell.Navbar>
       <AppShell.Main className={isBackground}>{withContainer}</AppShell.Main>
-      <AppShell.Aside>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit
-        dolores velit excepturi optio eveniet quos minima nam libero
-        perspiciatis neque?
+      <AppShell.Aside
+        p="md"
+        style={{
+          overflowY: "auto",
+        }}
+      >
+        <AsidePage />
       </AppShell.Aside>
       <AppShell.Footer></AppShell.Footer>
     </AppShell>
