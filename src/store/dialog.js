@@ -5,12 +5,30 @@ export const useDialogStore = create((set) => ({
     desktop: true,
     mobile: false,
   },
+
+  drawer: {
+    desktop: true,
+    mobile: false,
+  },
+
   aside: {
     desktop: true,
     mobile: false,
   },
 
   toggleDialog: () => set((state) => ({ dialog: !state.dialog })),
+
+  // Set Drawer Desktop
+  toggleDrawerDesktop: () =>
+    set((state) => ({
+      drawer: { ...state.drawer, desktop: !state.drawer.desktop },
+    })),
+
+  // Set Drawer Mobile
+  toggleDrawerMobile: () =>
+    set((state) => ({
+      drawer: { ...state.drawer, mobile: !state.drawer.mobile },
+    })),
 
   // Set Aside Desktop
   toggleAsideDesktop: () =>

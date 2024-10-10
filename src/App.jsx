@@ -22,8 +22,13 @@ const containerBreakpoint = 1280;
 
 function App() {
   const location = useLocation();
-  const mobileOpened = useDialogStore((state) => state.aside.mobile);
-  const desktopOpened = useDialogStore((state) => state.aside.desktop);
+
+  //Conditionals
+  const { mobile: mobileOpened, desktop: desktopOpened } = useDialogStore(
+    (state) => state.aside
+  );
+  const { mobile: drawerMobileOpened, desktop: drawerDesktopOpened } =
+    useDialogStore((state) => state.drawer);
 
   const mainHeight = useMatches({
     base: "100%",
@@ -46,7 +51,19 @@ function App() {
     ? classes.bgImage
     : null;
 
-  const isNavbar = notNavbarRoutes.includes(location.pathname);
+  // Collapse Drawer and Aside
+  const { handleDrawerMobile, handleDrawerDesktop } =
+    location.pathname === "/chat"
+      ? {
+          handleDrawerMobile: !drawerMobileOpened,
+          handleDrawerDesktop: !drawerDesktopOpened,
+        }
+      : { handleDrawerMobile: true, handleDrawerDesktop: true };
+
+  const { handleAsideMobile, handleAsideDesktop } =
+    location.pathname === "/chat"
+      ? { handleAsideMobile: !mobileOpened, handleAsideDesktop: !desktopOpened }
+      : { handleAsideMobile: true, handleAsideDesktop: true };
 
   return (
     <AppShell
@@ -54,7 +71,7 @@ function App() {
       navbar={{
         width: 400,
         breakpoint: "sm",
-        collapsed: { mobile: !false, desktop: !true },
+        collapsed: { mobile: handleDrawerMobile, desktop: handleDrawerDesktop },
       }}
       styles={{
         main: {
@@ -64,7 +81,7 @@ function App() {
       aside={{
         width: 350,
         breakpoint: "md",
-        collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
+        collapsed: { mobile: handleAsideMobile, desktop: handleAsideDesktop },
       }}
     >
       <AppShell.Header>
