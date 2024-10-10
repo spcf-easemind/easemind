@@ -11,7 +11,7 @@ import {
 import { IconPlus } from "@tabler/icons-react";
 // import HappyImage from "../assets/HappyImage.jpg";
 
-export default function MembersList({ instance }) {
+export default function MembersList({ instance, onClick }) {
   const membersInstance = instance.map((member) => (
     <Box key={member.name}>
       <Group>
@@ -29,7 +29,7 @@ export default function MembersList({ instance }) {
 
   return (
     <Stack>
-      <UnstyledButton>
+      <UnstyledButton onClick={onClick}>
         <Box>
           <Group>
             <Card

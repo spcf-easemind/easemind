@@ -13,6 +13,8 @@ export const useDialogStore = create((set) => ({
     mobile: false,
   },
 
+  chatModal: false,
+
   toggleDialog: () => set((state) => ({ dialog: !state.dialog })),
 
   // Set Drawer Desktop
@@ -40,4 +42,7 @@ export const useDialogStore = create((set) => ({
       aside: { ...state.aside, mobile: !state.aside.mobile },
     })),
   setAsideMobile: (val) => set(() => ({ aside: val })),
+
+  // Toggle Chat Modal
+  toggleChatModal: () => set((state) => ({ chatModal: !state.chatModal })),
 }));

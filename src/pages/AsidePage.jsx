@@ -13,11 +13,12 @@ import IconImage from "../assets/icons/input/IconImage.svg";
 import IconVideoCamera from "../assets/icons/dropdown/IconVideoCamera.svg";
 import IconLink from "../assets/icons/dropdown/IconLink.svg";
 import IconDocument from "../assets/icons/dropdown/IconDocument.svg";
+import { useDialogStore } from "../store/dialog.js";
 
 const dropdownData = [
   {
     icon: IconManyPeople,
-    label: "Messages",
+    label: "Members",
     data: [
       {
         id: 1,
@@ -73,11 +74,13 @@ const dropdownData = [
 ];
 
 export default function AsidePage() {
+  const toggleChatModalFn = useDialogStore((state) => state.toggleChatModal);
+
   const dropdownInstances = dropdownData.map((instance) => {
     let children = null;
 
-    if (instance.label === "Messages") {
-      children = <MembersList instance={instance.data} />;
+    if (instance.label === "Members") {
+      children = <MembersList instance={instance.data} onClick={toggleChatModalFn}/>;
     } else if (instance.label === "Photos") {
       children = <PhotoGrid images={instance.data} />;
     } else if (instance.label === "Videos") {

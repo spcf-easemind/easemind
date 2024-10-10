@@ -1,8 +1,10 @@
-import { Flex } from "@mantine/core";
+import { Flex, Stack, TextInput } from "@mantine/core";
 
 import ChatHeader from "../components/headers/ChatHeader.jsx";
 import ChatBody from "../components/chat/ChatBody.jsx";
 import ChatInput from "../components/chat/ChatInput.jsx";
+import ChatModal from "../components/modals/ChatModal.jsx";
+import CheckboxList from "../components/CheckboxList.jsx";
 
 import { useRef, useState } from "react";
 import { useForm } from "@mantine/form";
@@ -28,6 +30,21 @@ const data = [
   },
 ];
 
+const new_friends = [
+  {
+    id: 1,
+    name: "Alexander Camaddo",
+    image:
+      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-9.png",
+  },
+  {
+    id: 2,
+    name: "Gabriel Gatbonton",
+    image:
+      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-1.png",
+  },
+];
+
 export default function ChatPage() {
   // Convo Zustand
   const [convo, setConvo] = useState(data);
@@ -42,6 +59,14 @@ export default function ChatPage() {
     useShallow((state) => ({
       toggleMobile: state.toggleAsideMobile,
       toggleDesktop: state.toggleAsideDesktop,
+    }))
+  );
+
+  // Modal
+  const { chatModal, toggleChatModal } = useDialogStore(
+    useShallow((state) => ({
+      chatModal: state.chatModal,
+      toggleChatModal: state.toggleChatModal,
     }))
   );
 
@@ -84,6 +109,22 @@ export default function ChatPage() {
         py={padding}
         px={24}
       />
+
+      {/* Modal */}
+      <ChatModal
+        modal={{ opened: chatModal, onClose: toggleChatModal }}
+        title="Add member"
+        buttonLabel="Add member"
+      >
+        <Stack>
+          <TextInput placeholder="Search" size="lg" />
+
+          <CheckboxList
+            label="Engaged with these people"
+            checkboxes={new_friends}
+          />
+        </Stack>
+      </ChatModal>
     </Flex>
   );
 }
