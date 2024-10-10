@@ -39,7 +39,7 @@ export default function ChatList({
       <Group align="center">
         <Image src={userImage} w={55} radius={10} />
         <Box flex={1}>
-          <Title size="h4" lineClamp={1}>
+          <Title order={5} lineClamp={1} fw={500}>
             {userName}
           </Title>
           <Text lineClamp={1} c="gray" size="sm">
@@ -47,7 +47,7 @@ export default function ChatList({
           </Text>
         </Box>
         <Box h={40} w={40}>
-          <Text c="gray" size="sm" align='right'>
+          <Text c="gray" size="sm" align='right' truncate="end">
             {time}
           </Text>
           {isBadge}

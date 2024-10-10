@@ -8,7 +8,6 @@ import {
   Input,
   Tabs,
   Stack,
-  Fieldset,
 } from "@mantine/core";
 import { useState } from "react";
 
@@ -17,21 +16,9 @@ import IconConnectCompanion from "../assets/icons/chat/IconConnect.svg";
 import IconSearch from "../assets/icons/chat/IconSearch.svg";
 
 import { USER_CHATS, GROUP_CHATS } from "../static/chat";
+import classes from "./chat/ChatList.module.css";
 
 import ChatList from "./chat/ChatList";
-
-const chatMenuAttributes = [
-  {
-    name: "new-chat",
-    label: "New Chat",
-    icon: IconNewChat,
-  },
-  {
-    name: "connect-easecompanion",
-    label: "Connect to an EaseCompanion",
-    icon: IconConnectCompanion,
-  },
-];
 
 const tabsAttributes = [
   {
@@ -48,16 +35,6 @@ export default function ChatPage() {
   const [activeTab, setActiveTab] = useState("peers");
   const [activeChat, setActiveChat] = useState();
 
-  const chatMenuIcons = chatMenuAttributes.map((item) => {
-    return (
-      <Tooltip label={item.label} key={item.name} position="bottom">
-        <UnstyledButton>
-          <Image src={item.icon} w={30} />
-        </UnstyledButton>
-      </Tooltip>
-    );
-  });
-
   const tabsHeader = tabsAttributes.map((item) => {
     const isActive = activeTab === item.value;
     return (
@@ -65,9 +42,15 @@ export default function ChatPage() {
         value={item.value}
         key={item.value}
         size="lg"
-        c={isActive ? "sky-blue" : "gray"}
-        fw={isActive ? 600 : 300}
+        c={
+          isActive
+            ? "var(--mantine-primary-color-5)"
+            : "var(--mantine-color-gray-6)"
+        }
+        fw={isActive ? 500 : 400}
         fz="md"
+        className={classes.tabStyling}
+        data-active={isActive || undefined}
       >
         {item.label}
       </Tabs.Tab>
@@ -110,22 +93,34 @@ export default function ChatPage() {
         <Title c="gray.8" size={navbarTitleFontSize}>
           Messages
         </Title>
-        <Group gap={10}>{chatMenuIcons}</Group>
+        <Tooltip label='Connect with someone' position="bottom">
+          <UnstyledButton>
+            <Image src={IconConnectCompanion} w={30} />
+          </UnstyledButton>
+        </Tooltip>
       </Group>
 
       <Input
         py={15}
         size="md"
         placeholder="Search"
-        leftSectionPointerEvents="all"
+        leftSectionPointerEvents="none"
         leftSection={
           <UnstyledButton>
-            <Image src={IconSearch}/>
+            <Image src={IconSearch} />
           </UnstyledButton>
         }
       />
 
-      <Tabs defaultValue={activeTab} onChange={setActiveTab}>
+      <Tabs
+        defaultValue={activeTab}
+        onChange={setActiveTab}
+        styles={{
+          root: {
+            "--tabs-list-border-width": "0px",
+          },
+        }}
+      >
         <Tabs.List justify="space-around">{tabsHeader}</Tabs.List>
         {tabsContent}
       </Tabs>
