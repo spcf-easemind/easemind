@@ -8,7 +8,9 @@ import {
   Input,
   Tabs,
   Stack,
+  Fieldset,
 } from "@mantine/core";
+import { useState } from "react";
 
 import IconNewChat from "../assets/icons/chat/IconNewChat.svg";
 import IconConnectCompanion from "../assets/icons/chat/IconConnect.svg";
@@ -16,8 +18,7 @@ import IconSearch from "../assets/icons/chat/IconSearch.svg";
 
 import { USER_CHATS, GROUP_CHATS } from "../static/chat";
 
-import ChatList from "./ChatList";
-import { useState } from "react";
+import ChatList from "./chat/ChatList";
 
 const chatMenuAttributes = [
   {
@@ -45,6 +46,8 @@ const tabsAttributes = [
 
 export default function ChatPage() {
   const [activeTab, setActiveTab] = useState("peers");
+  const [activeChat, setActiveChat] = useState();
+
   const chatMenuIcons = chatMenuAttributes.map((item) => {
     return (
       <Tooltip label={item.label} key={item.name} position="bottom">
@@ -77,10 +80,20 @@ export default function ChatPage() {
         <Stack mt={16} gap={8}>
           {item.label === "Peers"
             ? USER_CHATS.map((chat) => (
-                <ChatList {...chat} key={chat.userName} />
+                <ChatList
+                  {...chat}
+                  key={chat.id}
+                  onSelectChat={setActiveChat}
+                  activeChat={activeChat}
+                />
               ))
             : GROUP_CHATS.map((chat) => (
-                <ChatList {...chat} key={chat.userName} />
+                <ChatList
+                  {...chat}
+                  key={chat.id}
+                  onSelectChat={setActiveChat}
+                  activeChat={activeChat}
+                />
               ))}
         </Stack>
       </Tabs.Panel>
@@ -104,7 +117,12 @@ export default function ChatPage() {
         py={15}
         size="md"
         placeholder="Search"
-        leftSection={<Image src={IconSearch} />}
+        leftSectionPointerEvents="all"
+        leftSection={
+          <UnstyledButton>
+            <Image src={IconSearch}/>
+          </UnstyledButton>
+        }
       />
 
       <Tabs defaultValue={activeTab} onChange={setActiveTab}>
