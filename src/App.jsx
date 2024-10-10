@@ -13,8 +13,8 @@ import Navigation from "./components/Navigation.jsx";
 import { Outlet, useLocation } from "react-router-dom";
 
 // Constants
-const isBackgroundRoutes = ["/chat", "/internet-identity" ];
-const notNavbarRoutes = [ "/internet-identity", "/" ];
+const isBackgroundRoutes = ["/chat", "/internet-identity"];
+const notNavbarRoutes = ["/internet-identity", "/", "/login"];
 
 const containerBreakpoint = 1280;
 
@@ -50,25 +50,24 @@ function App() {
       navbar={{
         width: 400,
         breakpoint: "sm",
-        // collapsed: { desktop: isNavbar },
+        collapsed: { desktop: isNavbar },
       }}
       styles={{
         main: {
           height: mainHeight,
         },
       }}
+   
     >
       <AppShell.Header>
         <Container size={containerBreakpoint} h="inherit">
           {whichHeader}
         </Container>
       </AppShell.Header>
-      <AppShell.Navbar p='md'>
-        <Navigation/>
+      <AppShell.Navbar p="md">
+        <Navigation />
       </AppShell.Navbar>
-      <AppShell.Main className={isBackground}>
-        {withContainer}
-      </AppShell.Main>
+      <AppShell.Main className={isBackground}>{withContainer}</AppShell.Main>
       <AppShell.Footer></AppShell.Footer>
     </AppShell>
   );

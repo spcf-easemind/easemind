@@ -11,11 +11,11 @@ import { useDialogStore } from "../store/dialog.js";
 import { useShallow } from "zustand/shallow";
 import { useNavigate } from "react-router-dom";
 
+
 import SurveyModal from "../components/modals/SurveyModal.jsx";
 import SignUpModal from "../components/modals/SignUpModal.jsx";
 import AuthCard from "../components/cards/AuthCard.jsx";
 import { LOGIN_INPUTS } from "../static/authentication.js";
-
 
 import { parse, format } from "date-fns";
 
@@ -24,6 +24,7 @@ const title =
 
 export default function LoginPage() {
   const navigate = useNavigate();
+
   const { dialog, toggleDialog } = useDialogStore(
     useShallow((state) => ({
       dialog: state.dialog,
@@ -140,7 +141,6 @@ export default function LoginPage() {
   function handleNavigation() {
     navigate("/login");
   }
-
 
   function handleDialogOpen() {
     handleOpen();
