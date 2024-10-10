@@ -2,7 +2,10 @@ import { Group, Image, Text, UnstyledButton } from "@mantine/core";
 import HappyImage from "../../assets/HappyImage.jpg";
 import IconInfo from "../../assets/icons/header/IconInfo.svg";
 
-export default function ChatHeader({ ...props }) {
+export default function ChatHeader({
+  onClick: { toggleDesktop, toggleMobile },
+  ...props
+}) {
   return (
     <Group
       {...props}
@@ -23,7 +26,20 @@ export default function ChatHeader({ ...props }) {
         </div>
       </Group>
 
-      <UnstyledButton py={7} px="sm">
+      <UnstyledButton
+        py={7}
+        px="sm"
+        hiddenFrom="md"
+        onClick={toggleMobile}
+      >
+        <Image src={IconInfo} w={24} />
+      </UnstyledButton>
+      <UnstyledButton
+        py={7}
+        px="sm"
+        visibleFrom="md"
+        onClick={toggleDesktop}
+      >
         <Image src={IconInfo} w={24} />
       </UnstyledButton>
     </Group>

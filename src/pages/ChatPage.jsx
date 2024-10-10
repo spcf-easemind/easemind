@@ -4,8 +4,10 @@ import ChatHeader from "../components/headers/ChatHeader.jsx";
 import ChatBody from "../components/chat/ChatBody.jsx";
 import ChatInput from "../components/chat/ChatInput.jsx";
 
-import { useCallback, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "@mantine/form";
+import { useDialogStore } from "../store/dialog.js";
+import { useShallow } from "zustand/shallow";
 
 const padding = 18;
 
@@ -27,10 +29,21 @@ const data = [
 ];
 
 export default function ChatPage() {
+  // Convo Zustand
   const [convo, setConvo] = useState(data);
+
+  // Boiler Plate Constants
   const currentDate = new Date().toISOString();
   const user = "Gabriel Gatbonton";
   const inputRef = useRef();
+
+  // Aside Controls
+  const { toggleMobile, toggleDesktop } = useDialogStore(
+    useShallow((state) => ({
+      toggleMobile: state.toggleAsideMobile,
+      toggleDesktop: state.toggleAsideDesktop,
+    }))
+  );
 
   const form = useForm({
     mode: "uncontrolled",
@@ -62,7 +75,7 @@ export default function ChatPage() {
 
   return (
     <Flex direction="column" w="100%" h="inherit">
-      <ChatHeader p={padding} />
+      <ChatHeader onClick={{ toggleDesktop, toggleMobile }} p={padding} />
       <ChatBody data={convo} p={padding} flex={1} />
       <ChatInput
         ref={inputRef}

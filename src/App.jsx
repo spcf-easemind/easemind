@@ -11,6 +11,7 @@ import Navigation from "./components/Navigation.jsx";
 
 // React Router
 import { Outlet, useLocation } from "react-router-dom";
+import { useDialogStore } from "./store/dialog.js";
 
 // Constants
 const isBackgroundRoutes = ["/chat", "/internet-identity"];
@@ -20,6 +21,8 @@ const containerBreakpoint = 1280;
 
 function App() {
   const location = useLocation();
+  const mobileOpened = useDialogStore((state) => state.aside.mobile);
+  const desktopOpened = useDialogStore((state) => state.aside.desktop);
 
   const mainHeight = useMatches({
     base: "100%",
@@ -50,14 +53,18 @@ function App() {
       navbar={{
         width: 400,
         breakpoint: "sm",
-        collapsed: { desktop: isNavbar },
+        collapsed: { mobile: !false, desktop:  !true },
       }}
       styles={{
         main: {
           height: mainHeight,
         },
       }}
-   
+      aside={{
+        width: 350,
+        breakpoint: "md",
+        collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
+      }}
     >
       <AppShell.Header>
         <Container size={containerBreakpoint} h="inherit">
@@ -68,6 +75,11 @@ function App() {
         <Navigation />
       </AppShell.Navbar>
       <AppShell.Main className={isBackground}>{withContainer}</AppShell.Main>
+      <AppShell.Aside>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit
+        dolores velit excepturi optio eveniet quos minima nam libero
+        perspiciatis neque?
+      </AppShell.Aside>
       <AppShell.Footer></AppShell.Footer>
     </AppShell>
   );

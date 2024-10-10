@@ -60,6 +60,7 @@ export default function ChatPage() {
     return (
       <Tabs.Tab
         value={item.value}
+        key={item.value}
         size="lg"
         c={isActive ? "sky-blue" : "gray"}
         fw={isActive ? 600 : 300}
@@ -72,7 +73,7 @@ export default function ChatPage() {
 
   const tabsContent = tabsAttributes.map((item) => {
     return (
-      <Tabs.Panel value={item.value}>
+      <Tabs.Panel value={item.value} key={item.value}>
         <Stack mt={16} gap={8}>
           {item.label === "Peers"
             ? USER_CHATS.map((chat) => (
