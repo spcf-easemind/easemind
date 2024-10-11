@@ -26,13 +26,14 @@ const title =
 export default function LoginPage() {
   const navigate = useNavigate();
 
-  const { user, message, userSignUpFn, getUserInfoFn, userLoginFn } =
+  const { user, message, userSignUpFn, getUserInfoFn, deleteUserInfoFn, userLoginFn } =
     useUsersStore(
       useShallow((state) => ({
         user: state.user,
         message: state.message,
         userSignUpFn: state.userSignUp,
         getUserInfoFn: state.getUserInfo,
+        deleteUserInfoFn: state.deleteUserInfo,
         userLoginFn: state.loginUser,
       }))
     );
@@ -122,6 +123,7 @@ export default function LoginPage() {
     // console.log(user);
 
     userLoginFn(value.email, value.password);
+    // deleteUserInfoFn();
 
     console.log('Sign In Form submitted');
   }

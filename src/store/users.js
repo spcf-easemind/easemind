@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { setDoc, uploadFile, listDocs } from '@junobuild/core';
+import { setDoc, uploadFile, listDocs, deleteDoc } from '@junobuild/core';
 import { nanoid } from 'nanoid';
 
 export const useUsersStore = create((set) => ({
@@ -42,7 +42,10 @@ export const useUsersStore = create((set) => ({
       });
       // console.log(response);
       console.log('User signed up successfully:', formData);
-      set({ user: formData, error: null });
+      set({ user: {
+        fullName: formData.fullName,
+        email: formData.email
+      }, message: 'User signed up successfully'});
     } catch (error) {
       console.error('Error during sign up:', error);
       set({ error: error.message, user: null });
@@ -75,6 +78,31 @@ export const useUsersStore = create((set) => ({
         message: error.message || 'An error occurred while fetching user data',
       }));
     }
+  },
+
+  deleteUserInfo: async () => {
+    const items = await listDocs({
+      collection: 'userCredentials'
+    });
+
+    if (items.items && items.items.length > 0 && items.items[0].data) {
+      for (const item of items.items){
+        await deleteDoc({
+          collection: 'userCredentials',
+          doc: item
+        })
+        set(() => ({
+          user: null,
+          message: 'User credential deleted successfully!'
+        }));
+      }
+    } else {
+      set(() => ({
+        user: null,
+        message: 'There is no account created on this identity'
+      }));
+    }
+    
   },
 
   loginUser: async (email, password) => {
