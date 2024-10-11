@@ -3,6 +3,7 @@ import { Flex, Image, Text, Group, Stack } from "@mantine/core";
 import HappyImage from "../../assets/HappyImage.jpg";
 import ChatCard from "./ChatCard.jsx";
 import ChatBox from "./ChatBox.jsx";
+import ImageTruncation from "../buttons/ImageTruncation.jsx";
 
 export default function ChatContainer({ data }) {
   const user = "Gabriel Gatbonton";
@@ -12,9 +13,23 @@ export default function ChatContainer({ data }) {
       ? { justify: "end", direction: "row-reverse", withMessageData: false }
       : { justify: "start", direction: "row", withMessageData: true };
 
-  const messageInstances = data.message.map((message) => (
-    <ChatCard key={message} text={message} />
-  ));
+  const messageInstances = () => {
+    if (data.message) {
+      return data.message.map((message) => (
+        <ChatCard key={message} text={message} />
+      ));
+    } else if (data.images) {
+      return <ImageTruncation images={data.images} />;
+    }
+  };
+
+  // if (item.message) {
+  //   return data.message.map((message) => (
+  //     <ChatCard key={message} text={message} />
+  //   ));
+  // } else if (daitemta.images) {
+  //   return <ImageTruncation images={data.images} />;
+  // }
 
   return (
     <Flex gap={16} align="end" justify={justify} direction={direction}>
@@ -32,7 +47,7 @@ export default function ChatContainer({ data }) {
           </Group>
         )}
         <Stack align={justify} gap={8}>
-          {messageInstances}
+          {messageInstances()}
         </Stack>
       </ChatBox>
     </Flex>

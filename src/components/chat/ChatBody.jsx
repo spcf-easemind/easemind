@@ -1,4 +1,4 @@
-import { Paper, Stack } from "@mantine/core";
+import { Paper, ScrollArea, Stack } from "@mantine/core";
 
 import ChatContainer from "./ChatContainer.jsx";
 import { useEffect, useRef } from "react";
@@ -26,7 +26,7 @@ export default function ChatBody({ data, ...props }) {
     <Paper
       {...props}
       style={{
-        overFlowY: "auto",
+        overFlow: "auto",
       }}
       ref={scrollViewport}
     >
