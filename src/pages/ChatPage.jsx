@@ -1,4 +1,4 @@
-import { Flex, Stack, TextInput } from "@mantine/core";
+import { Flex, Stack, MultiSelect } from "@mantine/core";
 
 import ChatHeader from "../components/headers/ChatHeader.jsx";
 import ChatBody from "../components/chat/ChatBody.jsx";
@@ -7,7 +7,7 @@ import ChatModal from "../components/modals/ChatModal.jsx";
 import CheckboxList from "../components/CheckboxList.jsx";
 
 import { useRef, useState } from "react";
-import { useForm } from "@mantine/form";
+import { useForm, hasLength } from "@mantine/form";
 import { useDialogStore } from "../store/dialog.js";
 import { useShallow } from "zustand/shallow";
 
@@ -70,6 +70,8 @@ export default function ChatPage() {
     }))
   );
 
+  //
+
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
@@ -80,6 +82,16 @@ export default function ChatPage() {
     },
     validate: {
       message: (value) => !value.trim().length && "",
+    },
+  });
+
+  const addMembersForm = useForm({
+    mode: "controlled",
+    initialValues: {
+      members: [],
+    },
+    validate: {
+      members: hasLength({ min: 1 }, "Value is to be selected"),
     },
   });
 
@@ -96,6 +108,10 @@ export default function ChatPage() {
     form.setFieldValue("message", " ");
 
     inputRef.current.focus();
+  }
+
+  function handleAddMembers(formData) {
+    console.log(formData);
   }
 
   return (
@@ -115,13 +131,34 @@ export default function ChatPage() {
         modal={{ opened: chatModal, onClose: toggleChatModal }}
         title="Add member"
         buttonLabel="Add member"
+        onSubmit={addMembersForm.onSubmit(handleAddMembers)}
       >
         <Stack>
-          <TextInput placeholder="Search" size="lg" />
+          {/* <Combobox
+            data={new_friends.map(({ name }) => name)}
+            value={addMembersForm.values.members}
+            onChange={(val) => addMembersForm.setFieldValue("members", val)}
+          /> */}
+          <MultiSelect
+            placeholder="Search"
+            rightSection={" "}
+            size="lg"
+            searchable
+            {...addMembersForm.getInputProps("members")}
+            data={new_friends.map(({ name }) => name)}
+            styles={{
+              pill: {
+                borderRadius: 5,
+                backgroundColor: "var(--mantine-primary-color-5)",
+                color: "white",
+              },
+            }}
+          />
 
           <CheckboxList
             label="Engaged with these people"
             checkboxes={new_friends}
+            {...addMembersForm.getInputProps("members")}
           />
         </Stack>
       </ChatModal>

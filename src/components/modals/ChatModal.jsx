@@ -14,6 +14,7 @@ export default function ChatModal({
   title,
   children,
   buttonLabel,
+  onSubmit,
 }) {
   return (
     <Modal
@@ -35,7 +36,7 @@ export default function ChatModal({
       <ActionIcon className={classes.closeIcon} onClick={onClose}>
         <IconX />
       </ActionIcon>
-      <form>
+      <form onSubmit={onSubmit}>
         <Card px={16} py={24} mih={600}>
           <Stack gap={24} mih="inherit">
             <Title order={3} ta="center">

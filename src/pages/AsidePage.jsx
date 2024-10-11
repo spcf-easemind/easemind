@@ -3,10 +3,11 @@ import HappyImage from "../assets/HappyImage.jpg";
 
 import DropDown from "../components/DropDown.jsx";
 import MembersList from "../components/MembersList.jsx";
-import PhotoGrid from "../components/PhotoGrid.jsx";
+import PhotoList from "../components/grid/PhotoList.jsx";
 import VideoGrid from "../components/VideoGrid.jsx";
 import LinkList from "../components/LinkList.jsx";
 import DocumentList from "../components/DocumentList.jsx";
+import Gallery from "../components/grid/Gallery.jsx";
 
 import IconManyPeople from "../assets/icons/IconManyPeople.svg";
 import IconImage from "../assets/icons/input/IconImage.svg";
@@ -80,9 +81,15 @@ export default function AsidePage() {
     let children = null;
 
     if (instance.label === "Members") {
-      children = <MembersList instance={instance.data} onClick={toggleChatModalFn}/>;
+      children = (
+        <MembersList instance={instance.data} onClick={toggleChatModalFn} />
+      );
     } else if (instance.label === "Photos") {
-      children = <PhotoGrid images={instance.data} />;
+      children = (
+        <Gallery>
+          <PhotoList images={instance.data} />
+        </Gallery>
+      );
     } else if (instance.label === "Videos") {
       children = <VideoGrid />;
     } else if (instance.label === "Links") {

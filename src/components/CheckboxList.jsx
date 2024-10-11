@@ -1,8 +1,7 @@
 import { Box, Card, Checkbox, Group, Stack, Text, Image } from "@mantine/core";
 import { useState } from "react";
 
-export default function CheckboxList({ label, checkboxes }) {
-  const [value, setValue] = useState([]);
+export default function CheckboxList({ label, checkboxes, ...props }) {
   const checkboxInstances = checkboxes.map((checkbox) => (
     <Checkbox.Card
       key={checkbox.id}
@@ -24,7 +23,7 @@ export default function CheckboxList({ label, checkboxes }) {
       <Text size="sm" c="dimmed" mb={10}>
         {label}
       </Text>
-      <Checkbox.Group value={value} onChange={setValue}>
+      <Checkbox.Group {...props}>
         <Stack gap={15}>{checkboxInstances}</Stack>
       </Checkbox.Group>
     </Box>

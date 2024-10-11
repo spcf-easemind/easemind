@@ -1,0 +1,5 @@
+.image {
+  display: inline-block;
+  width: 100%;
+  border-radius: var(--mantine-spacing-lg);
+}
