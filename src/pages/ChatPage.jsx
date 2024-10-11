@@ -123,7 +123,7 @@ export default function ChatPage() {
         form={form}
         onSubmit={handleFormSubmit}
         py={padding}
-        px={24}
+        px={16}
       />
 
       {/* Modal */}

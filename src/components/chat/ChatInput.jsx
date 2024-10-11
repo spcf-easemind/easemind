@@ -5,6 +5,7 @@ import {
   UnstyledButton,
   Image,
   Button,
+  Card,
 } from "@mantine/core";
 
 import IconEmoticon from "../../assets/icons/input/IconEmoticon.svg";
@@ -50,7 +51,7 @@ const ChatInput = forwardRef(({ form, onSubmit, ...props }, ref) => {
   }
 
   const groupIcons = (
-    <Group ml={12} justify="center" wrap="no-wrap">
+    <Group justify="center" wrap="no-wrap">
       {icons.map((icon) => (
         <UnstyledButton
           onClick={() => {
@@ -72,54 +73,58 @@ const ChatInput = forwardRef(({ form, onSubmit, ...props }, ref) => {
 
   return (
     <Box {...props}>
-      <form onSubmit={form.onSubmit((value) => handleSubmit(value))}>
-        <TextInput
-          ref={ref}
-          leftSection={groupIcons}
-          rightSection={sendButton}
-          size="lg"
-          variant="filled"
-          radius="xl"
-          styles={{
-            input: {
-              paddingLeft: "8%",
-              border: "1px solid var(--mantine-color-gray-3)",
-            },
-            section: {
-              width: 100,
-            },
-          }}
-          key={form.key("message")}
-          {...form.getInputProps("message")}
-        />
+      <Card
+        withBorder
+        radius="xl"
+        py={0}
+        pl={10}
+        pr={8}
+        style={{
+          backgroundColor: "var(--mantine-color-gray-1)",
+        }}
+      >
+        <form onSubmit={form.onSubmit((value) => handleSubmit(value))}>
+          <Group>
+            {groupIcons}
+            <TextInput
+              flex={1}
+              ref={ref}
+              size="lg"
+              variant="unstyled"
+              key={form.key("message")}
+              {...form.getInputProps("message")}
+            />
+            {sendButton}
 
-        {/* Hidden file inputs for image and file */}
-        <input
-          type="file"
-          accept="image/*"
-          ref={imageInputRef}
-          style={{ display: "none" }}
-          onChange={(e) => {
-            // Handle the selected image file
-            const file = e.target.files[0];
-            if (file) {
-              console.log("Selected image:", file);
-            }
-          }}
-        />
-        <input
-          type="file"
-          ref={fileInputRef}
-          style={{ display: "none" }}
-          onChange={(e) => {
-            // Handle the selected file
-            const file = e.target.files[0];
-            if (file) {
-              console.log("Selected file:", file);
-            }
-          }}
-        />
-      </form>
+            {/* Hidden file inputs for image and file */}
+            <input
+              type="file"
+              accept="image/*"
+              ref={imageInputRef}
+              style={{ display: "none" }}
+              onChange={(e) => {
+                // Handle the selected image file
+                const file = e.target.files[0];
+                if (file) {
+                  console.log("Selected image:", file);
+                }
+              }}
+            />
+            <input
+              type="file"
+              ref={fileInputRef}
+              style={{ display: "none" }}
+              onChange={(e) => {
+                // Handle the selected file
+                const file = e.target.files[0];
+                if (file) {
+                  console.log("Selected file:", file);
+                }
+              }}
+            />
+          </Group>
+        </form>
+      </Card>
     </Box>
   );
 });
