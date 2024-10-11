@@ -7,24 +7,39 @@ export default defineDevConfig(() => ({
       datastore: [
         {
           collection: 'userSurveys',
-          read: 'managed',
-          write: 'managed',
+          read: 'private',
+          write: 'private',
           memory: 'stable',
           mutablePermissions: true,
         },
         {
           collection: 'userCredentials',
-          read: 'managed',
-          write: 'managed',
+          read: 'private',
+          write: 'private',
           memory: 'heap',
           mutablePermissions: true,
         },
+        {
+          collection: 'anonymousCredentials',
+          read: 'private',
+          write: 'private',
+          memory: 'heap',
+          mutablePermissions: true,
+        },
+        
       ],
       storage: [
         {
-          collection: 'images',
-          read: 'managed',
-          write: 'managed',
+          collection: 'userProfilePicture',
+          read: 'private',
+          write: 'private',
+          memory: 'heap',
+          mutablePermission: true,
+        },
+        {
+          collection: 'anonymousProfilePicture',
+          read: 'private',
+          write: 'private',
           memory: 'heap',
           mutablePermission: true,
         },
