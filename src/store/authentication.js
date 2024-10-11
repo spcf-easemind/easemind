@@ -13,7 +13,7 @@ export const useAuthenticationStore = create(
         // console.log("Juno initialized:", response);
       },
 
-      authenticateInternetIdentity: () => {
+      authenticateInternetIdentity: async () => {
         // Authenticate Internet Identity
         const signInOptions = {
           windowed: true,
@@ -21,13 +21,13 @@ export const useAuthenticationStore = create(
           allowPin: false,
         };
 
-        const handleSignIn = () => {
-          signIn(signInOptions).catch((error) => {
+        const handleSignIn = async () => {
+          await signIn(signInOptions).catch((error) => {
             console.error("Sign-in failed:", error);
           });
         };
 
-        handleSignIn();
+        await handleSignIn();
 
         const sub = authSubscribe((userJuno) =>
           set(() => {

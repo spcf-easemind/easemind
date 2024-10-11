@@ -9,13 +9,26 @@ import mainRoutes from "./modules/main-routes.jsx";
 
 import { useAuthenticationStore } from "../store/authentication.js";
 import { useEffect } from "react";
+import { useShallow } from "zustand/shallow";
 
 export default function AppRouter() {
-  const initialize = useAuthenticationStore((state) => state.initializeJuno);
+  const { initialize, user, logout } = useAuthenticationStore(
+    useShallow((state) => ({
+      initialize: state.initializeJuno,
+      user: state.user,
+      logout: state.logoutInternetIdentity,
+    }))
+  );
 
   useEffect(() => {
     initialize();
-  }, []);
+  }, [initialize]);
+
+  useEffect(() => {
+    if (!user) {
+      logout();
+    }
+  }, [user, logout]);
 
   const router = createBrowserRouter([
     {
