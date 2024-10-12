@@ -10,6 +10,7 @@ export default function ChatBody({ data, ...props }) {
     if (scrollViewport.current) {
       scrollViewport.current.scrollTo({
         top: scrollViewport.current.scrollHeight,
+        behavior: "smooth",
       });
     }
   };
@@ -23,16 +24,10 @@ export default function ChatBody({ data, ...props }) {
   ));
 
   return (
-    <Paper
-      {...props}
-      style={{
-        overFlow: "auto",
-      }}
-      ref={scrollViewport}
-    >
-      <Stack justify="end" h="100%">
-        {instances}
-      </Stack>
-    </Paper>
+    <ScrollArea {...props} viewportRef={scrollViewport} scrollHideDelay={0}>
+      <Paper>
+        <Stack justify="end">{instances}</Stack>
+      </Paper>
+    </ScrollArea>
   );
 }

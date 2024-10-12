@@ -147,17 +147,18 @@ export default function ChatPage() {
   }
 
   return (
-    <Flex direction="column" w="100%" h="100%">
-      <ChatHeader onClick={{ toggleDesktop, toggleMobile }} p={padding} />
-      <ChatBody data={convo} p={padding} flex={1} h="inherit" />
-      <ChatInput
-        ref={inputRef}
-        form={form}
-        onSubmit={handleFormSubmit}
-        py={padding}
-        px={16}
-      />
-
+    <>
+      <Flex direction="column" w="100%" h="100%">
+        <ChatHeader onClick={{ toggleDesktop, toggleMobile }} p={padding} />
+        <ChatBody data={convo} p={padding} h="inherit" />
+        <ChatInput
+          ref={inputRef}
+          form={form}
+          onSubmit={handleFormSubmit}
+          py={padding}
+          px={16}
+        />
+      </Flex>
       {/* Modal */}
       <ChatModal
         modal={{ opened: chatModal, onClose: toggleChatModal }}
@@ -194,6 +195,6 @@ export default function ChatPage() {
           />
         </Stack>
       </ChatModal>
-    </Flex>
+    </>
   );
 }
