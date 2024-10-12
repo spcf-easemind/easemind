@@ -15,6 +15,7 @@ import IconVideoCamera from "../assets/icons/dropdown/IconVideoCamera.svg";
 import IconLink from "../assets/icons/dropdown/IconLink.svg";
 import IconDocument from "../assets/icons/dropdown/IconDocument.svg";
 import { useDialogStore } from "../store/dialog.js";
+import { useMemo } from "react";
 
 const dropdownData = [
   {
@@ -77,33 +78,35 @@ const dropdownData = [
 export default function AsidePage() {
   const toggleChatModalFn = useDialogStore((state) => state.toggleChatModal);
 
-  const dropdownInstances = dropdownData.map((instance) => {
-    let children = null;
+  const dropdownInstances = useMemo(() => {
+    return dropdownData.map((instance) => {
+      let children = null;
 
-    if (instance.label === "Members") {
-      children = (
-        <MembersList instance={instance.data} onClick={toggleChatModalFn} />
-      );
-    } else if (instance.label === "Photos") {
-      children = (
-        <Gallery>
-          <PhotoList images={instance.data} />
-        </Gallery>
-      );
-    } else if (instance.label === "Videos") {
-      children = <VideoGrid />;
-    } else if (instance.label === "Links") {
-      children = <LinkList links={instance.data} />;
-    } else if (instance.label === "Documents") {
-      children = <DocumentList documents={instance.data} />;
-    }
+      if (instance.label === "Members") {
+        children = (
+          <MembersList instance={instance.data} onClick={toggleChatModalFn} />
+        );
+      } else if (instance.label === "Photos") {
+        children = (
+          <Gallery>
+            <PhotoList images={instance.data} />
+          </Gallery>
+        );
+      } else if (instance.label === "Videos") {
+        children = <VideoGrid />;
+      } else if (instance.label === "Links") {
+        children = <LinkList links={instance.data} />;
+      } else if (instance.label === "Documents") {
+        children = <DocumentList documents={instance.data} />;
+      }
 
-    return (
-      <DropDown key={instance.label} {...instance}>
-        {children}
-      </DropDown>
-    );
-  });
+      return (
+        <DropDown key={instance.label} {...instance}>
+          {children}
+        </DropDown>
+      );
+    });
+  }, []);
 
   return (
     <Stack align="center" h="inherit" py={36}>
