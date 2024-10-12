@@ -13,7 +13,7 @@ export default function SignUpModal({
   opened,
   onClose,
   onSubmit,
-  onNavigate,
+  onDialog,
 }) {
   return (
     <Modal
@@ -32,13 +32,17 @@ export default function SignUpModal({
       <AuthCard
         form={form}
         onSubmit={onSubmit}
-        onDialogOpen={onNavigate}
+        onDialogOpen={onDialog}
         heading={{
           title: "Sign Up",
           description:
             "Take the first step toward better mental health and well-being today, and unlock the support you deserve.",
         }}
-        buttonLabel="Sign Up"
+        button={{ btnLabel: "Sign up", btnLoading: false }}
+        footer={{
+          ftrMessage: "Already have an account? ",
+          ftrButton: "Sign In",
+        }}
       >
         <Stack mb={32}>
           <TextInput
