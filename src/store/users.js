@@ -1,21 +1,31 @@
 import { create } from 'zustand';
-import { setDoc, uploadFile, listDocs, deleteDoc } from '@junobuild/core';
+import { setDoc, getDoc, uploadFile, listDocs, deleteDoc, signOut } from '@junobuild/core';
 import { nanoid } from 'nanoid';
 
 export const useUsersStore = create((set) => ({
-  user: null,
+  data: null,
   message: null,
 
   userSignUp: async (formData) => {
     try {
+      set(() => ({
+        data: null,
+        message: "Loading..."
+      }));
+
       // const key = nanoid();
       const items = await listDocs({
         collection: 'userCredentials',
       });
-      console.log(items);
+
       if (items.items[0]) {
         throw new Error('This identity already have an account!.');
       }
+
+      set(() => ({
+        data: null,
+        message: "Loading..."
+      }));
 
       const key = nanoid();
       await setDoc({
@@ -40,49 +50,103 @@ export const useUsersStore = create((set) => ({
           data: formData.survey,
         },
       });
+
+      await setDoc({
+        collection: 'users',
+        doc: {
+          key,
+          data: {
+            key: key,
+            fullName: formData.fullName,
+            status: "offline"
+          }
+        }
+      });
+
       // console.log(response);
-      console.log('User signed up successfully:', formData);
-      set({ user: {
+      set({ data: {
         fullName: formData.fullName,
         email: formData.email
       }, message: 'User signed up successfully'});
     } catch (error) {
       console.error('Error during sign up:', error);
-      set({ error: error.message, user: null });
+      set({ message: error.message, user: null });
     }
   },
 
   getUserInfo: async () => {
     try {
+      set(() => ({
+        data: null,
+        message: "Loading..."
+      }));
+
       const items = await listDocs({
         collection: 'userCredentials',
       });
 
+      const itemSurveys = await listDocs({
+        collection: 'userSurveys'
+      });
+
       if (items.items && items.items.length > 0 && items.items[0].data) {
-        console.log('User data fetched successfully!', items.items[0].data);
+        const userData = {
+          userCredentials: items.items[0],
+          userSurveys: itemSurveys.items[0]
+        }
         set(() => ({
-          user: items.items[0].data,
-          message: null,
+          data: userData,
+          message: "User Fetched Successfully!",
         }));
       } else {
         console.log('No user data found');
         set(() => ({
-          user: null,
+          data: null,
           message: 'No user data found',
         }));
       }
     } catch (error) {
       console.error('Error fetching user info:', error);
       set(() => ({
-        user: null,
+        data: null,
         message: error.message || 'An error occurred while fetching user data',
       }));
     }
   },
 
+  getAllUsers: async () => {
+    set(() => ({
+      data: null,
+      message: "Loading..."
+    }));
+
+    const users = await listDocs({
+      collection: 'userCredentials'
+    })
+
+    const allUsers = [];
+    for(const user of users.items){
+      allUsers.push(user);
+    }
+
+    set(() => ({
+      data: allUsers,
+      message: "All users fetched successfully!"
+    }))
+
+  },
+
   deleteUserInfo: async () => {
+    set(() => ({
+      data: null,
+      message: "Loading..."
+    }));
+
     const items = await listDocs({
       collection: 'userCredentials'
+    });
+    const itemSurveys = await listDocs({
+      collection: 'userSurveys'
     });
 
     if (items.items && items.items.length > 0 && items.items[0].data) {
@@ -92,20 +156,99 @@ export const useUsersStore = create((set) => ({
           doc: item
         })
         set(() => ({
-          user: null,
+          data: null,
           message: 'User credential deleted successfully!'
+        }));
+      }
+
+      for (const itemSurvey of itemSurveys.items){
+        await deleteDoc({
+          collection: 'userSurveys',
+          doc: itemSurvey
+        })
+        set(() => ({
+          data: null,
+          message: 'User surveys deleted successfully!'
         }));
       }
     } else {
       set(() => ({
-        user: null,
+        data: null,
         message: 'There is no account created on this identity'
       }));
     }
     
   },
 
+  updateUserInfo: async(formData) => {
+    set(() => ({
+      data: null,
+      message: "Loading..."
+    }));
+
+    const items = await listDocs({
+      collection: 'userCredentials'
+    });
+
+
+    if (items.items && items.items.length > 0 && items.items[0].data) {
+      const userData = items.items[0].data;
+      const userKey = items.items[0].key;
+      const userVersion = items.items[0].version;
+
+      // use the formData when you needed to update the userCredentials.
+      const updatedData = {
+        dateOfBirth: userData.dateOfBirth,
+        email: userData.email,
+        fullName: userData.fullName,
+        mobileNumber: userData.mobileNumber,
+        password: userData.password,
+        role: userData.role,
+      }
+
+      const user = await getDoc({
+        collection: 'users',
+        key: userKey,
+      });
+
+      const updatedUserData = {
+        key: user.data.key,
+        fullName: user.data.fullName,
+        status: "online"
+      }
+
+      await setDoc({
+        collection: "userCredentials",
+        doc: {
+          key: userKey,
+          data: updatedData,
+          version: userVersion
+        }
+      })
+
+      const updatedUser = await setDoc({
+        collection: 'users',
+        doc: {
+          key: user.key,
+          data: updatedUserData,
+          version: user.version
+        }
+      })
+
+      set(() => ({
+        data: updatedUser,
+        message: "User Updated Successfully!"
+      }))
+      console.log(updatedUser);
+    }
+  },
+
   loginUser: async (email, password) => {
+    set(() => ({
+      data: null,
+      message: "Loading..."
+    }));
+
     const items = await listDocs({
       collection: 'userCredentials',
     });
@@ -116,22 +259,47 @@ export const useUsersStore = create((set) => ({
         items.items[0].data.email === email &&
         items.items[0].data.password === password
       ) {
-        set(() => ({
-          user: {
-            fullName: items.items[0].data.fullName,
-            email: items.items[0].data.email,
-          },
-          message: 'Login Successfully!',
-        }));
-      } else {
-        set(() => ({
-          user: null,
-          message: 'Incorrect email or password',
-        }));
-      }
+        const user = await getDoc({
+          collection: 'users',
+          key: items.items[0].key,
+        });
+        
+          const userData = user.data;
+          const userKey = user.key;
+          const userVersion = user.version;
+
+          // use the formData when you needed to update the userCredentials.
+          const updatedData = {
+            key: userData.key,
+            fullName: userData.fullName,
+            status: "online"
+          }
+
+          await setDoc({
+            collection: "users",
+            doc: {
+              key: userKey,
+              data: updatedData,
+              version: userVersion
+            }
+          })
+
+          set(() => ({
+            data: {
+              fullName: items.items[0].data.fullName,
+              email: items.items[0].data.email,
+            },
+            message: 'Login Successfully!',
+          }));
+        } else {
+          set(() => ({
+            data: null,
+            message: 'Incorrect email or password',
+          }));
+        }
     } else {
       set(() => ({
-        user: null,
+        data: null,
         message: 'No account found on this identity. Please sign up first',
       }));
     }
