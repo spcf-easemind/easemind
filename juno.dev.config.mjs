@@ -26,6 +26,13 @@ export default defineDevConfig(() => ({
           memory: 'heap',
           mutablePermissions: true,
         },
+        {
+          collection: 'users',
+          read: 'public',
+          write: 'private',
+          memory: 'heap',
+          mutablePErmissions: true,
+        }
         
       ],
       storage: [
