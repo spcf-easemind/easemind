@@ -15,19 +15,35 @@ import { LOGIN_INPUTS } from "../static/authentication.js";
 
 import { parse, format } from "date-fns";
 
-import { useUsersStore } from "../store/users.js";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
+import { useUsersStore } from '../store/users.js';
+import { useAuthenticationStore } from '../store/authentication.js';
 
 const title =
   "In a world filled with hardships, why don't we prioritize our happiness and mental well-being instead?";
 
 export default function LoginPage() {
-  const { userSignUpFn, userLoginFn } = useUsersStore(
+
+  const { data, message, userSignUpFn, getUserInfoFn, getAllUsersFn, deleteUserInfoFn, userLoginFn, updateUserInfoFn, logoutUserFn } =
+    useUsersStore(
+      useShallow((state) => ({
+        data: state.data,
+        message: state.message,
+        userSignUpFn: state.userSignUp,
+        getUserInfoFn: state.getUserInfo,
+        getAllUsersFn: state.getAllUsers,
+        deleteUserInfoFn: state.deleteUserInfo,
+        userLoginFn: state.loginUser,
+        updateUserInfoFn: state.updateUserInfo,
+        logoutUserFn: state.logoutUser
+      }))
+    );
+
+  const { logoutInternetIdentityFn } = useAuthenticationStore(
     useShallow((state) => ({
-      userSignUpFn: state.userSignUp,
-      userLoginFn: state.loginUser,
+      logoutInternetIdentityFn: state.logoutInternetIdentity 
     }))
-  );
+  )
 
   const { dialog, toggleDialog } = useDialogStore(
     useShallow((state) => ({
@@ -35,6 +51,11 @@ export default function LoginPage() {
       toggleDialog: state.toggleDialog,
     }))
   );
+
+  useEffect(() => {
+    console.log(data);
+    console.log(message);
+  }, [data, message]);
 
   const [signupOpened, { open: handleSignupOpen, close: handleSignupClose }] =
     useDisclosure(false);
@@ -94,13 +115,33 @@ export default function LoginPage() {
 
   // Sign In Function
   function handleSignIn(value) {
-    try {
-      userLoginFn(value.email, value.password);
-    } catch (error) {
-      console.error("Error logging in: ", error);
-    } finally {
-      handleSignupClose();
-    }
+    // Testing area
+      // getUserInfoFn();
+      // getAllUsersFn();
+      // updateUserInfoFn();
+      // deleteUserInfoFn();
+
+      // userLoginFn(value.email, value.password);
+      logoutInternetIdentityFn();
+
+
+
+    // Actual code content
+
+    // try {
+    //   userLoginFn(value.email, value.password);
+    // } catch (error) {
+    //   console.error("Error logging in: ", error);
+    // } finally {
+    //   handleSignupClose();
+    // }
+
+    console.log('Sign In Form submitted');
+  }
+
+  function handleSurveyForm(value) {
+    signupForm.setValues({ ...value });
+    handleSignupOpen();
   }
 
   // Sign Up Function
