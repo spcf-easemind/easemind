@@ -7,6 +7,9 @@ import { useDisclosure } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 import { useDialogStore } from "../store/dialog.js";
 import { useShallow } from "zustand/shallow";
+import { useNavigate } from "react-router-dom";
+import { useUsersStore } from "../store/users.js";
+import { useCallback } from "react";
 
 import SurveyModal from "../components/modals/SurveyModal.jsx";
 import SignUpModal from "../components/modals/SignUpModal.jsx";
@@ -15,47 +18,24 @@ import { LOGIN_INPUTS } from "../static/authentication.js";
 
 import { parse, format } from "date-fns";
 
-import { useCallback, useEffect } from "react";
-import { useUsersStore } from '../store/users.js';
-import { useAuthenticationStore } from '../store/authentication.js';
-
 const title =
   "In a world filled with hardships, why don't we prioritize our happiness and mental well-being instead?";
 
 export default function LoginPage() {
+  const navigate = useNavigate();
 
-  const { data, message, userSignUpFn, getUserInfoFn, getAllUsersFn, deleteUserInfoFn, userLoginFn, updateUserInfoFn, logoutUserFn } =
-    useUsersStore(
-      useShallow((state) => ({
-        data: state.data,
-        message: state.message,
-        userSignUpFn: state.userSignUp,
-        getUserInfoFn: state.getUserInfo,
-        getAllUsersFn: state.getAllUsers,
-        deleteUserInfoFn: state.deleteUserInfo,
-        userLoginFn: state.loginUser,
-        updateUserInfoFn: state.updateUserInfo,
-        logoutUserFn: state.logoutUser
-      }))
-    );
-
-  const { logoutInternetIdentityFn } = useAuthenticationStore(
+  const { userSignUpFn, userLoginFn } = useUsersStore(
     useShallow((state) => ({
-      logoutInternetIdentityFn: state.logoutInternetIdentity 
+      userSignUpFn: state.userSignUp,
+      userLoginFn: state.loginUser,
     }))
-  )
-
+  );
   const { dialog, toggleDialog } = useDialogStore(
     useShallow((state) => ({
       dialog: state.dialog,
       toggleDialog: state.toggleDialog,
     }))
   );
-
-  useEffect(() => {
-    console.log(data);
-    console.log(message);
-  }, [data, message]);
 
   const [signupOpened, { open: handleSignupOpen, close: handleSignupClose }] =
     useDisclosure(false);
@@ -115,37 +95,18 @@ export default function LoginPage() {
 
   // Sign In Function
   function handleSignIn(value) {
-    // Testing area
-      // getUserInfoFn();
-      // getAllUsersFn();
-      // updateUserInfoFn();
-      // deleteUserInfoFn();
-
-      // userLoginFn(value.email, value.password);
-      logoutInternetIdentityFn();
-
-
-
-    // Actual code content
-
-    // try {
-    //   userLoginFn(value.email, value.password);
-    // } catch (error) {
-    //   console.error("Error logging in: ", error);
-    // } finally {
-    //   handleSignupClose();
-    // }
-
-    console.log('Sign In Form submitted');
-  }
-
-  function handleSurveyForm(value) {
-    signupForm.setValues({ ...value });
-    handleSignupOpen();
+    try {
+      userLoginFn(value.email, value.password);
+      navigate("/home");
+    } catch (error) {
+      console.error("Error logging in: ", error);
+    } finally {
+      handleSignupClose();
+    }
   }
 
   // Sign Up Function
-  function handleSignUpForm() {
+  async function handleSignUpForm() {
     try {
       const formData = { ...signupForm.getValues() };
       const date = format(
@@ -163,7 +124,7 @@ export default function LoginPage() {
 
       formData["dateOfBirth"] = date;
       delete formData.date;
-      userSignUpFn(formData);
+      await userSignUpFn(formData);
     } catch (error) {
       console.error("Error in Sign Up Form submission", error);
     }
@@ -215,7 +176,7 @@ export default function LoginPage() {
           }}
           button={{ btnLabel: "Login", btnLoading: false }}
           footer={{
-            ftrMessage: "Don’t have an account? ",
+            ftrMessage: "Don't have an account? ",
             ftrButton: "Create Account",
           }}
         >

@@ -13,6 +13,7 @@ export default function Gallery({ children }) {
       plugins={[lgVideo]}
       speed={500}
       elementClassNames={classes.lightGalleryGrid}
+      licenseKey="0000-0000-000-0000"
     >
       {children}
     </LightGallery>

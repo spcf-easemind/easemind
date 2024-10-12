@@ -1,20 +1,22 @@
 import { Outlet, Navigate, useLocation } from "react-router-dom";
 import { useAuthenticationStore } from "../store/authentication";
-import { useShallow } from "zustand/shallow";
+// import { useUsersStore } from "../store/users";
 
 export default function ProtectedRoute() {
-  const { user } = useAuthenticationStore(
-    useShallow((state) => ({ user: state.user }))
-  );
+  const identity = useAuthenticationStore((state) => state.user);
+  // const user = useUsersStore((state) => state.user);
   const location = useLocation();
 
-  if (!user && location.pathname !== "/internet-identity") {
+  if (!identity && location.pathname !== "/internet-identity") {
     return <Navigate to="/internet-identity" />;
-  }
-
-  if (user && location.pathname === "/internet-identity") {
+  } else if (identity && location.pathname === "/internet-identity") {
     return <Navigate to="/login" />;
-  }
+  } 
+  // else if (identity && !user && location.pathname !== "/login") {
+  //   return <Navigate to="/login" />;
+  // } else if (identity && user && location.pathname === "/login") {
+  //   return <Navigate to="/home" />;
+  // }
 
   return <Outlet />;
 }

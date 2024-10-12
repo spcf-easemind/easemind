@@ -9,8 +9,8 @@ import IconAccountFilled from "../../assets/icons/header/IconAccountFilled.svg";
 
 import classes from "./MainHeader.module.css";
 
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useCallback, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const menuLinks = [
   {
@@ -38,7 +38,14 @@ const menuLinks = [
 
 export default function MainHeader() {
   const navigate = useNavigate();
-  const [active, setActive] = useState("chat");
+  const location = useLocation();
+
+  const currentLocation = useCallback(() => {
+    const response = menuLinks.find((item) => item.route === location.pathname);
+    return response.name;
+  }, [location]);
+
+  const [active, setActive] = useState(currentLocation());
 
   function handleMenuClick(name, route) {
     setActive(name);
