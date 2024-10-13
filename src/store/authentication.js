@@ -151,7 +151,7 @@ export const useAuthenticationStore = create(
             const userData = user.data;
             const userKey = user.key;
             const userVersion = user.version;
-            const userEmail = items.items[0].data.email;
+            const userItems = items.items[0].data;
 
             // use the formData when you needed to update the userCredentials.
             const updatedData = {
@@ -174,8 +174,9 @@ export const useAuthenticationStore = create(
                 ...state.user,
                 data: {
                   fullName: userData.fullName,
-                  email: userEmail,
+                  email: userItems.email,
                   key: userKey,
+                  role: userItems.role,
                 },
               },
               message: "Login Successfully!",
