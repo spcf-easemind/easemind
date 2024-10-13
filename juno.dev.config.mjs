@@ -32,6 +32,13 @@ export default defineDevConfig(() => ({
           write: 'private',
           memory: 'heap',
           mutablePErmissions: true,
+        },
+        {
+          collection: 'anonymousUser',
+          read: 'public',
+          write: 'private',
+          memory: 'heap',
+          mutablePErmissions: true,
         }
         
       ],
@@ -45,6 +52,13 @@ export default defineDevConfig(() => ({
         },
         {
           collection: 'anonymousProfilePicture',
+          read: 'private',
+          write: 'private',
+          memory: 'heap',
+          mutablePermission: true,
+        },
+        {
+          collection: 'testImages',
           read: 'private',
           write: 'private',
           memory: 'heap',
