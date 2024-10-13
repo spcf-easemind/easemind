@@ -10,7 +10,7 @@ export default function ProtectedRoute() {
     user: identity.data,
   };
 
-  console.log(!identityProvider && !user && location.pathname !== "/login");
+  // console.log(!identityProvider && !user && location.pathname !== "/login");
 
   if (!identityProvider && location.pathname !== "/internet-identity") {
     return <Navigate to="/internet-identity" />;

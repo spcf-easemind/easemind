@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { setDoc, getDoc, listDocs, deleteDoc } from "@junobuild/core";
+import { setDoc, getDoc, listDocs, deleteDoc, uploadFile, listAssets, deleteAsset } from "@junobuild/core";
 import { nanoid } from "nanoid";
 
 export const useUsersStore = create((set) => ({
@@ -78,11 +78,6 @@ export const useUsersStore = create((set) => ({
 
   getUserInfo: async () => {
     try {
-      set(() => ({
-        data: null,
-        message: "Loading...",
-      }));
-
       const items = await listDocs({
         collection: "userCredentials",
       });
@@ -92,9 +87,15 @@ export const useUsersStore = create((set) => ({
       });
 
       if (items.items && items.items.length > 0 && items.items[0].data) {
+        const user = await getDoc({
+          collection: "users",
+          key: items.items[0].key,
+        });
+
         const userData = {
           userCredentials: items.items[0],
           userSurveys: itemSurveys.items[0],
+          user: user.data
         };
         set(() => ({
           data: userData,
@@ -122,18 +123,21 @@ export const useUsersStore = create((set) => ({
     //   message: "Loading...",
     // }));
 
-    const users = await listDocs({
-      collection: "userCredentials",
+    // const users = await listDocs({
+    //   collection: "users",
+    // });
+    const userProfiles = await listAssets({
+      collection: "userProfilePicture",
     });
 
-    console.log(users);
+    console.log(userProfiles);
 
-    const allUsers = [];
-    for (const user of users.items) {
-      allUsers.push(user);
-    }
+    // const allUsers = [];
+    // for (const userProfile of userProfiles.items) {
+    //   allUsers.push(userProfile);
+    // }
 
-    console.log(allUsers);
+    // // console.log(allUsers);
 
     // set(() => ({
     //   data: allUsers,
@@ -185,6 +189,23 @@ export const useUsersStore = create((set) => ({
         collection: "users",
         doc: user,
       });
+
+      const userProfiles = await listAssets({
+        collection: "userProfilePicture",
+      });
+
+      for (const userProfile of userProfiles.items) {
+        await deleteAsset({ 
+          collection: "userProfilePicture",
+          fullPath: userProfile.fullPath
+        });
+
+        set(() => ({
+          data: null,
+          message: "User profile picture deleted successfully!",
+        }));
+      }
+
       set(() => ({
         data: null,
         message: "User deleted successfully!",
@@ -197,40 +218,53 @@ export const useUsersStore = create((set) => ({
     }
   },
 
-  updateUserInfo: async (formData) => {
-    set(() => ({
-      data: null,
-      message: "Loading...",
-    }));
+  // deleteUserProfile: async () => {
+  //   const userProfiles = await listAssets({
+  //     collection: "userProfilePicture",
+  //   });
 
-    const items = await listDocs({
-      collection: "userCredentials",
-    });
+  //   console.log("results:", userProfiles);
+  //   for (const userProfile of userProfiles.items) {
+  //     // console.log(userProfile)
+  //       const result = await deleteAsset({ 
+  //         collection: "userProfilePicture",
+  //         fullPath: userProfile.fullPath
+  //       });
+        
+  //       // set(() => ({
+  //       //   data: null,
+  //       //   message: "User profile picture deleted successfully!",
+  //       // }));
+  //     }
+  // },
 
-    if (items.items && items.items.length > 0 && items.items[0].data) {
-      const userData = items.items[0].data;
-      const userKey = items.items[0].key;
-      const userVersion = items.items[0].version;
+  updateUserInfo: async (fetchedData, file) => {
+    set(() => ({ loading: true }));
 
-      // use the formData when you needed to update the userCredentials.
+    try {
+      if (!fetchedData || !fetchedData.userCredentials) {
+        throw new Error("User data not available");
+      }
+
+      const userData = fetchedData.userCredentials.data;
+      const userKey = fetchedData.userCredentials.key;
+      const userVersion = fetchedData.userCredentials.version;
+
+      let profileImageUrl = userData.profileImageUrl;
+
+      if (file) {
+        const filename = `${userKey}-profile`;
+        const { downloadUrl } = await uploadFile({
+          collection: "userProfilePicture",
+          data: file,
+          filename,
+        });
+        profileImageUrl = downloadUrl;
+      }
+
       const updatedData = {
-        dateOfBirth: userData.dateOfBirth,
-        email: userData.email,
-        fullName: userData.fullName,
-        mobileNumber: userData.mobileNumber,
-        password: userData.password,
-        role: userData.role,
-      };
-
-      const user = await getDoc({
-        collection: "users",
-        key: userKey,
-      });
-
-      const updatedUserData = {
-        key: user.data.key,
-        fullName: user.data.fullName,
-        status: "online",
+        ...userData,
+        profileImageUrl,
       };
 
       await setDoc({
@@ -242,6 +276,16 @@ export const useUsersStore = create((set) => ({
         },
       });
 
+      const user = await getDoc({
+        collection: "users",
+        key: userKey,
+      });
+
+      const updatedUserData = {
+        ...user.data,
+        profileImageUrl,
+      };
+
       const updatedUser = await setDoc({
         collection: "users",
         doc: {
@@ -252,10 +296,25 @@ export const useUsersStore = create((set) => ({
       });
 
       set(() => ({
-        data: updatedUser,
+        data: {
+          ...fetchedData,
+          userCredentials: {
+            ...fetchedData.userCredentials,
+            data: updatedData,
+          },
+        },
         message: "User Updated Successfully!",
+        loading: false,
       }));
-      console.log(updatedUser);
+
+      return true; // Indicate successful update
+    } catch (error) {
+      console.error("Error updating user info:", error);
+      set(() => ({
+        message: error.message || "An error occurred while updating user data",
+        loading: false,
+      }));
+      return false; // Indicate failed update
     }
   },
 }));
