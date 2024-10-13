@@ -1,9 +1,10 @@
 import ChatPage from "../../pages/ChatPage.jsx";
+import HomePage from "../../pages/HomePage.jsx";
 
 const mainRoutes = [
   {
     path: "/home",
-    element: "",
+    element: <HomePage />,
   },
   {
     path: "/chat",

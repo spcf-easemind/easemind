@@ -6,8 +6,12 @@ import { signIn, signOut, listDocs, setDoc, getDoc } from "@junobuild/core";
 export const useAuthenticationStore = create(
   persist(
     (set, get) => ({
-      user: null,
+      user: {
+        identity_provider: null,
+        data: null,
+      },
       message: null,
+      loading: false,
 
       initializeJuno: async () => {
         await initSatellite();
@@ -15,6 +19,9 @@ export const useAuthenticationStore = create(
       },
 
       authenticateInternetIdentity: async () => {
+        // Set Loading True
+        set(() => ({ loading: true }));
+
         // Authenticate Internet Identity
         const signInOptions = {
           windowed: true,
@@ -31,12 +38,13 @@ export const useAuthenticationStore = create(
         await handleSignIn();
 
         const sub = authSubscribe((userJuno) =>
-          set(() => {
+          set((state) => {
             console.log(userJuno);
 
             return {
               user: {
-                [userJuno.data.provider]: {
+                ...state.user,
+                identity_provider: {
                   identity: userJuno.identity,
                   owner: userJuno.owner,
                   key: userJuno.key,
@@ -45,6 +53,9 @@ export const useAuthenticationStore = create(
             };
           })
         );
+
+        // Set Loading False
+        set(() => ({ loading: false }));
 
         return () => sub();
       },
@@ -140,6 +151,7 @@ export const useAuthenticationStore = create(
             const userData = user.data;
             const userKey = user.key;
             const userVersion = user.version;
+            const userEmail = items.items[0].data.email;
 
             // use the formData when you needed to update the userCredentials.
             const updatedData = {
@@ -161,8 +173,9 @@ export const useAuthenticationStore = create(
               user: {
                 ...state.user,
                 data: {
-                  fullName: items.items[0].data.fullName,
-                  email: items.items[0].data.email,
+                  fullName: userData.fullName,
+                  email: userEmail,
+                  key: userKey,
                 },
               },
               message: "Login Successfully!",
@@ -190,6 +203,7 @@ export const useAuthenticationStore = create(
     {
       name: "authentication",
       storage: createJSONStorage(() => sessionStorage),
+      partialize: (state) => ({ user: state.user }),
     }
   )
 );

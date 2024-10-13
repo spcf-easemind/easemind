@@ -17,6 +17,7 @@ import AuthCard from "../components/cards/AuthCard.jsx";
 import { LOGIN_INPUTS } from "../static/authentication.js";
 
 import { parse, format } from "date-fns";
+import { useAuthenticationStore } from "../store/authentication.js";
 
 const title =
   "In a world filled with hardships, why don't we prioritize our happiness and mental well-being instead?";
@@ -24,12 +25,9 @@ const title =
 export default function LoginPage() {
   const navigate = useNavigate();
 
-  const { userSignUpFn, userLoginFn } = useUsersStore(
-    useShallow((state) => ({
-      userSignUpFn: state.userSignUp,
-      userLoginFn: state.loginUser,
-    }))
-  );
+  const userSignUpFn = useUsersStore((state) => state.userSignUp);
+  const userLoginFn = useAuthenticationStore((state) => state.loginUser);
+
   const { dialog, toggleDialog } = useDialogStore(
     useShallow((state) => ({
       dialog: state.dialog,
@@ -94,9 +92,9 @@ export default function LoginPage() {
   });
 
   // Sign In Function
-  function handleSignIn(value) {
+  async function handleSignIn(value) {
     try {
-      userLoginFn(value.email, value.password);
+      await userLoginFn(value.email, value.password);
       navigate("/home");
     } catch (error) {
       console.error("Error logging in: ", error);
