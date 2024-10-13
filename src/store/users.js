@@ -5,14 +5,13 @@ import { nanoid } from "nanoid";
 export const useUsersStore = create((set) => ({
   data: null,
   message: null,
+  loading: false,
 
   userSignUp: async (formData) => {
-    try {
-      set(() => ({
-        data: null,
-        message: "Loading...",
-      }));
+    // Loading is True
+    set(() => ({ loading: true }));
 
+    try {
       // const key = nanoid();
       const items = await listDocs({
         collection: "userCredentials",
@@ -21,11 +20,6 @@ export const useUsersStore = create((set) => ({
       if (items.items[0]) {
         throw new Error("This identity already have an account!.");
       }
-
-      set(() => ({
-        data: null,
-        message: "Loading...",
-      }));
 
       const key = nanoid();
       await setDoc({
@@ -71,9 +65,14 @@ export const useUsersStore = create((set) => ({
         },
         message: "User signed up successfully",
       });
+
+      // Loading is False
+      set(() => ({ loading: false }));
     } catch (error) {
       console.error("Error during sign up:", error);
       set({ message: error.message, data: null });
+      // Loading is False
+      set(() => ({ loading: false }));
     }
   },
 

@@ -26,7 +26,12 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   const userSignUpFn = useUsersStore((state) => state.userSignUp);
-  const userLoginFn = useAuthenticationStore((state) => state.loginUser);
+  const { userLoginFn, loading } = useAuthenticationStore(
+    useShallow((state) => ({
+      loading: state.loading,
+      userLoginFn: state.loginUser,
+    }))
+  );
 
   const { dialog, toggleDialog } = useDialogStore(
     useShallow((state) => ({
@@ -123,6 +128,7 @@ export default function LoginPage() {
       formData["dateOfBirth"] = date;
       delete formData.date;
       await userSignUpFn(formData);
+      handleSignupClose();
     } catch (error) {
       console.error("Error in Sign Up Form submission", error);
     }
@@ -172,7 +178,7 @@ export default function LoginPage() {
             description:
               "Experience welcome and transform into something new as you embark on a journey of self-discovery. ",
           }}
-          button={{ btnLabel: "Login", btnLoading: false }}
+          button={{ btnLabel: "Login", btnLoading: loading }}
           footer={{
             ftrMessage: "Don't have an account? ",
             ftrButton: "Create Account",

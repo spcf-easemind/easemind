@@ -133,6 +133,9 @@ export const useAuthenticationStore = create(
       },
 
       loginUser: async (email, password) => {
+        // Set Loading True
+        set(() => ({ loading: true }));
+
         const items = await listDocs({
           collection: "userCredentials",
         });
@@ -181,6 +184,9 @@ export const useAuthenticationStore = create(
               },
               message: "Login Successfully!",
             }));
+
+            // Set Loading False
+            set(() => ({ loading: false }));
           } else {
             set((state) => ({
               user: {
@@ -189,6 +195,9 @@ export const useAuthenticationStore = create(
               },
               message: "Incorrect email or password",
             }));
+
+            // Set Loading False
+            set(() => ({ loading: false }));
           }
         } else {
           set((state) => ({
@@ -198,6 +207,9 @@ export const useAuthenticationStore = create(
             },
             message: "No account found on this identity. Please sign up first",
           }));
+
+          // Set Loading False
+          set(() => ({ loading: false }));
         }
       },
     }),
