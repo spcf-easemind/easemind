@@ -177,6 +177,19 @@ export const useUsersStore = create(
               message: "User surveys deleted successfully!",
             }));
           }
+
+          const user = getDoc({
+            collection: 'users',
+            key: items.items[0].key,
+          });
+          await deleteDoc({
+            collection: 'users',
+            doc: user,
+          });
+          set(() => ({
+              data: null,
+              message: "User deleted successfully!",
+            }));
         } else {
           set(() => ({
             data: null,
