@@ -69,7 +69,7 @@ function App() {
       : { handleDrawerMobile: true, handleDrawerDesktop: true };
 
   const { handleAsideMobile, handleAsideDesktop } =
-  location.pathname.startsWith("/chat")
+    location.pathname.startsWith("/chat")
       ? { handleAsideMobile: !mobileOpened, handleAsideDesktop: !desktopOpened }
       : { handleAsideMobile: true, handleAsideDesktop: true };
 
@@ -81,15 +81,15 @@ function App() {
         breakpoint: "sm",
         collapsed: { mobile: handleDrawerMobile, desktop: handleDrawerDesktop },
       }}
-      styles={{
-        main: {
-          height: mainHeight,
-        },
-      }}
       aside={{
         width: 350,
         breakpoint: "md",
         collapsed: { mobile: handleAsideMobile, desktop: handleAsideDesktop },
+      }}
+      styles={{
+        main: {
+          height: mainHeight,
+        },
       }}
     >
       <AppShell.Header>

@@ -1,5 +1,4 @@
 import { Group, Image, Text, UnstyledButton } from "@mantine/core";
-import HappyImage from "../../assets/HappyImage.jpg";
 import IconInfo from "../../assets/icons/header/IconInfo.svg";
 
 export default function ChatHeader({

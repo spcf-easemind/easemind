@@ -18,53 +18,6 @@ import { useParams } from "react-router-dom";
 
 const padding = 18;
 
-// Here to Call Zustand Data
-
-const data = [
-  {
-    id: 1,
-    name: "Alexander Camaddo",
-    message: ["O komusta ka par!"],
-    created_at: "12:00 am",
-  },
-  {
-    id: 2,
-    name: "Gabriel Gatbonton",
-    message: ["Oini, mayap mu!", "Komusta ka?"],
-    created_at: "1:00 am",
-  },
-  {
-    id: 3,
-    name: "Alexander Camaddo",
-    message: ["O reni, reng litratu kailangan mu."],
-    created_at: "4:00 am",
-  },
-  {
-    id: 4,
-    name: "Alexander Camaddo",
-    images: [HappyImage, HappyImage, HappyImage, HappyImage, HappyImage],
-    created_at: "4:01 am",
-  },
-  {
-    id: 5,
-    name: "Gabriel Gatbonton",
-    message: ["Oini, mayap mu!", "Komusta ka?"],
-    created_at: "1:00 am",
-  },
-  {
-    id: 6,
-    name: "Gabriel Gatbonton",
-    message: ["Oini, mayap mu!", "Komusta ka?"],
-    created_at: "1:00 am",
-  },
-  {
-    id: 7,
-    name: "Gabriel Gatbonton",
-    message: ["Oini, mayap mu!", "Komusta ka?"],
-    created_at: "1:00 am",
-  },
-];
-
 const new_friends = [
   {
     id: 1,
@@ -108,12 +61,10 @@ export default function ChatPage() {
 
   useEffect(() => {
     if (chatRef) {
-      console.log("Subscribing to chat");
       listenForMessages(chatRef);
     }
 
     return () => {
-      console.log("Unsubscribing from chat");
       unsubscribeFromChat(chatRef);
     };
   }, [chatRef]);
