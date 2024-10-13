@@ -8,10 +8,13 @@ import CheckboxList from "../components/CheckboxList.jsx";
 
 import HappyImage from "../assets/HappyImage.jpg";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useForm, hasLength } from "@mantine/form";
 import { useDialogStore } from "../store/dialog.js";
 import { useShallow } from "zustand/shallow";
+import { useChatStore } from "../store/chat.js";
+import { useAuthenticationStore } from "../store/authentication.js";
+import { useParams } from "react-router-dom";
 
 const padding = 18;
 
@@ -79,12 +82,45 @@ const new_friends = [
 
 export default function ChatPage() {
   // Convo Zustand
-  const [convo, setConvo] = useState(data);
+  const { chatRef } = useParams();
+  const loggedUser = useAuthenticationStore((state) => state.user.data);
+  const {
+    fetchChats,
+    getChatPageData,
+    chats,
+    sendMessage,
+    listenForMessages,
+    unsubscribeFromChat,
+  } = useChatStore(
+    useShallow((state) => ({
+      fetchChats: state.fetchChats,
+      getChatPageData: state.getChatPageData,
+      sendMessage: state.sendMessage,
+      chats: state.chats,
+      listenForMessages: state.listenForMessages,
+      unsubscribeFromChat: state.unsubscribeFromChat,
+    }))
+  );
 
-  // Boiler Plate Constants
-  const currentDate = new Date().toISOString();
-  const user = "Gabriel Gatbonton";
+  useEffect(() => {
+    if (loggedUser.key) fetchChats(loggedUser.key);
+  }, []);
+
+  useEffect(() => {
+    if (chatRef) {
+      console.log("Subscribing to chat");
+      listenForMessages(chatRef);
+    }
+
+    return () => {
+      console.log("Unsubscribing from chat");
+      unsubscribeFromChat(chatRef);
+    };
+  }, [chatRef]);
+
+  // Variables
   const inputRef = useRef();
+  const { header, chatMessages } = getChatPageData(chatRef);
 
   // Aside Controls
   const { toggleMobile, toggleDesktop } = useDialogStore(
@@ -102,15 +138,13 @@ export default function ChatPage() {
     }))
   );
 
-  //
-
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
-      id: "",
-      name: user,
-      message: [],
-      created_at: currentDate,
+      userKey: loggedUser.key,
+      name: loggedUser.fullName,
+      message: "",
+      type: "text",
     },
     validate: {
       message: (value) => !value.trim().length && "",
@@ -128,18 +162,17 @@ export default function ChatPage() {
   });
 
   // Here to Call Zustand Function
-  function handleFormSubmit(formData) {
+  async function handleSendMessage(formData) {
     const data = { ...formData };
-    const arrayLength = convo.length;
 
-    data.id = arrayLength + 1;
-    data.message = [data.message];
-
-    setConvo((oldVal) => [...oldVal, data]);
-
-    form.setFieldValue("message", " ");
-
-    inputRef.current.focus();
+    sendMessage(chatRef, data)
+      .catch((error) => {
+        console.error("Error", error);
+      })
+      .finally(() => {
+        form.setFieldValue("message", " ");
+        inputRef.current.focus();
+      });
   }
 
   function handleAddMembers(formData) {
@@ -149,12 +182,16 @@ export default function ChatPage() {
   return (
     <>
       <Flex direction="column" w="100%" h="100%">
-        <ChatHeader onClick={{ toggleDesktop, toggleMobile }} p={padding} />
-        <ChatBody data={convo} p={padding} h="inherit" />
+        <ChatHeader
+          header={header}
+          onClick={{ toggleDesktop, toggleMobile }}
+          p={padding}
+        />
+        <ChatBody data={chatMessages} p={padding} h="inherit" />
         <ChatInput
           ref={inputRef}
           form={form}
-          onSubmit={handleFormSubmit}
+          onSubmit={handleSendMessage}
           py={padding}
           px={16}
         />

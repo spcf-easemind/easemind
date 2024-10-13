@@ -1,48 +1,46 @@
 import { Flex, Image, Text, Group, Stack } from "@mantine/core";
 
-import HappyImage from "../../assets/HappyImage.jpg";
 import ChatCard from "./ChatCard.jsx";
 import ChatBox from "./ChatBox.jsx";
 import ImageTruncation from "../buttons/ImageTruncation.jsx";
+import { useAuthenticationStore } from "../../store/authentication.js";
+import { format } from "date-fns";
 
 export default function ChatContainer({ data }) {
-  const user = "Gabriel Gatbonton";
+  const userkey = useAuthenticationStore((state) => state.user.data.key);
 
   const { justify, direction, withMessageData } =
-    data.name === user
+    data.userId === userkey
       ? { justify: "end", direction: "row-reverse", withMessageData: false }
       : { justify: "start", direction: "row", withMessageData: true };
 
   const messageInstances = () => {
-    if (data.message) {
-      return data.message.map((message) => (
-        <ChatCard key={message} text={message} />
-      ));
-    } else if (data.images) {
+    if (data.type === "text") {
+      return <ChatCard text={data.message} />;
+    } else if (data.type === "image") {
       return <ImageTruncation images={data.images} />;
     }
   };
 
-  // if (item.message) {
-  //   return data.message.map((message) => (
-  //     <ChatCard key={message} text={message} />
-  //   ));
-  // } else if (daitemta.images) {
-  //   return <ImageTruncation images={data.images} />;
-  // }
+  const computedCreatedAt = () => {
+    const date = new Date(data.time);
+    return format(date, "h:mm a");
+  };
 
   return (
     <Flex gap={16} align="end" justify={justify} direction={direction}>
-      {withMessageData && <Image src={HappyImage} w={36} h={36} radius="md" />}
+      {withMessageData && (
+        <Image src={data.userImage} w={36} h={36} radius="md" />
+      )}
 
       <ChatBox mb={2} maw="60%">
         {withMessageData && (
           <Group gap={8} ml={6} mb={4}>
             <Text size="sm" fw={500}>
-              Masipag
+              {data.name}
             </Text>
             <Text size="sm" c="dimmed" fw={400}>
-              12:00 am
+              {computedCreatedAt()}
             </Text>
           </Group>
         )}

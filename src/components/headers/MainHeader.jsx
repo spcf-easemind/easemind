@@ -41,7 +41,9 @@ export default function MainHeader() {
   const location = useLocation();
 
   const currentLocation = useCallback(() => {
-    const response = menuLinks.find((item) => item.route === location.pathname);
+    const response = menuLinks.find((item) =>
+      location.pathname.startsWith(item.route)
+    );
     return response.name;
   }, [location]);
 

@@ -9,6 +9,12 @@ const mainRoutes = [
   {
     path: "/chat",
     element: <ChatPage />,
+    children: [
+      {
+        path: ":chatRef",
+        element: <ChatPage />,
+      },
+    ],
   },
   {
     path: "/profile",

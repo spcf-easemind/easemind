@@ -35,18 +35,18 @@ function App() {
     sm: "90dvh",
   });
 
-  const withContainer =
-    location.pathname === "/chat" ? (
+  const withContainer = location.pathname.startsWith("/chat") ? (
+    <Outlet />
+  ) : (
+    <Container size={containerBreakpoint} h="100%">
       <Outlet />
-    ) : (
-      <Container size={containerBreakpoint} h="100%">
-        <Outlet />
-      </Container>
-    );
+    </Container>
+  );
 
+  // Adjusted logic to include /chat and /chat/:chatRef for header
   const whichHeader = mainRoutes
     .map(({ path }) => path)
-    .includes(location.pathname) ? (
+    .some((path) => location.pathname.startsWith(path)) ? (
     <MainHeader />
   ) : (
     <Header />
@@ -55,13 +55,13 @@ function App() {
   const withBackground = ![
     ...mainRoutes.map(({ path }) => path),
     "/internet-identity",
-  ].includes(location.pathname)
+  ].some((path) => location.pathname.startsWith(path))
     ? classes.bgImage
     : null;
 
   // Collapse Drawer and Aside
   const { handleDrawerMobile, handleDrawerDesktop } =
-    location.pathname === "/chat"
+    location.pathname.startsWith("/chat")
       ? {
           handleDrawerMobile: !drawerMobileOpened,
           handleDrawerDesktop: !drawerDesktopOpened,
@@ -69,7 +69,7 @@ function App() {
       : { handleDrawerMobile: true, handleDrawerDesktop: true };
 
   const { handleAsideMobile, handleAsideDesktop } =
-    location.pathname === "/chat"
+  location.pathname.startsWith("/chat")
       ? { handleAsideMobile: !mobileOpened, handleAsideDesktop: !desktopOpened }
       : { handleAsideMobile: true, handleAsideDesktop: true };
 

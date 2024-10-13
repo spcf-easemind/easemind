@@ -83,7 +83,7 @@ const ChatInput = forwardRef(({ form, onSubmit, ...props }, ref) => {
           backgroundColor: "var(--mantine-color-gray-1)",
         }}
       >
-        <form onSubmit={form.onSubmit((value) => handleSubmit(value))}>
+        <form onSubmit={form.onSubmit(handleSubmit)}>
           <Group>
             {groupIcons}
             <TextInput

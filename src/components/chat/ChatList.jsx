@@ -43,7 +43,7 @@ export default function ChatList({
             {userName}
           </Title>
           <Text lineClamp={1} c="gray" size="sm">
-            {text}
+            {text ? text : "No messages yet"}
           </Text>
         </Box>
         <Box h={40} w={40}>
