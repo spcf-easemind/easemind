@@ -6,15 +6,14 @@ import ChatInput from "../components/chat/ChatInput.jsx";
 import ChatModal from "../components/modals/ChatModal.jsx";
 import CheckboxList from "../components/CheckboxList.jsx";
 
-import HappyImage from "../assets/HappyImage.jpg";
-
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useForm, hasLength } from "@mantine/form";
 import { useDialogStore } from "../store/dialog.js";
 import { useShallow } from "zustand/shallow";
 import { useChatStore } from "../store/chat.js";
 import { useAuthenticationStore } from "../store/authentication.js";
 import { useParams } from "react-router-dom";
+import useListener from "../hooks/useListener.jsx";
 
 const padding = 18;
 
@@ -34,44 +33,34 @@ const new_friends = [
 ];
 
 export default function ChatPage() {
-  // Convo Zustand
+  // React Router
   const { chatRef } = useParams();
+  // Zustand
   const loggedUser = useAuthenticationStore((state) => state.user.data);
   const {
-    fetchChats,
     getChatPageData,
-    chats,
     sendMessage,
     listenForMessages,
     unsubscribeFromChat,
   } = useChatStore(
     useShallow((state) => ({
-      fetchChats: state.fetchChats,
       getChatPageData: state.getChatPageData,
       sendMessage: state.sendMessage,
-      chats: state.chats,
       listenForMessages: state.listenForMessages,
       unsubscribeFromChat: state.unsubscribeFromChat,
     }))
   );
 
-  useEffect(() => {
-    if (loggedUser.key) fetchChats(loggedUser.key);
-  }, []);
-
-  useEffect(() => {
-    if (chatRef) {
-      listenForMessages(chatRef);
-    }
-
-    return () => {
-      unsubscribeFromChat(chatRef);
-    };
-  }, [chatRef]);
+  // Event Listener
+  const { header, chatMessages } = useListener({
+    chatRef,
+    listenerFn: listenForMessages,
+    unsubscribeFn: unsubscribeFromChat,
+    getFn: getChatPageData,
+  });
 
   // Variables
   const inputRef = useRef();
-  const { header, chatMessages } = getChatPageData(chatRef);
 
   // Aside Controls
   const { toggleMobile, toggleDesktop } = useDialogStore(

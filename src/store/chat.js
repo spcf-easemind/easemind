@@ -45,7 +45,7 @@ export const useChatStore = create((set, get) => ({
           userImage: displayUser().image,
           text: `${lastMessage.userName}: ${lastMessage.message}`,
           type: chat.type,
-          time: "3:16",
+          time: lastMessage.time,
           unread: 0,
         });
       } else if (chat.type === "group") {
@@ -55,7 +55,7 @@ export const useChatStore = create((set, get) => ({
           userImage: chat.chatImage,
           text: `${lastMessage.userName}: ${lastMessage.message}`,
           type: chat.type,
-          time: "3:16",
+          time: lastMessage.time,
           unread: 0,
         });
       }
