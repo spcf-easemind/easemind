@@ -1,24 +1,29 @@
-import { Flex, Image, Text, Group, Stack } from "@mantine/core";
+import { Flex, Avatar, Text, Group, Stack } from "@mantine/core";
 
 import ChatCard from "./ChatCard.jsx";
 import ChatBox from "./ChatBox.jsx";
 import ImageTruncation from "../buttons/ImageTruncation.jsx";
 import { useAuthenticationStore } from "../../store/authentication.js";
 import { format } from "date-fns";
+import { useChatStore } from "../../store/chat.js";
+import { useParams } from "react-router-dom";
 
 export default function ChatContainer({ data }) {
+  const { chatRef } = useParams();
   const userkey = useAuthenticationStore((state) => state.user.data.key);
+  const getUserData = useChatStore((state) => state.getUserData);
 
-  const { justify, direction, withMessageData } =
-    data.userId === userkey
-      ? { justify: "end", direction: "row-reverse", withMessageData: false }
-      : { justify: "start", direction: "row", withMessageData: true };
+  const userLoggedIn = data.userId === userkey;
+
+  const { justify, direction, withMessageData } = userLoggedIn
+    ? { justify: "end", direction: "row-reverse", withMessageData: false }
+    : { justify: "start", direction: "row", withMessageData: true };
 
   const messageInstances = () => {
     if (data.type === "text") {
       return <ChatCard text={data.message} />;
     } else if (data.type === "image") {
-      return <ImageTruncation images={data.images} />;
+      return <ImageTruncation isLoggedIn={userLoggedIn} images={data.fileURL} />;
     }
   };
 
@@ -27,17 +32,23 @@ export default function ChatContainer({ data }) {
     return format(date, "h:mm a");
   };
 
+  const userAlgo = (userKey) => {
+    const users = getUserData(chatRef);
+    const [userId] = Object.keys(users).filter((key) => key !== userKey);
+    return users[userId];
+  };
+
   return (
     <Flex gap={16} align="end" justify={justify} direction={direction}>
       {withMessageData && (
-        <Image src={data.userImage} w={36} h={36} radius="md" />
+        <Avatar src={userAlgo(chatRef).image} w={36} h={36} radius="md" />
       )}
 
       <ChatBox mb={2} maw="60%">
         {withMessageData && (
           <Group gap={8} ml={6} mb={4}>
             <Text size="sm" fw={500}>
-              {data.name}
+              {userAlgo(chatRef).name}
             </Text>
             <Text size="sm" c="dimmed" fw={400}>
               {computedCreatedAt()}

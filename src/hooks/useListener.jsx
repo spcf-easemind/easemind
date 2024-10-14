@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 
 export default function useListener({
+  chats,
   chatRef,
   listenerFn,
   unsubscribeFn,
@@ -9,7 +10,7 @@ export default function useListener({
   const data = useMemo(() => {
     const ref = chatRef ?? null;
     return getFn(ref);
-  }, [chatRef]);
+  }, [chatRef, chats]);
 
   useEffect(() => {
     if (chatRef) {

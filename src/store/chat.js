@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { database } from "../plugins/firebase.js";
+import { database, storage as firebaseStorage } from "../plugins/firebase.js";
 import { useAuthenticationStore } from "./authentication.js";
 import { ref, onValue, off } from "firebase/database";
 
@@ -7,8 +7,11 @@ import {
   listChats,
   createNewChat,
   sendMessage,
+  uploadImage,
   serializeChatPageData,
   serializeNavData,
+  serializeUserData,
+  serializeAsideData,
 } from "../functions/firebase.js";
 
 export const useChatStore = create((set, get) => ({
@@ -30,6 +33,21 @@ export const useChatStore = create((set, get) => ({
       useAuthenticationStore.getState().user.data.key || null;
 
     const response = serializeChatPageData(allChats, chatRef, loggedInUserId);
+    return response;
+  },
+
+  getUserData: (chatRef) => {
+    const allChats = get().chats;
+    const response = serializeUserData(allChats, chatRef);
+    return response;
+  },
+
+  getAsideData: (chatRef) => {
+    const allChats = get().chats;
+    const loggedInUserId =
+      useAuthenticationStore.getState().user.data.key || null;
+
+    const response = serializeAsideData(allChats, chatRef, loggedInUserId);
     return response;
   },
 
@@ -65,6 +83,8 @@ export const useChatStore = create((set, get) => ({
           ...messagesData[messageId],
         }));
 
+        // console.log(messagesData);
+
         // Update Zustand store with new messages
         set((state) => {
           const updatedChats = state.chats.map((chat) => {
@@ -73,6 +93,7 @@ export const useChatStore = create((set, get) => ({
             }
             return chat;
           });
+          // console.log(updatedChats);
           return { chats: updatedChats };
         });
       }
@@ -102,6 +123,14 @@ export const useChatStore = create((set, get) => ({
   sendMessage: async (chatRef, formData) => {
     const db = database;
     const response = await sendMessage(db, chatRef, formData);
+    return response;
+  },
+
+  uploadImage: async (chatRef, formData) => {
+    const db = database;
+    const storage = firebaseStorage;
+
+    const response = await uploadImage(db, storage, chatRef, formData);
     return response;
   },
 }));

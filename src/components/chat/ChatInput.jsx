@@ -32,7 +32,7 @@ const icons = [
   },
 ];
 
-const ChatInput = forwardRef(({ form, onSubmit, ...props }, ref) => {
+const ChatInput = forwardRef(({ form, onSubmit, onUpload, ...props }, ref) => {
   const imageInputRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -40,13 +40,20 @@ const ChatInput = forwardRef(({ form, onSubmit, ...props }, ref) => {
     onSubmit(formData);
   }
 
+  function handleUploadFile(files) {
+    console.log(files);
+    onUpload(files);
+  }
+
   // Handle icon click for image and file
   function handleIconClick(action) {
     console.log(action);
     if (action === "image") {
-      imageInputRef.current.click(); // Trigger image input
+      // Trigger image input
+      imageInputRef.current.click();
     } else if (action === "file") {
-      fileInputRef.current.click(); // Trigger file input
+      // Trigger file input
+      fileInputRef.current.click();
     }
   }
 
@@ -104,10 +111,8 @@ const ChatInput = forwardRef(({ form, onSubmit, ...props }, ref) => {
               style={{ display: "none" }}
               onChange={(e) => {
                 // Handle the selected image file
-                const file = e.target.files[0];
-                if (file) {
-                  console.log("Selected image:", file);
-                }
+                const files = e.target.files;
+                handleUploadFile(files);
               }}
             />
             <input
@@ -116,10 +121,8 @@ const ChatInput = forwardRef(({ form, onSubmit, ...props }, ref) => {
               style={{ display: "none" }}
               onChange={(e) => {
                 // Handle the selected file
-                const file = e.target.files[0];
-                if (file) {
-                  console.log("Selected file:", file);
-                }
+                const files = e.target.files;
+                handleUploadFile(files);
               }}
             />
           </Group>

@@ -1,19 +1,23 @@
 import {
   get as getFirebase,
   set as setFirebase,
-  ref,
+  ref as databaseRef,
   push,
   serverTimestamp,
   child,
 } from "firebase/database";
 
-
+import {
+  ref as storageRef,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
 
 import { serializer } from "../utils/serializer";
 
 export async function listChats(db, loggedInUserId) {
   // Reference to the 'chats' node
-  const chatsRef = ref(db, "chats");
+  const chatsRef = databaseRef(db, "chats");
 
   // Fetch all chats from the 'chats' node
   const response = await getFirebase(chatsRef)
@@ -36,7 +40,7 @@ export async function listChats(db, loggedInUserId) {
 }
 
 export async function createNewChat(db, { chatName = "", users }) {
-  const chatRef = ref(db, "chats");
+  const chatRef = databaseRef(db, "chats");
   const newChatRef = push(chatRef);
 
   const chatData = {
@@ -62,11 +66,7 @@ export async function createNewChat(db, { chatName = "", users }) {
   return response;
 }
 
-export async function sendMessage(
-  db,
-  chatRef,
-  { userKey, message, type, name }
-) {
+export async function sendMessage(db, chatRef, { userKey, message, type }) {
   // // Boilerplate
   // const allChats = get().chats;
   // const chat = allChats.find((chat) => chat.id === chatRef);
@@ -81,14 +81,14 @@ export async function sendMessage(
   // Message data
   const messageData = {
     userKey: userKey,
-    name: name,
+    // name: name,
     // image: displayUser().image,
     message: message,
     createdAt: serverTimestamp(),
     type: type,
   };
 
-  const messageRef = child(ref(db), `chats/${chatRef}/messages`);
+  const messageRef = child(databaseRef(db), `chats/${chatRef}/messages`);
   const newMessageRef = push(messageRef);
 
   const response = await setFirebase(newMessageRef, messageData)
@@ -158,12 +158,6 @@ export function serializeNavData(allChats, loggedInUserId) {
       ? serializer.serializeMessages(chat.messages).slice(-1)[0]
       : null;
 
-    const isLastMessageResponse = lastMessage
-      ? `${lastMessage.userName}: ${lastMessage.message}`
-      : "Message now!";
-
-    const isLastMessageTime = lastMessage ? lastMessage.time : chat.createdAt;
-
     if (chat.type === "private") {
       const displayUser = () => {
         const [userId] = Object.keys(chat.users).filter(
@@ -171,6 +165,12 @@ export function serializeNavData(allChats, loggedInUserId) {
         );
         return chat.users[userId];
       };
+
+      const isLastMessageResponse = lastMessage
+        ? `${displayUser().name}: ${lastMessage.message}`
+        : "Message now!";
+
+      const isLastMessageTime = lastMessage ? lastMessage.time : chat.createdAt;
 
       privateChat.push({
         id: chat.id,
@@ -195,4 +195,82 @@ export function serializeNavData(allChats, loggedInUserId) {
   });
 
   return { privateChat, groupChat };
+}
+
+export function serializeUserData(allChats, chatRef) {
+  const chat = allChats.find((chat) => chat.id === chatRef) ?? null;
+
+  if (chat) {
+    const chatUsers = chat.users;
+    return chatUsers;
+  }
+  return [];
+}
+
+export function serializeAsideData(allChats, chatRef, loggedInUserId) {
+  const chat = allChats.find((chat) => chat.id === chatRef) ?? null;
+  let asideData = {
+    type: "",
+    header: {
+      name: "",
+      image: null,
+    },
+    images: [],
+    videos: [],
+    links: [],
+    documents: [],
+  };
+  if (chat) {
+    const chatUsers = chat.users;
+    const [userId] = Object.keys(chatUsers).filter(
+      (item) => item !== loggedInUserId
+    );
+    const displayUser = chatUsers[userId];
+
+    asideData.type = chat.type;
+    asideData.header = displayUser;
+
+    return asideData;
+  }
+  return asideData;
+}
+
+// Media Storing
+
+export async function uploadImage(
+  db,
+  storage,
+  chatRef,
+  { file, userKey, type = "image" }
+) {
+  const fileRef = storageRef(storage, `chats/${chatRef}/${file.name}`);
+
+  // Upload file to Firebase Storage
+  const snapshot = await uploadBytes(fileRef, file);
+  const downloadURL = await getDownloadURL(snapshot.ref);
+
+  // Save metadata to Firebase Realtime Database
+  const messageRef = databaseRef(db, `chats/${chatRef}/messages`);
+  const newMessageRef = push(messageRef);
+
+  const messageData = {
+    userKey: userKey,
+    fileURL: downloadURL,
+    type: type, // 'image', 'video', 'file', etc.
+    createdAt: serverTimestamp(),
+  };
+
+  const response = await setFirebase(newMessageRef, messageData)
+    .then(() => {
+      return {
+        status: 201,
+        message: "Image uploaded successfully!",
+        data: messageData,
+      };
+    })
+    .catch((error) => {
+      console.error("Error uploading image:", error);
+      throw new Error(`Error uploading: ${messageType}!`);
+    });
+  return response;
 }

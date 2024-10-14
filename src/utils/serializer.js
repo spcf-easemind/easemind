@@ -3,15 +3,24 @@ export const serializer = {
     return Object.keys(messages).map((messageId) => {
       const message = messages[messageId];
       // const user = chatUsers[message.userId];
-      return {
-        id: messageId,
-        userId: message.userKey,
-        userImage: message.image,
-        userName: message.name,
-        message: message.message,
-        time: message.createdAt,
-        type: message.type,
-      };
+
+      if (message.type === "text") {
+        return {
+          id: messageId,
+          userId: message.userKey,
+          message: message.message,
+          time: message.createdAt,
+          type: message.type,
+        };
+      } else if (message.type === "image") {
+        return {
+          id: messageId,
+          userId: message.userKey,
+          fileURL: [message.fileURL],
+          time: message.createdAt,
+          type: message.type,
+        };
+      }
     });
   },
   serializeChats: (chats, loggedInUserId) => {

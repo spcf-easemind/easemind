@@ -42,6 +42,7 @@ export default function ChatPage() {
     sendMessage,
     listenForMessages,
     unsubscribeFromChat,
+    uploadImage,
     chats,
   } = useChatStore(
     useShallow((state) => ({
@@ -50,11 +51,13 @@ export default function ChatPage() {
       sendMessage: state.sendMessage,
       listenForMessages: state.listenForMessages,
       unsubscribeFromChat: state.unsubscribeFromChat,
+      uploadImage: state.uploadImage,
     }))
   );
 
   // Event Listener
   const { header, chatMessages } = useListener({
+    chats,
     chatRef,
     listenerFn: listenForMessages,
     unsubscribeFn: unsubscribeFromChat,
@@ -84,7 +87,6 @@ export default function ChatPage() {
     mode: "uncontrolled",
     initialValues: {
       userKey: loggedUser.key,
-      name: loggedUser.fullName,
       message: "",
       type: "text",
     },
@@ -117,6 +119,18 @@ export default function ChatPage() {
       });
   }
 
+  async function handleUploadFile(files) {
+    const formData = {
+      userKey: form.getValues().userKey,
+      type: "image",
+      file: files[0],
+    };
+
+    uploadImage(chatRef, formData).catch((error) => {
+      console.error("Error", error);
+    });
+  }
+
   function handleAddMembers(formData) {
     console.log(formData);
   }
@@ -134,6 +148,7 @@ export default function ChatPage() {
           ref={inputRef}
           form={form}
           onSubmit={handleSendMessage}
+          onUpload={handleUploadFile}
           py={padding}
           px={16}
         />
