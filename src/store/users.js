@@ -131,20 +131,20 @@ export const useUsersStore = create((set) => ({
     //   message: "Loading...",
     // }));
 
-    // const users = await listDocs({
-    //   collection: 'users',
-    // });
+    const users = await listDocs({
+      collection: 'users',
+    });
 
     // console.log(users);
-    const userProfiles = await listAssets({
-      collection: 'userProfilePicture',
-    });
+    // const userProfiles = await listAssets({
+    //   collection: 'userProfilePicture',
+    // });
 
     // console.log(userProfiles);
 
     const allUsers = [];
-    for (const userProfile of userProfiles.items) {
-      allUsers.push(userProfile);
+    for (const user of users.items) {
+      allUsers.push(user);
     }
 
     set(() => ({
