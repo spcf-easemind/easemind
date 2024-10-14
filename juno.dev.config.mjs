@@ -39,8 +39,7 @@ export default defineDevConfig(() => ({
           write: 'private',
           memory: 'heap',
           mutablePErmissions: true,
-        }
-        
+        },
       ],
       storage: [
         {
