@@ -1,17 +1,15 @@
 import { create } from "zustand";
 import { database } from "../plugins/firebase.js";
 import { useAuthenticationStore } from "./authentication.js";
-import { serializer } from "../utils/serializer.js";
+import { ref, onValue, off } from "firebase/database";
+
 import {
-  set as setFirebase,
-  ref,
-  push,
-  serverTimestamp,
-  get as getFirebase,
-  onValue,
-  child,
-  off,
-} from "firebase/database";
+  listChats,
+  createNewChat,
+  sendMessage,
+  serializeChatPageData,
+  serializeNavData,
+} from "../functions/firebase.js";
 
 export const useChatStore = create((set, get) => ({
   chats: [],
@@ -23,153 +21,36 @@ export const useChatStore = create((set, get) => ({
     const loggedInUserId =
       useAuthenticationStore.getState().user.data?.key || null;
 
-    const privateChat = [];
-    const groupChat = [];
-
-    allChats.forEach((chat) => {
-      const lastMessage = chat.messages
-        ? serializer.serializeMessages(chat.messages).slice(-1)[0]
-        : null;
-
-      const isLastMessageResponse = lastMessage
-        ? `${lastMessage.userName}: ${lastMessage.message}`
-        : "Message now!";
-
-      const isLastMessageTime = lastMessage ? lastMessage.time : chat.createdAt;
-
-      if (chat.type === "private") {
-        const displayUser = () => {
-          const [userId] = Object.keys(chat.users).filter(
-            (item) => item !== loggedInUserId
-          );
-          return chat.users[userId];
-        };
-
-        privateChat.push({
-          id: chat.id,
-          userName: displayUser().name,
-          userImage: displayUser().image,
-          text: isLastMessageResponse,
-          type: chat.type,
-          time: isLastMessageTime,
-          unread: 0,
-        });
-      } else if (chat.type === "group") {
-        groupChat.push({
-          id: chat.id,
-          userName: chat.chatName,
-          userImage: chat.chatImage,
-          text: isLastMessageResponse,
-          type: chat.type,
-          time: isLastMessageTime,
-          unread: 0,
-        });
-      }
-    });
-
-    return { privateChat, groupChat };
+    const response = serializeNavData(allChats, loggedInUserId);
+    return response;
   },
   getChatPageData: (chatRef) => {
     const allChats = get().chats;
     const loggedInUserId =
       useAuthenticationStore.getState().user.data.key || null;
 
-    let header = {
-      name: "",
-      image: null,
-      lastSeen: "",
-    };
-    let chatMessages = [];
-
-    const chat = allChats.find((chat) => chat.id === chatRef) ?? null;
-
-    if (chat) {
-      const messages = chat.messages;
-      const chatUsers = chat.users;
-
-      if (chat.type === "private") {
-        const displayUser = () => {
-          const [userId] = Object.keys(chatUsers).filter(
-            (item) => item !== loggedInUserId
-          );
-          return chat.users[userId];
-        };
-
-        header = {
-          name: displayUser().name,
-          image: displayUser().image,
-          lastSeen: "Active now",
-        };
-      } else if (chat.type === "group") {
-        header = {
-          name: chat.chatName,
-          image: chat.chatImage,
-          lastSeen: "Active now",
-        };
-      }
-
-      if (messages) {
-        chatMessages = serializer.serializeMessages(messages);
-        console.log("Chest Messages", chatMessages);
-      }
-    }
-    return { header, chatMessages };
+    const response = serializeChatPageData(allChats, chatRef, loggedInUserId);
+    return response;
   },
 
   // Actions
   fetchChats: async (loggedInUserId) => {
     const db = database;
 
-    // Reference to the 'chats' node
-    const chatsRef = ref(db, "chats");
-
-    // Fetch all chats from the 'chats' node
-    await getFirebase(chatsRef)
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          const chats = snapshot.val();
-          const serializedData = serializer.serializeChats(
-            chats,
-            loggedInUserId
-          );
-
-          // Set the serialized chats in the Zustand store
-          set({ chats: serializedData });
-        } else {
-          console.log("No chats found.");
-          set({ chats: [] });
-        }
+    const response = await listChats(db, loggedInUserId)
+      .then((response) => {
+        set(() => ({ chats: response }));
       })
-      .catch((error) => {
-        console.error("Error fetching chats:", error);
+      .catch(() => {
+        set(() => ({ chats: [] }));
       });
+    return response;
   },
 
   findNewChat: async ({ chatName = "", users }) => {
     const db = database;
-
-    const instanceRef = ref(db, "chats");
-    const newChatRef = push(instanceRef);
-
-    await setFirebase(newChatRef, {
-      chatName: chatName,
-      createdAt: serverTimestamp(),
-      type: "private",
-      users: users,
-      messages: {},
-      images: {},
-      videos: {},
-      links: {},
-      documents: {},
-    })
-      .then((response) => {
-        console.log("Chat created with ID: ", newChatRef.key);
-        console.log(response);
-      })
-      .catch((error) => {
-        console.error("Error creating chat: ", error);
-        throw new Error("Error creating chat!");
-      });
+    const response = await createNewChat(db, { chatName, users });
+    return response;
   },
 
   listenForMessages: (chatRef) => {
@@ -218,42 +99,9 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
-  sendMessage: async (chatRef, { userKey, message, type, name }) => {
+  sendMessage: async (chatRef, formData) => {
     const db = database;
-    const allChats = get().chats;
-    const chat = allChats.find((chat) => chat.id === chatRef);
-
-    // Get the user's image
-    const displayUser = () => {
-      const [userId] = Object.keys(chat.users).filter(
-        (item) => item === userKey
-      );
-      return chat.users[userId];
-    };
-
-    // Message data
-    const messageData = {
-      userKey: userKey,
-      name: name,
-      image: displayUser().image,
-      message: message,
-      createdAt: serverTimestamp(),
-      type: type,
-    };
-
-    const messageRef = child(ref(db), `chats/${chatRef}/messages`);
-    const newMessageRef = push(messageRef);
-
-    const response = await setFirebase(newMessageRef, messageData)
-      .then(() => {
-        console.log("Message sent successfully:", newMessageRef.key);
-        get().fetchChats(userKey);
-      })
-      .catch((error) => {
-        console.error("Error sending message:", error);
-        throw new Error("Error sending message!");
-      });
-
+    const response = await sendMessage(db, chatRef, formData);
     return response;
   },
 }));
