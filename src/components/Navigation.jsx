@@ -121,11 +121,17 @@ export default function ChatPage() {
           image:
             "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-9.png",
         },
+        // {
+        //   id: "4pnFyYuxhXBGQ5lzjHpKv",
+        //   name: "Alexander Camaddo",
+        //   image:
+        //     "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-1.png",
+        // },
         {
-          id: "4pnFyYuxhXBGQ5lzjHpKv",
-          name: "Alexander Camaddo",
+          id: "CalhaQnIh3z3nOGIc6ysK",
+          name: "ICTDU",
           image:
-            "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-1.png",
+            "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-3.png",
         },
       ],
     };

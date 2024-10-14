@@ -31,6 +31,12 @@ export const useChatStore = create((set, get) => ({
         ? serializer.serializeMessages(chat.messages).slice(-1)[0]
         : null;
 
+      const isLastMessageResponse = lastMessage
+        ? `${lastMessage.userName}: ${lastMessage.message}`
+        : "Message now!";
+
+      const isLastMessageTime = lastMessage ? lastMessage.time : chat.createdAt;
+
       if (chat.type === "private") {
         const displayUser = () => {
           const [userId] = Object.keys(chat.users).filter(
@@ -43,9 +49,9 @@ export const useChatStore = create((set, get) => ({
           id: chat.id,
           userName: displayUser().name,
           userImage: displayUser().image,
-          text: `${lastMessage.userName}: ${lastMessage.message}`,
+          text: isLastMessageResponse,
           type: chat.type,
-          time: lastMessage.time,
+          time: isLastMessageTime,
           unread: 0,
         });
       } else if (chat.type === "group") {
@@ -53,9 +59,9 @@ export const useChatStore = create((set, get) => ({
           id: chat.id,
           userName: chat.chatName,
           userImage: chat.chatImage,
-          text: `${lastMessage.userName}: ${lastMessage.message}`,
+          text: isLastMessageResponse,
           type: chat.type,
-          time: lastMessage.time,
+          time: isLastMessageTime,
           unread: 0,
         });
       }
