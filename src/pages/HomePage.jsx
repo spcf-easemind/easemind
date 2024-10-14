@@ -35,7 +35,7 @@ export default function HomePage() {
   const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
-    // getUserInfoFn();
+    getUserInfoFn();
     // getAllUsersFn();
     // deleteUserInfoFn();
     // console.log(message);
