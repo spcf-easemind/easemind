@@ -39,8 +39,8 @@ export default function HomePage() {
     // getAllUsersFn();
     // deleteUserInfoFn();
     // console.log(message);
-    console.log(data);
-  }, [data]); // eslint-disable-line react-hooks/exhaustive-deps
+    // console.log(data);
+  }, [data, message]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const form = useForm({
     mode: 'uncontrolled',

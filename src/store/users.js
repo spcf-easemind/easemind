@@ -103,7 +103,7 @@ export const useUsersStore = create((set) => ({
         const userData = {
           userCredentials: items.items[0],
           userSurveys: itemSurveys.items[0],
-          user: user.data,
+          users: user.data,
         };
         set(() => ({
           data: userData,
@@ -189,14 +189,20 @@ export const useUsersStore = create((set) => ({
         }));
       }
 
-      const user = getDoc({
+      const user = await getDoc({
         collection: 'users',
         key: items.items[0].key,
       });
+
       await deleteDoc({
         collection: 'users',
         doc: user,
       });
+
+      set(() => ({
+        data: null,
+        message: 'User deleted successfully!',
+      }));
 
       const userProfiles = await listAssets({
         collection: 'userProfilePicture',
@@ -213,11 +219,6 @@ export const useUsersStore = create((set) => ({
           message: 'User profile picture deleted successfully!',
         }));
       }
-
-      set(() => ({
-        data: null,
-        message: 'User deleted successfully!',
-      }));
     } else {
       set(() => ({
         data: null,
@@ -239,10 +240,10 @@ export const useUsersStore = create((set) => ({
   //         fullPath: userProfile.fullPath
   //       });
 
-  //       // set(() => ({
-  //       //   data: null,
-  //       //   message: "User profile picture deleted successfully!",
-  //       // }));
+  //       set(() => ({
+  //         data: null,
+  //         message: "User profile picture deleted successfully!",
+  //       }));
   //     }
   // },
 

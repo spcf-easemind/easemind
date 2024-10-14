@@ -66,30 +66,21 @@ export const useAuthenticationStore = create(
         });
 
         if (items.items && items.items.length > 0 && items.items[0].data) {
-          // console.log('asd', email);
-          const userData = items.items[0].data;
-          const userKey = items.items[0].key;
-          const userVersion = items.items[0].version;
-
-          // use the formData when you needed to update the userCredentials.
-          const updatedData = {
-            dateOfBirth: userData.dateOfBirth,
-            email: userData.email,
-            fullName: userData.fullName,
-            mobileNumber: userData.mobileNumber,
-            password: userData.password,
-            role: userData.role,
-          };
-
           const user = await getDoc({
             collection: "users",
             key: userKey,
           });
 
+          const userWithConvertedDates = convertTimestamps(user);
+          const userData = user.data;
+          const userKey = user.key;
+          const userVersion = user.version;
+
           const updatedUserData = {
             key: user.data.key,
-            fullName: user.data.fullName,
+            fullName: userData.fullName,
             status: "offline",
+            lastUpdated: userWithConvertedDates,
           };
           set(() => ({
             user: null,
@@ -97,20 +88,11 @@ export const useAuthenticationStore = create(
           }));
 
           await setDoc({
-            collection: "userCredentials",
-            doc: {
-              key: userKey,
-              data: updatedData,
-              version: userVersion,
-            },
-          });
-
-          await setDoc({
             collection: "users",
             doc: {
-              key: user.key,
+              key: userKey,
               data: updatedUserData,
-              version: user.version,
+              version: userVersion,
             },
           });
 
@@ -151,6 +133,7 @@ export const useAuthenticationStore = create(
               key: items.items[0].key,
             });
 
+            const userWithConvertedDates = convertTimestamps(user);
             const userData = user.data;
             const userKey = user.key;
             const userVersion = user.version;
@@ -161,6 +144,7 @@ export const useAuthenticationStore = create(
               key: userData.key,
               fullName: userData.fullName,
               status: "online",
+              lastUpdated: userWithConvertedDates,
             };
 
             await setDoc({
@@ -220,3 +204,24 @@ export const useAuthenticationStore = create(
     }
   )
 );
+
+function convertTimestamps(user) {
+  const convertNanosToDateString = (nanos) => {
+    // Convert nanoseconds to milliseconds
+    const milliseconds = Number(nanos.toString().slice(0, -6));
+    const date = new Date(milliseconds);
+    
+    // Format the date as a string (e.g., "2024-03-14 15:30:45")
+    return date;
+  };
+
+  // Use updated_at if it exists, otherwise fallback to created_at
+  const timestamp = user.updated_at || user.created_at;
+
+  if (timestamp) {
+    return convertNanosToDateString(timestamp);
+  }
+
+  // Return null or a default string if no valid timestamp is found
+  return null; // or return "N/A" if you prefer a default string
+}

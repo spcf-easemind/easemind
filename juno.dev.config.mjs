@@ -40,6 +40,20 @@ export default defineDevConfig(() => ({
           memory: 'heap',
           mutablePErmissions: true,
         },
+        {
+          collection: 'publicMaterials',
+          read: 'public',
+          write: 'private',
+          memory: 'heap',
+          mutablePErmissions: true,
+        },
+        {
+          collection: 'userPublicMaterials',
+          read: 'private',
+          write: 'private',
+          memory: 'heap',
+          mutablePErmissions: true,
+        },
       ],
       storage: [
         {
@@ -52,6 +66,13 @@ export default defineDevConfig(() => ({
         {
           collection: 'anonymousProfilePicture',
           read: 'private',
+          write: 'private',
+          memory: 'heap',
+          mutablePermission: true,
+        },
+        {
+          collection: 'publicMaterialPictures',
+          read: 'public',
           write: 'private',
           memory: 'heap',
           mutablePermission: true,
