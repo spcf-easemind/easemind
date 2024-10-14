@@ -42,8 +42,10 @@ export default function ChatPage() {
     sendMessage,
     listenForMessages,
     unsubscribeFromChat,
+    chats,
   } = useChatStore(
     useShallow((state) => ({
+      chats: state.chats,
       getChatPageData: state.getChatPageData,
       sendMessage: state.sendMessage,
       listenForMessages: state.listenForMessages,

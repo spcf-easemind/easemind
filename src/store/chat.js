@@ -81,7 +81,7 @@ export const useChatStore = create((set, get) => ({
     };
     let chatMessages = [];
 
-    const chat = allChats.find((chat) => chat.id === chatRef);
+    const chat = allChats.find((chat) => chat.id === chatRef) ?? null;
 
     if (chat) {
       const messages = chat.messages;
@@ -110,6 +110,7 @@ export const useChatStore = create((set, get) => ({
 
       if (messages) {
         chatMessages = serializer.serializeMessages(messages);
+        console.log("Chest Messages", chatMessages);
       }
     }
     return { header, chatMessages };

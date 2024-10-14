@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 export default function useListener({
   chatRef,
@@ -6,10 +6,13 @@ export default function useListener({
   unsubscribeFn,
   getFn,
 }) {
-  const [data, setData] = useState(getFn());
+  const data = useMemo(() => {
+    const ref = chatRef ?? null;
+    return getFn(ref);
+  }, [chatRef]);
+
   useEffect(() => {
     if (chatRef) {
-      setData(getFn(chatRef));
       listenerFn(chatRef);
     }
 

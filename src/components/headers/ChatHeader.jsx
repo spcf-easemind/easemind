@@ -1,4 +1,4 @@
-import { Group, Image, Text, UnstyledButton } from "@mantine/core";
+import { Avatar, Group, Image, Text, UnstyledButton } from "@mantine/core";
 import IconInfo from "../../assets/icons/header/IconInfo.svg";
 
 export default function ChatHeader({
@@ -15,7 +15,9 @@ export default function ChatHeader({
       }}
     >
       <Group>
-        <Image w={50} h={50} radius="md" src={image} />
+        <Avatar radius="md" w={50} h={50} src={image} variant="transparent">
+          {" "}
+        </Avatar>
         <div>
           <Text size="md" fw={500}>
             {name}
