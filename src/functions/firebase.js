@@ -215,6 +215,7 @@ export function serializeAsideData(allChats, chatRef, loggedInUserId) {
       name: "",
       image: null,
     },
+    members: [],
     images: [],
     videos: [],
     links: [],

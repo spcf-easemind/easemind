@@ -45,7 +45,7 @@ export const useChatStore = create((set, get) => ({
   getAsideData: (chatRef) => {
     const allChats = get().chats;
     const loggedInUserId =
-      useAuthenticationStore.getState().user.data.key || null;
+      useAuthenticationStore.getState().user.data?.key || null;
 
     const response = serializeAsideData(allChats, chatRef, loggedInUserId);
     return response;
