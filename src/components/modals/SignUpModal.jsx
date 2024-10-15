@@ -8,13 +8,16 @@ import {
 } from "@mantine/core";
 import AuthCard from "../cards/AuthCard";
 import { DATE_SELECTS } from "../../static/date";
+import { useUsersStore } from "../../store/users";
+
 export default function SignUpModal({
   form,
   opened,
   onClose,
   onSubmit,
-  onNavigate,
+  onDialog,
 }) {
+  const loading = useUsersStore((state) => state.loading);
   return (
     <Modal
       opened={opened}
@@ -32,13 +35,17 @@ export default function SignUpModal({
       <AuthCard
         form={form}
         onSubmit={onSubmit}
-        onDialogOpen={onNavigate}
+        onDialogOpen={onDialog}
         heading={{
           title: "Sign Up",
           description:
             "Take the first step toward better mental health and well-being today, and unlock the support you deserve.",
         }}
-        buttonLabel="Sign Up"
+        button={{ btnLabel: "Sign up", btnLoading: loading }}
+        footer={{
+          ftrMessage: "Already have an account? ",
+          ftrButton: "Sign In",
+        }}
       >
         <Stack mb={32}>
           <TextInput

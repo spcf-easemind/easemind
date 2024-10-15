@@ -6,29 +6,16 @@ import ChatInput from "../components/chat/ChatInput.jsx";
 import ChatModal from "../components/modals/ChatModal.jsx";
 import CheckboxList from "../components/CheckboxList.jsx";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useForm, hasLength } from "@mantine/form";
 import { useDialogStore } from "../store/dialog.js";
 import { useShallow } from "zustand/shallow";
+import { useChatStore } from "../store/chat.js";
+import { useAuthenticationStore } from "../store/authentication.js";
+import { useParams } from "react-router-dom";
+import useListener from "../hooks/useListener.jsx";
 
 const padding = 18;
-
-// Here to Call Zustand Data
-
-const data = [
-  {
-    id: 1,
-    name: "Alexander Camaddo",
-    message: ["O komusta ka par!"],
-    created_at: "12:00 am",
-  },
-  {
-    id: 2,
-    name: "Gabriel Gatbonton",
-    message: ["Oini, mayap mu!", "Komusta ka?"],
-    created_at: "1:00 am",
-  },
-];
 
 const new_friends = [
   {
@@ -46,12 +33,38 @@ const new_friends = [
 ];
 
 export default function ChatPage() {
-  // Convo Zustand
-  const [convo, setConvo] = useState(data);
+  // React Router
+  const { chatRef } = useParams();
+  // Zustand
+  const loggedUser = useAuthenticationStore((state) => state.user.data);
+  const {
+    getChatPageData,
+    sendMessage,
+    listenForMessages,
+    unsubscribeFromChat,
+    uploadImage,
+    chats,
+  } = useChatStore(
+    useShallow((state) => ({
+      chats: state.chats,
+      getChatPageData: state.getChatPageData,
+      sendMessage: state.sendMessage,
+      listenForMessages: state.listenForMessages,
+      unsubscribeFromChat: state.unsubscribeFromChat,
+      uploadImage: state.uploadImage,
+    }))
+  );
 
-  // Boiler Plate Constants
-  const currentDate = new Date().toISOString();
-  const user = "Gabriel Gatbonton";
+  // Event Listener
+  const { header, chatMessages } = useListener({
+    chats,
+    chatRef,
+    listenerFn: listenForMessages,
+    unsubscribeFn: unsubscribeFromChat,
+    getFn: getChatPageData,
+  });
+
+  // Variables
   const inputRef = useRef();
 
   // Aside Controls
@@ -70,15 +83,12 @@ export default function ChatPage() {
     }))
   );
 
-  //
-
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
-      id: "",
-      name: user,
-      message: [],
-      created_at: currentDate,
+      userKey: loggedUser.key,
+      message: "",
+      type: "text",
     },
     validate: {
       message: (value) => !value.trim().length && "",
@@ -96,18 +106,29 @@ export default function ChatPage() {
   });
 
   // Here to Call Zustand Function
-  function handleFormSubmit(formData) {
+  async function handleSendMessage(formData) {
     const data = { ...formData };
-    const arrayLength = convo.length;
 
-    data.id = arrayLength + 1;
-    data.message = [data.message];
+    sendMessage(chatRef, data)
+      .catch((error) => {
+        console.error("Error", error);
+      })
+      .finally(() => {
+        form.setFieldValue("message", " ");
+        inputRef.current.focus();
+      });
+  }
 
-    setConvo((oldVal) => [...oldVal, data]);
+  async function handleUploadFile(files) {
+    const formData = {
+      userKey: form.getValues().userKey,
+      type: "image",
+      file: files[0],
+    };
 
-    form.setFieldValue("message", " ");
-
-    inputRef.current.focus();
+    uploadImage(chatRef, formData).catch((error) => {
+      console.error("Error", error);
+    });
   }
 
   function handleAddMembers(formData) {
@@ -115,17 +136,23 @@ export default function ChatPage() {
   }
 
   return (
-    <Flex direction="column" w="100%" h="inherit">
-      <ChatHeader onClick={{ toggleDesktop, toggleMobile }} p={padding} />
-      <ChatBody data={convo} p={padding} flex={1} />
-      <ChatInput
-        ref={inputRef}
-        form={form}
-        onSubmit={handleFormSubmit}
-        py={padding}
-        px={16}
-      />
-
+    <>
+      <Flex direction="column" w="100%" h="100%">
+        <ChatHeader
+          header={header}
+          onClick={{ toggleDesktop, toggleMobile }}
+          p={padding}
+        />
+        <ChatBody data={chatMessages} p={padding} h="inherit" />
+        <ChatInput
+          ref={inputRef}
+          form={form}
+          onSubmit={handleSendMessage}
+          onUpload={handleUploadFile}
+          py={padding}
+          px={16}
+        />
+      </Flex>
       {/* Modal */}
       <ChatModal
         modal={{ opened: chatModal, onClose: toggleChatModal }}
@@ -162,6 +189,6 @@ export default function ChatPage() {
           />
         </Stack>
       </ChatModal>
-    </Flex>
+    </>
   );
 }

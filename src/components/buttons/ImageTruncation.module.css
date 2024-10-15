@@ -1,0 +1,39 @@
+.parent {
+  /* position: relative; */
+  width: 100%;
+  height: rem(150px);
+  gap: 0;
+}
+
+.button {
+  /* position: absolute; */
+  width: rem(150px);
+  height: inherit;
+}
+
+.image {
+  width: inherit;
+  height: inherit;
+  object-fit: cover;
+  border-radius: var(--mantine-radius-md);
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: inherit;
+  height: inherit;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--mantine-radius-md);
+
+  .text {
+    color: white;
+    font-size: var(--mantine-font-size-lg);
+    font-weight: 700;
+  }
+}
