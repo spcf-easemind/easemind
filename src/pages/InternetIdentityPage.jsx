@@ -9,9 +9,10 @@ import { useNavigate } from "react-router-dom";
 
 export default function InternetIdentityPage() {
   const navigate = useNavigate();
-  const { authenticate } = useAuthenticationStore(
+  const { authenticate, loading } = useAuthenticationStore(
     useShallow((state) => ({
       authenticate: state.authenticateInternetIdentity,
+      loading: state.loading,
     }))
   );
 
@@ -42,6 +43,7 @@ export default function InternetIdentityPage() {
         mt={16}
         size="md"
         onClick={() => authenticateFn()}
+        loading={loading}
       >
         Continue with Internet Identity
       </Button>

@@ -1,29 +1,37 @@
-import { Flex, Title, Group, TextInput, Checkbox, Anchor } from "@mantine/core";
+import { Flex, Title, Group, TextInput, Checkbox, Anchor } from '@mantine/core';
 
-import classes from "./LoginPage.module.css";
+import classes from './LoginPage.module.css';
 
 // Hooks
-import { useEffect } from "react";
-import { useDisclosure } from "@mantine/hooks";
-import { useMatches } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { useDialogStore } from "../store/dialog.js";
-import { useShallow } from "zustand/shallow";
-import { useNavigate } from "react-router-dom";
+import { useDisclosure } from '@mantine/hooks';
+import { useForm } from '@mantine/form';
+import { useDialogStore } from '../store/dialog.js';
+import { useShallow } from 'zustand/shallow';
+import { useNavigate } from 'react-router-dom';
+import { useUsersStore } from '../store/users.js';
+import { useCallback, useEffect } from 'react';
 
+import SurveyModal from '../components/modals/SurveyModal.jsx';
+import SignUpModal from '../components/modals/SignUpModal.jsx';
+import AuthCard from '../components/cards/AuthCard.jsx';
+import { LOGIN_INPUTS } from '../static/authentication.js';
 
-import SurveyModal from "../components/modals/SurveyModal.jsx";
-import SignUpModal from "../components/modals/SignUpModal.jsx";
-import AuthCard from "../components/cards/AuthCard.jsx";
-import { LOGIN_INPUTS } from "../static/authentication.js";
-
-import { parse, format } from "date-fns";
+import { parse, format } from 'date-fns';
+import { useAuthenticationStore } from '../store/authentication.js';
 
 const title =
   "In a world filled with hardships, why don't we prioritize our happiness and mental well-being instead?";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+
+  const userSignUpFn = useUsersStore((state) => state.userSignUp);
+  const { userLoginFn, loading } = useAuthenticationStore(
+    useShallow((state) => ({
+      loading: state.loading,
+      userLoginFn: state.loginUser,
+    }))
+  );
 
   const { dialog, toggleDialog } = useDialogStore(
     useShallow((state) => ({
@@ -32,161 +40,116 @@ export default function LoginPage() {
     }))
   );
 
-  const [opened, { open: handleOpen, close: handleClose }] =
-    useDisclosure(dialog);
   const [signupOpened, { open: handleSignupOpen, close: handleSignupClose }] =
     useDisclosure(false);
 
-  useEffect(() => {
-    if (dialog) {
-      handleOpen();
-    } else {
-      handleClose();
-    }
-  }, [dialog, handleOpen, handleClose]);
-
   const loginForm = useForm({
-    mode: "uncontrolled",
+    mode: 'uncontrolled',
     initialValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
     validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
+      email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
       password: (value) =>
         value.length < 6
-          ? "Password should be at least 6 characters long"
+          ? 'Password should be at least 6 characters long'
           : null,
     },
   });
 
   const signupForm = useForm({
-    mode: "uncontrolled",
+    mode: 'uncontrolled',
     initialValues: {
-      fullName: "",
+      fullName: '',
       date: {
-        day: "",
-        month: "",
-        year: "",
+        day: '',
+        month: '',
+        year: '',
       },
-      mobileNumber: "",
-      email: "",
-      password: "",
-      role: "",
+      mobileNumber: '',
+      email: '',
+      password: '',
+      role: '',
       survey: {
-        1: "",
-        2: "",
-        3: "",
-        4: "",
-        5: "",
+        1: '',
+        2: '',
+        3: '',
+        4: '',
+        5: '',
       },
     },
     validate: {
-      fullName: (value) => (!value ? "Full name is required" : null),
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
+      fullName: (value) => (!value ? 'Full name is required' : null),
+      email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
       mobileNumber: (value) =>
         value.length === 10
           ? null
-          : "Mobile number should be exactly 10 characters long",
+          : 'Mobile number should be exactly 10 characters long',
       password: (value) =>
         value.length < 6
-          ? "Password should be at least 6 characters long"
+          ? 'Password should be at least 6 characters long'
           : null,
-      "date.day": (value) => (!value ? "Day is required" : null),
-      "date.month": (value) => (!value ? "Month is required" : null),
-      "date.year": (value) => (!value ? "Year is required" : null),
+      'date.day': (value) => (!value ? 'Day is required' : null),
+      'date.month': (value) => (!value ? 'Month is required' : null),
+      'date.year': (value) => (!value ? 'Year is required' : null),
     },
   });
 
   // Sign In Function
-  function handleSignIn(value) {
-    console.log(value);
-    console.log("Sign In Form submitted");
-  }
-
-  function handleSurveyForm(value) {
-    signupForm.setValues({ ...value });
-    handleSignupOpen();
+  async function handleSignIn(value) {
+    try {
+      await userLoginFn(value.email, value.password);
+      navigate('/home');
+    } catch (error) {
+      console.error('Error logging in: ', error);
+    } finally {
+      handleSignupClose();
+    }
   }
 
   // Sign Up Function
-  function handleSignUpForm(value) {
-    console.log(value);
-
+  async function handleSignUpForm() {
     try {
       const formData = { ...signupForm.getValues() };
       const date = format(
         parse(
           formData.date.year +
-            "-" +
+            '-' +
             formData.date.month +
-            "-" +
+            '-' +
             formData.date.day,
-          "yyyy-MM-dd",
+          'yyyy-MM-dd',
           new Date()
         ),
-        "yyyy-MM-dd"
+        'yyyy-MM-dd'
       );
 
-      formData["dateOfBirth"] = date;
+      formData['dateOfBirth'] = date;
       delete formData.date;
-
-      console.log(formData);
-      console.log("Sign Up Form submitted");
+      await userSignUpFn(formData);
+      handleSignupClose();
     } catch (error) {
-      console.error("Error in Sign Up Form submission", error);
+      console.error('Error in Sign Up Form submission', error);
     }
   }
 
-  function handleNavigation() {
-    navigate("/login");
-  }
-
-  function handleDialogOpen() {
-    handleOpen();
+  const handleActiveSignUpForm = useCallback(() => {
     toggleDialog();
-  }
+    handleSignupOpen();
+  }, []);
 
-  function handleDialogClose() {
-    handleClose();
-    toggleDialog();
-  }
-
-  const titleFontSize = useMatches({
-    base: 40,
-    sm: 55,
-    lg: 65,
-  });
-
-  const titleMarginTop = useMatches({
-    base: 32,
-    md: 0,
-  });
-
-  const textMarginBottom = useMatches({
-    base: 12,
-    md: 22,
-  });
-
-  const textInputSize = useMatches({
-    base: "sm",
-    md: "md",
-  });
-
-  const marginBottom = useMatches({
-    base: 16,
-    md: 32,
-  });
+  const handleDialogSwitch = useCallback(() => {
+    signupForm.reset();
+    handleSignupClose();
+  }, []);
 
   const inputInstances = LOGIN_INPUTS.map((item) => (
     <TextInput
-      styles={{
-        input: {
-          borderColor: "var(--mantine-color-gray-6)",
-        },
+      classNames={{
+        input: classes.textInputBorder,
       }}
-      size={textInputSize}
-      mb={textMarginBottom}
+      className={classes.textInput}
       type={item.type}
       placeholder={item.placeholder}
       key={loginForm.key(item.name)}
@@ -203,31 +166,27 @@ export default function LoginPage() {
         justify="center"
         align="center"
         h="inherit"
-        direction={{ base: "column", sm: "row" }}
+        direction={{ base: 'column', sm: 'row' }}
       >
-        <Title
-          size={titleFontSize}
-          className={classes.heading}
-          ta={{ base: "center", sm: "start" }}
-          maw={{ base: "100%", sm: "60%" }}
-          mt={titleMarginTop}
-        >
-          {title}
-        </Title>
+        <Title className={classes.heading}>{title}</Title>
         <AuthCard
           form={loginForm}
           onSubmit={(formData) => handleSignIn(formData)}
-          onDialogOpen={handleDialogOpen}
+          onDialogOpen={toggleDialog}
           heading={{
-            title: "Login",
+            title: 'Login',
             description:
-              "Experience welcome and transform into something new as you embark on a journey of self-discovery.",
+              'Experience welcome and transform into something new as you embark on a journey of self-discovery. ',
           }}
-          buttonLabel="Login"
+          button={{ btnLabel: 'Login', btnLoading: loading }}
+          footer={{
+            ftrMessage: "Don't have an account? ",
+            ftrButton: 'Create Account',
+          }}
         >
           {inputInstances}
 
-          <Group justify="space-between" mb={marginBottom}>
+          <Group justify="space-between" className={classes.marginBottom}>
             <Checkbox label="Remember me" c="gray.6" />
             <Anchor size="sm" component="button" underline="never">
               Forgot Password?
@@ -237,16 +196,17 @@ export default function LoginPage() {
       </Flex>
 
       <SurveyModal
-        opened={opened}
-        onClose={handleDialogClose}
-        onSubmit={handleSurveyForm}
+        form={signupForm}
+        opened={dialog}
+        onClose={toggleDialog}
+        onSubmit={handleActiveSignUpForm}
       />
       <SignUpModal
         form={signupForm}
         opened={signupOpened}
         onClose={handleSignupClose}
         onSubmit={handleSignUpForm}
-        onNavigate={handleNavigation}
+        onDialog={handleDialogSwitch}
       ></SignUpModal>
     </>
   );
