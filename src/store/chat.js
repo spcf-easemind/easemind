@@ -21,7 +21,7 @@ export const useChatStore = create((set, get) => ({
   // Getters
   getNavChats: () => {
     const allChats = get().chats;
-    
+
     const loggedInUserId =
       useAuthenticationStore.getState().user.data?.key || null;
 
@@ -131,7 +131,11 @@ export const useChatStore = create((set, get) => ({
     const db = database;
     const storage = firebaseStorage;
 
-    const response = await uploadImage(db, storage, chatRef, formData);
+    const response = await uploadImage(db, storage, chatRef, formData).then(
+      (response) => {
+        console.log(response);
+      }
+    );
     return response;
   },
 }));

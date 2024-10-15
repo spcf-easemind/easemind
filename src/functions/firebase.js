@@ -180,8 +180,6 @@ export function serializeNavData(allChats, loggedInUserId) {
 
         const lastMessageUser = chatUsers[whichUser];
 
-        console.log(whichUser);
-
         if (lastMessage?.type === "image") {
           return `${lastMessageUser.name}: Image`;
         } else {

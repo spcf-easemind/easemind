@@ -16,7 +16,7 @@ const mainRoutes = [
     children: [
       {
         path: ":chatRef",
-        element: <ChatPage />,
+        element: <div />,
       },
     ],
   },
