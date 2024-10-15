@@ -39,7 +39,7 @@ export default function HomePage() {
     // getAllUsersFn();
     // deleteUserInfoFn();
     // console.log(message);
-    console.log(data);
+    // console.log(data);
   }, [data, message]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const form = useForm({

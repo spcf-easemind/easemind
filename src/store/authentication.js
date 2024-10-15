@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { authSubscribe, initSatellite } from "@junobuild/core";
-import { signIn, signOut, listDocs, setDoc, getDoc } from "@junobuild/core";
+import { signIn, signOut, listDocs, setDoc, getDoc, deleteDoc } from "@junobuild/core";
+import { defineConsoleConfig } from "@junobuild/config";
 
 export const useAuthenticationStore = create(
   persist(
