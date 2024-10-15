@@ -27,32 +27,8 @@ import IconLeave from "../assets/icons/buttons/IconLeave.svg";
 import { useDialogStore } from "../store/dialog.js";
 import { useAuthenticationStore } from "../store/authentication.js";
 import { useChatStore } from "../store/chat.js";
+import { useShallow } from "zustand/shallow";
 import { useMemo } from "react";
-import { useParams } from "react-router-dom";
-
-// const asideData = {
-//   type: "private",
-//   members: [
-//     {
-//       id: "IeDexac8elb3gZ90q5s3L",
-//       name: "Gabriel Alfonso",
-//       role: "Admin",
-//       image:
-//         "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-9.png",
-//     },
-//     {
-//       id: "4pnFyYuxhXBGQ5lzjHpKv",
-//       name: "Alexander JC",
-//       role: "Group Member",
-//       image:
-//         "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-1.png",
-//     },
-//   ],
-//   images: [],
-//   videos: [],
-//   documents: [],
-//   links: [],
-// };
 
 const dropdownFormat = [
   {
@@ -83,30 +59,54 @@ const dropdownFormat = [
 ];
 
 export default function AsidePage() {
-  const { chatRef } = useParams();
   const loggedUser = useAuthenticationStore((state) => state.user.data);
   const toggleChatModalFn = useDialogStore((state) => state.toggleChatModal);
-  const getAsideData = useChatStore((state) => state.getAsideData);
+  const { chat } = useChatStore(
+    useShallow((state) => ({
+      chat: state.chat,
+    }))
+  );
 
-  const asideData = getAsideData(chatRef);
+  const { asideDataPage: asideData, header } = chat;
 
-  console.log(asideData);
+  // console.log(chat);
+  // console.log(asideData);
 
   const computedDropdownInputs = useMemo(() => {
-    return asideData.type !== ""
+    return header.type !== ""
       ? dropdownFormat
           .filter(
-            (item) =>
-              !(asideData.type === "private" && item.label === "Members")
+            (item) => !(header.type === "private" && item.label === "Members")
           )
           .map((item) => ({
             ...item,
             data: asideData[item.dataKey],
           }))
       : null;
-  }, [asideData]);
+  }, [asideData, header]);
 
   const dropdownInstances = useMemo(() => {
+    const noDataAvailableComponent = (message) => (
+      <Paper p={16} radius="md">
+        <Text c="dimmed" size="xs" ta="center">{message}</Text>
+      </Paper>
+    );
+
+    const isWithData = (data) => data.length > 0;
+
+    const PhotoComponent = (instance) => {
+      return (
+        <Gallery>
+          <PhotoList images={instance.data} />
+        </Gallery>
+      );
+    };
+    const VideoComponent = (instance) => <VideoGrid />;
+    const LinkComponent = (instance) => <LinkList links={instance.data} />;
+    const DocumentComponent = (instance) => (
+      <DocumentList documents={instance.data} />
+    );
+
     return computedDropdownInputs
       ? computedDropdownInputs.map((instance) => {
           let children = null;
@@ -119,17 +119,21 @@ export default function AsidePage() {
               />
             );
           } else if (instance.label === "Photos") {
-            children = (
-              <Gallery>
-                <PhotoList images={instance.data} />
-              </Gallery>
-            );
+            isWithData(instance.data)
+              ? (children = PhotoComponent(instance))
+              : (children = noDataAvailableComponent("No photos available"));
           } else if (instance.label === "Videos") {
-            children = <VideoGrid />;
+            isWithData(instance.data)
+              ? (children = VideoComponent(instance))
+              : (children = noDataAvailableComponent("No videos available"));
           } else if (instance.label === "Links") {
-            children = <LinkList links={instance.data} />;
+            isWithData(instance.data)
+              ? (children = LinkComponent(instance))
+              : (children = noDataAvailableComponent("No links available"));
           } else if (instance.label === "Documents") {
-            children = <DocumentList documents={instance.data} />;
+            isWithData(instance.data)
+              ? (children = DocumentComponent(instance))
+              : (children = noDataAvailableComponent("No links available"));
           }
 
           return (
@@ -141,7 +145,7 @@ export default function AsidePage() {
       : null;
   }, [computedDropdownInputs, toggleChatModalFn]);
 
-  const leaveButton = asideData.type === "group" && (
+  const leaveButton = header.type === "group" && (
     <UnstyledButton>
       <Paper
         p={16}
@@ -168,10 +172,10 @@ export default function AsidePage() {
           w={90}
           h={90}
           radius="sm"
-          src={asideData.header.image}
+          src={header.image}
         />
         <Title ta="center" order={3}>
-          {asideData.header.name}
+          {header.name}
         </Title>
       </Box>
 

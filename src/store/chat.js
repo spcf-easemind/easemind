@@ -16,6 +16,8 @@ import {
   queryChatData,
 } from "../functions/firebase.js";
 
+import { serializer } from "../utils/serializer.js";
+
 export const useChatStore = create((set, get) => ({
   chats: [],
   listeners: {}, // To store active listeners
@@ -50,29 +52,12 @@ export const useChatStore = create((set, get) => ({
     const loggedInUserId =
       useAuthenticationStore.getState().user.data?.key || null;
     const response = serializeChatPageData(chat, loggedInUserId);
-    console.log("TEST", response);
     return response;
   },
 
   getUserData: (chatRef) => {
     const allChats = get().chats;
     const response = serializeUserData(allChats, chatRef);
-    return response;
-  },
-
-  getAsideData: (chatRef) => {
-    const allChats = get().chats;
-    const asideDataState = get().asideDataPage;
-    const loggedInUserId =
-      useAuthenticationStore.getState().user.data?.key || null;
-
-    let response = {};
-
-    response = {
-      ...serializeAsideData(allChats, chatRef, loggedInUserId),
-      ...asideDataState,
-    };
-
     return response;
   },
 
@@ -100,7 +85,7 @@ export const useChatStore = create((set, get) => ({
     const db = database;
     const messagesRef = ref(db, `chats/${chatRef}/messages`);
 
-    const listener = onValue(messagesRef, (snapshot) => {
+    const listener = onValue(messagesRef, async (snapshot) => {
       const messagesData = snapshot.val();
       if (messagesData) {
         const chatMessages = Object.keys(messagesData).map((messageId) => ({
@@ -108,18 +93,23 @@ export const useChatStore = create((set, get) => ({
           ...messagesData[messageId],
         }));
 
-        // console.log(messagesData);
+        const asideResponse = await get().queryAsideData(
+          chatRef,
+          get().chat.header.type
+        );
 
         // Update Zustand store with new messages
         set((state) => {
-          const updatedChats = state.chats.map((chat) => {
-            if (chat.id === chatRef) {
-              return { ...chat, messages: chatMessages };
-            }
-            return chat;
-          });
-          // console.log(updatedChats);
-          return { chats: updatedChats };
+          return {
+            chat: {
+              ...state.chat,
+              chatMessages: serializer.serializeMessages(chatMessages),
+              asideDataPage: {
+                ...state.chat.asideDataPage,
+                ...asideResponse,
+              },
+            },
+          };
         });
       }
     });
@@ -169,7 +159,22 @@ export const useChatStore = create((set, get) => ({
     if (chatRef) {
       const response = await queryChatData(db, chatRef);
       const serializedData = get().setChatPageData(response);
-      set((state) => ({ chat: { ...state.chat, ...serializedData } }));
+
+      const asideResponse = await get().queryAsideData(
+        chatRef,
+        serializedData.header.type
+      );
+
+      set((state) => ({
+        chat: {
+          ...state.chat,
+          ...serializedData,
+          asideDataPage: {
+            ...state.chat.asideDataPage,
+            ...asideResponse,
+          },
+        },
+      }));
     } else {
       set(() => ({
         chat: {
@@ -180,6 +185,13 @@ export const useChatStore = create((set, get) => ({
             type: "",
           },
           chatMessages: [],
+          asideDataPage: {
+            users: [],
+            images: [],
+            documents: [],
+            videos: [],
+            links: [],
+          },
         },
       }));
     }
@@ -195,9 +207,6 @@ export const useChatStore = create((set, get) => ({
       acc[`${chatType}s`] = await queryMessagesByType(db, chatRef, chatType);
       return acc;
     }, {});
-
-    set(() => ({
-      asideDataPage: queries,
-    }));
+    return queries;
   },
 }));

@@ -6,13 +6,17 @@ import {
   Image,
   Button,
   Card,
+  Popover,
 } from "@mantine/core";
+
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
 
 import IconEmoticon from "../../assets/icons/input/IconEmoticon.svg";
 import IconImage from "../../assets/icons/input/IconImage.svg";
 import IconPaperClip from "../../assets/icons/input/IconPaperClip.svg";
 
-import { forwardRef, useRef } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 
 const icons = [
   {
@@ -23,7 +27,7 @@ const icons = [
   {
     name: "image",
     svg: IconImage,
-    action: "image",
+    action: "media",
   },
   {
     name: "paper-clip",
@@ -33,6 +37,7 @@ const icons = [
 ];
 
 const ChatInput = forwardRef(({ form, onSubmit, onUpload, ...props }, ref) => {
+  const [cursorPosition, setCursorPosition] = useState(0);
   const imageInputRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -41,14 +46,34 @@ const ChatInput = forwardRef(({ form, onSubmit, onUpload, ...props }, ref) => {
   }
 
   function handleUploadFile(files) {
-    console.log(files);
-    onUpload(files);
+    const fileData = [];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const fileType = file.type;
+
+      // Determine the type of each file based on its MIME type
+      if (fileType.startsWith("image/")) {
+        console.log("Uploaded file is an image:", file);
+        fileData.push({ type: "image", file });
+      } else if (fileType.startsWith("video/")) {
+        console.log("Uploaded file is a video:", file);
+        fileData.push({ type: "video", file });
+      } else {
+        // Handle all other document types
+        console.log("Uploaded file is a document:", file);
+        fileData.push({ type: "document", file });
+      }
+    }
+
+    // Pass all categorized files to the onUpload handler
+    onUpload(fileData);
   }
 
   // Handle icon click for image and file
   function handleIconClick(action) {
     console.log(action);
-    if (action === "image") {
+    if (action === "media") {
       // Trigger image input
       imageInputRef.current.click();
     } else if (action === "file") {
@@ -57,18 +82,43 @@ const ChatInput = forwardRef(({ form, onSubmit, onUpload, ...props }, ref) => {
     }
   }
 
+  function handleSelectEmoji(emoji) {
+    const cursor = ref.current.selectionStart;
+    ref.current.value =
+      ref.current.value.slice(0, cursor) +
+      emoji.native +
+      ref.current.value.slice(cursor);
+
+    setCursorPosition(cursor + emoji.native.length);
+
+    form.setFieldValue("message", ref.current.value);
+  }
+
+  useEffect(() => {
+    ref.current.focus();
+    ref.current.setSelectionRange(cursorPosition, cursorPosition);
+  }, [cursorPosition]);
+
   const groupIcons = (
     <Group justify="center" wrap="no-wrap">
-      {icons.map((icon) => (
-        <UnstyledButton
-          onClick={() => {
-            handleIconClick(icon.action);
-          }}
-          key={icon.name}
-        >
-          <Image src={icon.svg} />
-        </UnstyledButton>
-      ))}
+      {icons.map((icon) =>
+        icon.name === "emoticon" ? (
+          <Popover.Target key={icon.name}>
+            <UnstyledButton>
+              <Image src={icon.svg} />
+            </UnstyledButton>
+          </Popover.Target>
+        ) : (
+          <UnstyledButton
+            onClick={() => {
+              handleIconClick(icon.action);
+            }}
+            key={icon.name}
+          >
+            <Image src={icon.svg} />
+          </UnstyledButton>
+        )
+      )}
     </Group>
   );
 
@@ -91,41 +141,51 @@ const ChatInput = forwardRef(({ form, onSubmit, onUpload, ...props }, ref) => {
         }}
       >
         <form onSubmit={form.onSubmit(handleSubmit)}>
-          <Group>
-            {groupIcons}
-            <TextInput
-              flex={1}
-              ref={ref}
-              size="lg"
-              variant="unstyled"
-              key={form.key("message")}
-              {...form.getInputProps("message")}
-            />
-            {sendButton}
+          <Popover trapFocus withArrow position="top-start">
+            <Group>
+              {groupIcons}
+              <TextInput
+                flex={1}
+                ref={ref}
+                size="lg"
+                variant="unstyled"
+                key={form.key("message")}
+                {...form.getInputProps("message")}
+              />
+              {sendButton}
+              <Popover.Dropdown>
+                <Picker
+                  data={data}
+                  onEmojiSelect={handleSelectEmoji}
+                  emojiVersion="15"
+                />
+              </Popover.Dropdown>
 
-            {/* Hidden file inputs for image and file */}
-            <input
-              type="file"
-              accept="image/*"
-              ref={imageInputRef}
-              style={{ display: "none" }}
-              onChange={(e) => {
-                // Handle the selected image file
-                const files = e.target.files;
-                handleUploadFile(files);
-              }}
-            />
-            <input
-              type="file"
-              ref={fileInputRef}
-              style={{ display: "none" }}
-              onChange={(e) => {
-                // Handle the selected file
-                const files = e.target.files;
-                handleUploadFile(files);
-              }}
-            />
-          </Group>
+              {/* Hidden file inputs for image and file */}
+              <input
+                type="file"
+                accept="image/*,video/*"
+                ref={imageInputRef}
+                style={{ display: "none" }}
+                onChange={(e) => {
+                  // Handle the selected image file
+                  const files = e.target.files;
+                  handleUploadFile(files);
+                }}
+              />
+              <input
+                type="file"
+                ref={fileInputRef}
+                accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv"
+                style={{ display: "none" }}
+                onChange={(e) => {
+                  // Handle the selected file
+                  const files = e.target.files;
+                  handleUploadFile(files);
+                }}
+              />
+            </Group>
+          </Popover>
         </form>
       </Card>
     </Box>

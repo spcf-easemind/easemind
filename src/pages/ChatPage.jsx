@@ -66,7 +66,7 @@ export default function ChatPage() {
     unsubscribeFn: unsubscribeFromChat,
   });
 
-  console.log(header, chatMessages);
+  // console.log(header, chatMessages);
 
   // Variables
   const inputRef = useRef();
@@ -124,15 +124,17 @@ export default function ChatPage() {
   }
 
   async function handleUploadFile(files) {
-    const formData = {
-      userKey: form.getValues().userKey,
-      type: "image",
-      file: files[0],
-    };
 
-    uploadImage(chatRef, formData).catch((error) => {
-      console.error("Error", error);
-    });
+    console.log(files);
+    // const formData = {
+    //   userKey: form.getValues().userKey,
+    //   type: "image",
+    //   file: files[0],
+    // };
+
+    // uploadImage(chatRef, formData).catch((error) => {
+    //   console.error("Error", error);
+    // });
   }
 
   function handleAddMembers(formData) {
