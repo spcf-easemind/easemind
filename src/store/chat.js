@@ -52,7 +52,6 @@ export const useChatStore = create((set, get) => ({
     const loggedInUserId =
       useAuthenticationStore.getState().user.data?.key || null;
     const response = serializeChatPageData(chat, loggedInUserId);
-    console.log("TEST", response);
     return response;
   },
 
@@ -86,7 +85,7 @@ export const useChatStore = create((set, get) => ({
     const db = database;
     const messagesRef = ref(db, `chats/${chatRef}/messages`);
 
-    const listener = onValue(messagesRef, (snapshot) => {
+    const listener = onValue(messagesRef, async (snapshot) => {
       const messagesData = snapshot.val();
       if (messagesData) {
         const chatMessages = Object.keys(messagesData).map((messageId) => ({
@@ -94,12 +93,21 @@ export const useChatStore = create((set, get) => ({
           ...messagesData[messageId],
         }));
 
+        const asideResponse = await get().queryAsideData(
+          chatRef,
+          get().chat.header.type
+        );
+
         // Update Zustand store with new messages
         set((state) => {
           return {
             chat: {
               ...state.chat,
               chatMessages: serializer.serializeMessages(chatMessages),
+              asideDataPage: {
+                ...state.chat.asideDataPage,
+                ...asideResponse,
+              },
             },
           };
         });

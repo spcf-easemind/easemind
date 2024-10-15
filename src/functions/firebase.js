@@ -116,7 +116,6 @@ export function serializeChatPageData(chat, loggedInUserId) {
   let header = {};
   let chatMessages = [];
 
-  console.log("Check:", chat);
   const data = serializer.serializeChat(chat);
 
   if (data) {
@@ -310,10 +309,10 @@ export async function queryChatData(db, chatRef) {
     .then((snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
-        console.log("Chat data:", data);
+        // console.log("Chat data:", data);
         return data;
       } else {
-        console.log("Chat not found");
+        // console.log("Chat not found");
         return null;
       }
     })
@@ -332,10 +331,10 @@ export async function queryMessagesByType(db, chatRef, type) {
       if (snapshot.exists()) {
         // Returns only messages where type equals the value you are querying for
         const data = snapshot.val();
-        console.log(`Messages of type ${type}:`, data);
+        // console.log(`Messages of type ${type}:`, data);
         return serializer.serializeFileTypes(data);
       } else {
-        console.log(`No messages of type ${type}`);
+        // console.log(`No messages of type ${type}`);
         return [];
       }
     })

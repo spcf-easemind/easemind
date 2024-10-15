@@ -27,7 +27,7 @@ const icons = [
   {
     name: "image",
     svg: IconImage,
-    action: "image",
+    action: "media",
   },
   {
     name: "paper-clip",
@@ -37,7 +37,7 @@ const icons = [
 ];
 
 const ChatInput = forwardRef(({ form, onSubmit, onUpload, ...props }, ref) => {
-  const [cursorPosition, setCursorPosition] = useState(0)
+  const [cursorPosition, setCursorPosition] = useState(0);
   const imageInputRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -46,14 +46,34 @@ const ChatInput = forwardRef(({ form, onSubmit, onUpload, ...props }, ref) => {
   }
 
   function handleUploadFile(files) {
-    console.log(files);
-    onUpload(files);
+    const fileData = [];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const fileType = file.type;
+
+      // Determine the type of each file based on its MIME type
+      if (fileType.startsWith("image/")) {
+        console.log("Uploaded file is an image:", file);
+        fileData.push({ type: "image", file });
+      } else if (fileType.startsWith("video/")) {
+        console.log("Uploaded file is a video:", file);
+        fileData.push({ type: "video", file });
+      } else {
+        // Handle all other document types
+        console.log("Uploaded file is a document:", file);
+        fileData.push({ type: "document", file });
+      }
+    }
+
+    // Pass all categorized files to the onUpload handler
+    onUpload(fileData);
   }
 
   // Handle icon click for image and file
   function handleIconClick(action) {
     console.log(action);
-    if (action === "image") {
+    if (action === "media") {
       // Trigger image input
       imageInputRef.current.click();
     } else if (action === "file") {
@@ -62,7 +82,6 @@ const ChatInput = forwardRef(({ form, onSubmit, onUpload, ...props }, ref) => {
     }
   }
 
-
   function handleSelectEmoji(emoji) {
     const cursor = ref.current.selectionStart;
     ref.current.value =
@@ -70,22 +89,22 @@ const ChatInput = forwardRef(({ form, onSubmit, onUpload, ...props }, ref) => {
       emoji.native +
       ref.current.value.slice(cursor);
 
-    setCursorPosition(cursor + emoji.native.length)
+    setCursorPosition(cursor + emoji.native.length);
 
     form.setFieldValue("message", ref.current.value);
   }
 
   useEffect(() => {
-    ref.current.focus()
-    ref.current.setSelectionRange(cursorPosition, cursorPosition)
-  }, [cursorPosition])
+    ref.current.focus();
+    ref.current.setSelectionRange(cursorPosition, cursorPosition);
+  }, [cursorPosition]);
 
   const groupIcons = (
     <Group justify="center" wrap="no-wrap">
       {icons.map((icon) =>
         icon.name === "emoticon" ? (
-          <Popover.Target>
-            <UnstyledButton key={icon.name}>
+          <Popover.Target key={icon.name}>
+            <UnstyledButton>
               <Image src={icon.svg} />
             </UnstyledButton>
           </Popover.Target>
@@ -145,7 +164,7 @@ const ChatInput = forwardRef(({ form, onSubmit, onUpload, ...props }, ref) => {
               {/* Hidden file inputs for image and file */}
               <input
                 type="file"
-                accept="image/*"
+                accept="image/*,video/*"
                 ref={imageInputRef}
                 style={{ display: "none" }}
                 onChange={(e) => {
@@ -157,6 +176,7 @@ const ChatInput = forwardRef(({ form, onSubmit, onUpload, ...props }, ref) => {
               <input
                 type="file"
                 ref={fileInputRef}
+                accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv"
                 style={{ display: "none" }}
                 onChange={(e) => {
                   // Handle the selected file

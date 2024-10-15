@@ -69,8 +69,8 @@ export default function AsidePage() {
 
   const { asideDataPage: asideData, header } = chat;
 
-  console.log(chat);
-  console.log(asideData);
+  // console.log(chat);
+  // console.log(asideData);
 
   const computedDropdownInputs = useMemo(() => {
     return header.type !== ""
@@ -86,11 +86,30 @@ export default function AsidePage() {
   }, [asideData, header]);
 
   const dropdownInstances = useMemo(() => {
+    const noDataAvailableComponent = (message) => (
+      <Paper p={16} radius="md">
+        <Text c="dimmed" size="xs" ta="center">{message}</Text>
+      </Paper>
+    );
+
+    const isWithData = (data) => data.length > 0;
+
+    const PhotoComponent = (instance) => {
+      return (
+        <Gallery>
+          <PhotoList images={instance.data} />
+        </Gallery>
+      );
+    };
+    const VideoComponent = (instance) => <VideoGrid />;
+    const LinkComponent = (instance) => <LinkList links={instance.data} />;
+    const DocumentComponent = (instance) => (
+      <DocumentList documents={instance.data} />
+    );
+
     return computedDropdownInputs
       ? computedDropdownInputs.map((instance) => {
           let children = null;
-
-          // console.log(instance);
 
           if (instance.label === "Members") {
             children = (
@@ -100,17 +119,21 @@ export default function AsidePage() {
               />
             );
           } else if (instance.label === "Photos") {
-            children = (
-              <Gallery>
-                <PhotoList images={instance.data} />
-              </Gallery>
-            );
+            isWithData(instance.data)
+              ? (children = PhotoComponent(instance))
+              : (children = noDataAvailableComponent("No photos available"));
           } else if (instance.label === "Videos") {
-            children = <VideoGrid />;
+            isWithData(instance.data)
+              ? (children = VideoComponent(instance))
+              : (children = noDataAvailableComponent("No videos available"));
           } else if (instance.label === "Links") {
-            children = <LinkList links={instance.data} />;
+            isWithData(instance.data)
+              ? (children = LinkComponent(instance))
+              : (children = noDataAvailableComponent("No links available"));
           } else if (instance.label === "Documents") {
-            children = <DocumentList documents={instance.data} />;
+            isWithData(instance.data)
+              ? (children = DocumentComponent(instance))
+              : (children = noDataAvailableComponent("No links available"));
           }
 
           return (
