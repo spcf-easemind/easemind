@@ -103,7 +103,7 @@ export const useUsersStore = create((set) => ({
         const userData = {
           userCredentials: items.items[0],
           userSurveys: itemSurveys.items[0],
-          users: user.data,
+          user: user.data,
         };
         set(() => ({
           data: userData,
@@ -136,11 +136,11 @@ export const useUsersStore = create((set) => ({
     });
 
     // console.log(users);
-    // const userProfiles = await listAssets({
-    //   collection: 'userProfilePicture',
-    // });
+    const userProfiles = await listAssets({
+      collection: 'userProfilePicture',
+    });
 
-    // console.log(userProfiles);
+    console.log('User Profiles:', userProfiles);
 
     const allUsers = [];
     for (const user of users.items) {

@@ -35,11 +35,11 @@ export default function HomePage() {
   const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
-    getUserInfoFn();
+    // getUserInfoFn();
     // getAllUsersFn();
     // deleteUserInfoFn();
     // console.log(message);
-    // console.log(data);
+    console.log(data);
   }, [data, message]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const form = useForm({
