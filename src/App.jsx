@@ -77,12 +77,12 @@ function App() {
     <AppShell
       header={{ height: { base: 60, sm: 70 } }}
       navbar={{
-        width: 400,
+        width: {base: 350, lg: 400},
         breakpoint: "sm",
         collapsed: { mobile: handleDrawerMobile, desktop: handleDrawerDesktop },
       }}
       aside={{
-        width: 350,
+        width: {base: 300, lg: 350},
         breakpoint: "md",
         collapsed: { mobile: handleAsideMobile, desktop: handleAsideDesktop },
       }}
