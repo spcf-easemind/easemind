@@ -336,7 +336,7 @@ export async function queryMessagesByType(db, chatRef, type) {
         return serializer.serializeFileTypes(data);
       } else {
         console.log(`No messages of type ${type}`);
-        return null;
+        return [];
       }
     })
     .catch((error) => {

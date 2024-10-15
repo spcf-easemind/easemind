@@ -16,6 +16,8 @@ import {
   queryChatData,
 } from "../functions/firebase.js";
 
+import { serializer } from "../utils/serializer.js";
+
 export const useChatStore = create((set, get) => ({
   chats: [],
   listeners: {}, // To store active listeners
@@ -60,22 +62,6 @@ export const useChatStore = create((set, get) => ({
     return response;
   },
 
-  getAsideData: (chatRef) => {
-    const allChats = get().chats;
-    const asideDataState = get().asideDataPage;
-    const loggedInUserId =
-      useAuthenticationStore.getState().user.data?.key || null;
-
-    let response = {};
-
-    response = {
-      ...serializeAsideData(allChats, chatRef, loggedInUserId),
-      ...asideDataState,
-    };
-
-    return response;
-  },
-
   // Actions
   fetchChats: async (loggedInUserId) => {
     const db = database;
@@ -108,18 +94,14 @@ export const useChatStore = create((set, get) => ({
           ...messagesData[messageId],
         }));
 
-        // console.log(messagesData);
-
         // Update Zustand store with new messages
         set((state) => {
-          const updatedChats = state.chats.map((chat) => {
-            if (chat.id === chatRef) {
-              return { ...chat, messages: chatMessages };
-            }
-            return chat;
-          });
-          // console.log(updatedChats);
-          return { chats: updatedChats };
+          return {
+            chat: {
+              ...state.chat,
+              chatMessages: serializer.serializeMessages(chatMessages),
+            },
+          };
         });
       }
     });
@@ -169,7 +151,22 @@ export const useChatStore = create((set, get) => ({
     if (chatRef) {
       const response = await queryChatData(db, chatRef);
       const serializedData = get().setChatPageData(response);
-      set((state) => ({ chat: { ...state.chat, ...serializedData } }));
+
+      const asideResponse = await get().queryAsideData(
+        chatRef,
+        serializedData.header.type
+      );
+
+      set((state) => ({
+        chat: {
+          ...state.chat,
+          ...serializedData,
+          asideDataPage: {
+            ...state.chat.asideDataPage,
+            ...asideResponse,
+          },
+        },
+      }));
     } else {
       set(() => ({
         chat: {
@@ -180,6 +177,13 @@ export const useChatStore = create((set, get) => ({
             type: "",
           },
           chatMessages: [],
+          asideDataPage: {
+            users: [],
+            images: [],
+            documents: [],
+            videos: [],
+            links: [],
+          },
         },
       }));
     }
@@ -195,9 +199,6 @@ export const useChatStore = create((set, get) => ({
       acc[`${chatType}s`] = await queryMessagesByType(db, chatRef, chatType);
       return acc;
     }, {});
-
-    set(() => ({
-      asideDataPage: queries,
-    }));
+    return queries;
   },
 }));
