@@ -1,7 +1,9 @@
 import { Modal, Group, Stack, Text, Box } from "@mantine/core";
 import { useMatches } from "@mantine/core";
-import { useCounter } from "@mantine/hooks";
 import classes from "./SurveyModal.module.css";
+import { useForm } from "@mantine/form";
+
+import { useState } from "react";
 
 import Heading from "../headings/Heading.jsx";
 import RolePicker from "../forms/RolePicker.jsx";
@@ -14,16 +16,34 @@ import {
   STEPPER_LABELS,
 } from "../../static/register.js";
 
-export default function SurveyModal({ form, opened, onClose, onSubmit }) {
-  const [stepper, { increment, decrement, set }] = useCounter(1, { min: 1, max: 7 });
+export default function SurveyModal({ opened, onClose, onSubmit }) {
+  const [stepper, setStepper] = useState(1);
+
+  const form = useForm({
+    mode: "uncontrolled",
+    initialValues: {
+      role: undefined,
+      survey: {
+        1: undefined,
+        2: undefined,
+        3: undefined,
+        4: undefined,
+        5: undefined,
+      },
+    },
+  });
 
   function handleFormData(data) {
     form.setValues({ ...data });
-    increment();
+    setStepper((oldVal) => oldVal + 1);
 
     if (stepper + 1 === 7) {
-      onSubmit();
-      set(1);
+      const formValues = form.getValues();
+
+      // Functions
+      onSubmit(formValues);
+      onClose();
+      setStepper(1);
     }
   }
 

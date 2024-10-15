@@ -1,17 +1,12 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { authSubscribe, initSatellite } from "@junobuild/core";
-import { signIn, signOut, listDocs, setDoc, getDoc } from "@junobuild/core";
+import { signIn, signOut } from "@junobuild/core";
 
 export const useAuthenticationStore = create(
   persist(
     (set, get) => ({
-      user: {
-        identity_provider: null,
-        data: null,
-      },
-      message: null,
-      loading: false,
+      user: null,
 
       initializeJuno: async () => {
         await initSatellite();
@@ -19,9 +14,6 @@ export const useAuthenticationStore = create(
       },
 
       authenticateInternetIdentity: async () => {
-        // Set Loading True
-        set(() => ({ loading: true }));
-
         // Authenticate Internet Identity
         const signInOptions = {
           windowed: true,
@@ -38,13 +30,11 @@ export const useAuthenticationStore = create(
         await handleSignIn();
 
         const sub = authSubscribe((userJuno) =>
-          set((state) => {
+          set(() => {
             console.log(userJuno);
-
             return {
               user: {
-                ...state.user,
-                identity_provider: {
+                [userJuno.data.provider]: {
                   identity: userJuno.identity,
                   owner: userJuno.owner,
                   key: userJuno.key,
@@ -54,174 +44,17 @@ export const useAuthenticationStore = create(
           })
         );
 
-        // Set Loading False
-        set(() => ({ loading: false }));
-
         return () => sub();
       },
 
-      logoutInternetIdentity: async () => {
-        const items = await listDocs({
-          collection: "userCredentials",
-        });
-
-        if (items.items && items.items.length > 0 && items.items[0].data) {
-          const user = await getDoc({
-            collection: "users",
-            key: userKey,
-          });
-
-          const userWithConvertedDates = convertTimestamps(user);
-          const userData = user.data;
-          const userKey = user.key;
-          const userVersion = user.version;
-
-          const updatedUserData = {
-            key: user.data.key,
-            fullName: userData.fullName,
-            status: "offline",
-            lastUpdated: userWithConvertedDates,
-          };
-          set(() => ({
-            user: null,
-            message: "Loading...",
-          }));
-
-          await setDoc({
-            collection: "users",
-            doc: {
-              key: userKey,
-              data: updatedUserData,
-              version: userVersion,
-            },
-          });
-
-          const response = await signOut();
-
-          console.log(response);
-
-          sessionStorage.removeItem("authentication");
-
-          set(() => ({
-            user: null,
-            message: "Logout Successfully!",
-          }));
-        } else {
-          set(() => ({
-            user: null,
-            message: "No account found on this identity. Please sign up first",
-          }));
-        }
-      },
-
-      loginUser: async (email, password) => {
-        // Set Loading True
-        set(() => ({ loading: true }));
-
-        const items = await listDocs({
-          collection: "userCredentials",
-        });
-
-        if (items.items && items.items.length > 0 && items.items[0].data) {
-          // console.log('asd', email);
-          if (
-            items.items[0].data.email === email &&
-            items.items[0].data.password === password
-          ) {
-            const user = await getDoc({
-              collection: "users",
-              key: items.items[0].key,
-            });
-
-            const userWithConvertedDates = convertTimestamps(user);
-            const userData = user.data;
-            const userKey = user.key;
-            const userVersion = user.version;
-            const userItems = items.items[0].data;
-
-            // use the formData when you needed to update the userCredentials.
-            const updatedData = {
-              key: userData.key,
-              fullName: userData.fullName,
-              status: "online",
-              lastUpdated: userWithConvertedDates,
-            };
-
-            await setDoc({
-              collection: "users",
-              doc: {
-                key: userKey,
-                data: updatedData,
-                version: userVersion,
-              },
-            });
-
-            set((state) => ({
-              user: {
-                ...state.user,
-                data: {
-                  fullName: userData.fullName,
-                  email: userItems.email,
-                  key: userKey,
-                  role: userItems.role,
-                },
-              },
-              message: "Login Successfully!",
-            }));
-
-            // Set Loading False
-            set(() => ({ loading: false }));
-          } else {
-            set((state) => ({
-              user: {
-                ...state.user,
-                data: null,
-              },
-              message: "Incorrect email or password",
-            }));
-
-            // Set Loading False
-            set(() => ({ loading: false }));
-          }
-        } else {
-          set((state) => ({
-            user: {
-              ...state.user,
-              data: null,
-            },
-            message: "No account found on this identity. Please sign up first",
-          }));
-
-          // Set Loading False
-          set(() => ({ loading: false }));
-        }
+      logoutInternetIdentity: () => {
+        set(() => ({ user: null }));
+        signOut();
       },
     }),
     {
       name: "authentication",
       storage: createJSONStorage(() => sessionStorage),
-      partialize: (state) => ({ user: state.user }),
     }
   )
 );
-
-function convertTimestamps(user) {
-  const convertNanosToDateString = (nanos) => {
-    // Convert nanoseconds to milliseconds
-    const milliseconds = Number(nanos.toString().slice(0, -6));
-    const date = new Date(milliseconds);
-    
-    // Format the date as a string (e.g., "2024-03-14 15:30:45")
-    return date;
-  };
-
-  // Use updated_at if it exists, otherwise fallback to created_at
-  const timestamp = user.updated_at || user.created_at;
-
-  if (timestamp) {
-    return convertNanosToDateString(timestamp);
-  }
-
-  // Return null or a default string if no valid timestamp is found
-  return null; // or return "N/A" if you prefer a default string
-}

@@ -36,17 +36,12 @@ const icons = [
   },
 ];
 
-const ChatInput = forwardRef(({ form, onSubmit, onUpload, ...props }, ref) => {
+const ChatInput = forwardRef(({ form, onSubmit, ...props }, ref) => {
   const imageInputRef = useRef(null);
   const fileInputRef = useRef(null);
 
   function handleSubmit(formData) {
     onSubmit(formData);
-  }
-
-  function handleUploadFile(files) {
-    console.log(files);
-    onUpload(files);
   }
 
   // Handle icon click for image and file
@@ -107,7 +102,7 @@ const ChatInput = forwardRef(({ form, onSubmit, onUpload, ...props }, ref) => {
           backgroundColor: "var(--mantine-color-gray-1)",
         }}
       >
-        <form onSubmit={form.onSubmit(handleSubmit)}>
+        <form onSubmit={form.onSubmit((value) => handleSubmit(value))}>
           <Popover trapFocus withArrow position="top-start">
             <Group>
               {groupIcons}
@@ -136,9 +131,11 @@ const ChatInput = forwardRef(({ form, onSubmit, onUpload, ...props }, ref) => {
                 style={{ display: "none" }}
                 onChange={(e) => {
                   // Handle the selected image file
-                  const files = e.target.files;
-                handleUploadFile(files);
-              }}
+                  const file = e.target.files[0];
+                  if (file) {
+                    console.log("Selected image:", file);
+                  }
+                }}
               />
               <input
                 type="file"
@@ -146,9 +143,11 @@ const ChatInput = forwardRef(({ form, onSubmit, onUpload, ...props }, ref) => {
                 style={{ display: "none" }}
                 onChange={(e) => {
                   // Handle the selected file
-                  const files = e.target.files;
-                handleUploadFile(files);
-              }}
+                  const file = e.target.files[0];
+                  if (file) {
+                    console.log("Selected file:", file);
+                  }
+                }}
               />
             </Group>
           </Popover>

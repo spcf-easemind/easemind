@@ -35,18 +35,18 @@ function App() {
     sm: "90dvh",
   });
 
-  const withContainer = location.pathname.startsWith("/chat") ? (
-    <Outlet />
-  ) : (
-    <Container size={containerBreakpoint} h="100%">
+  const withContainer =
+    location.pathname === "/chat" ? (
       <Outlet />
-    </Container>
-  );
+    ) : (
+      <Container size={containerBreakpoint} h="100%">
+        <Outlet />
+      </Container>
+    );
 
-  // Adjusted logic to include /chat and /chat/:chatRef for header
   const whichHeader = mainRoutes
     .map(({ path }) => path)
-    .some((path) => location.pathname.startsWith(path)) ? (
+    .includes(location.pathname) ? (
     <MainHeader />
   ) : (
     <Header />
@@ -55,13 +55,13 @@ function App() {
   const withBackground = ![
     ...mainRoutes.map(({ path }) => path),
     "/internet-identity",
-  ].some((path) => location.pathname.startsWith(path))
+  ].includes(location.pathname)
     ? classes.bgImage
     : null;
 
   // Collapse Drawer and Aside
   const { handleDrawerMobile, handleDrawerDesktop } =
-    location.pathname.startsWith("/chat")
+    location.pathname === "/chat"
       ? {
           handleDrawerMobile: !drawerMobileOpened,
           handleDrawerDesktop: !drawerDesktopOpened,
@@ -69,7 +69,7 @@ function App() {
       : { handleDrawerMobile: true, handleDrawerDesktop: true };
 
   const { handleAsideMobile, handleAsideDesktop } =
-    location.pathname.startsWith("/chat")
+    location.pathname === "/chat"
       ? { handleAsideMobile: !mobileOpened, handleAsideDesktop: !desktopOpened }
       : { handleAsideMobile: true, handleAsideDesktop: true };
 
@@ -81,15 +81,15 @@ function App() {
         breakpoint: "sm",
         collapsed: { mobile: handleDrawerMobile, desktop: handleDrawerDesktop },
       }}
-      aside={{
-        width: 350,
-        breakpoint: "md",
-        collapsed: { mobile: handleAsideMobile, desktop: handleAsideDesktop },
-      }}
       styles={{
         main: {
           height: mainHeight,
         },
+      }}
+      aside={{
+        width: 350,
+        breakpoint: "md",
+        collapsed: { mobile: handleAsideMobile, desktop: handleAsideDesktop },
       }}
     >
       <AppShell.Header>

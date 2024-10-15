@@ -2,48 +2,8 @@
   font-family: var(--mantine-baloo-bhai-2);
   color: white;
   text-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
-  margin-top: 0;
-  font-size: rem(40px);
-  text-align: center;
-  max-width: 100%;
-
-  @media (min-width: $mantine-breakpoint-sm) {
-    font-size: rem(55px);
-    text-align: start;
-    max-width: 60%;
-  }
-
-  @media (min-width: $mantine-breakpoint-md) {
-    margin-top: rem(32px);
-  }
-
-  @media (min-width: $mantine-breakpoint-lg) {
-    font-size: rem(65px);
-  }
 
   @media (max-height: $mantine-breakpoint-xs) {
     font-size: rem(40px);
   }
-}
-
-.marginBottom {
-  margin-bottom: rem(16px);
-
-  @media (min-width: $mantine-breakpoint-md) {
-    margin-bottom: rem(32px);
-  }
-}
-
-.textInput {
-  margin-bottom: rem(12px);
-  font-size: var(--mantine-spacing-sm);
-
-  @media (min-width: $mantine-breakpoint-md) {
-    margin-bottom: rem(22px);
-    font-size: var(--mantine-spacing-md);
-  }
-}
-
-.textInputBorder {
-  border-color: var(--mantine-color-gray-6);
 }

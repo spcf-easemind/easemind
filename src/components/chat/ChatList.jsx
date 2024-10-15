@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 
 import classes from "./ChatList.module.css";
-import { format } from "date-fns";
+
 
 export default function ChatList({
   userName,
@@ -22,15 +22,10 @@ export default function ChatList({
   activeChat,
 }) {
   const isBadge = unread ? (
-    <Badge size="md" circle color="var(--mantine-primary-color-4)" ml={20}>
+    <Badge size="md" circle color='var(--mantine-primary-color-4)' ml={20}>
       {unread}
     </Badge>
   ) : null;
-
-  const formattedTime = (time) => {
-    const date = new Date(time);
-    return format(date, "kk:mm");
-  };
 
   return (
     <UnstyledButton
@@ -48,12 +43,12 @@ export default function ChatList({
             {userName}
           </Title>
           <Text lineClamp={1} c="gray" size="sm">
-            {text ? text : "No messages yet"}
+            {text}
           </Text>
         </Box>
         <Box h={40} w={40}>
-          <Text c="gray" size="sm" align="right" truncate="end">
-            {formattedTime(time)}
+          <Text c="gray" size="sm" align='right' truncate="end">
+            {time}
           </Text>
           {isBadge}
         </Box>

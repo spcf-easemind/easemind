@@ -1,9 +1,9 @@
-import { Avatar, Group, Image, Text, UnstyledButton } from "@mantine/core";
+import { Group, Image, Text, UnstyledButton } from "@mantine/core";
+import HappyImage from "../../assets/HappyImage.jpg";
 import IconInfo from "../../assets/icons/header/IconInfo.svg";
 
 export default function ChatHeader({
   onClick: { toggleDesktop, toggleMobile },
-  header: { name, image, lastSeen },
   ...props
 }) {
   return (
@@ -15,23 +15,31 @@ export default function ChatHeader({
       }}
     >
       <Group>
-        <Avatar radius="md" w={50} h={50} src={image} variant="transparent">
-          {" "}
-        </Avatar>
+        <Image w={50} h={50} radius="md" src={HappyImage} />
         <div>
           <Text size="md" fw={500}>
-            {name}
+            Malakas Group
           </Text>
           <Text size="xs" c="dimmed">
-            {lastSeen}
+            Last seen now
           </Text>
         </div>
       </Group>
 
-      <UnstyledButton py={7} px="sm" hiddenFrom="md" onClick={toggleMobile}>
+      <UnstyledButton
+        py={7}
+        px="sm"
+        hiddenFrom="md"
+        onClick={toggleMobile}
+      >
         <Image src={IconInfo} w={24} />
       </UnstyledButton>
-      <UnstyledButton py={7} px="sm" visibleFrom="md" onClick={toggleDesktop}>
+      <UnstyledButton
+        py={7}
+        px="sm"
+        visibleFrom="md"
+        onClick={toggleDesktop}
+      >
         <Image src={IconInfo} w={24} />
       </UnstyledButton>
     </Group>

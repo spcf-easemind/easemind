@@ -8,8 +8,7 @@ export default function AuthCard({
   onDialogOpen,
   children,
   heading: { title, description },
-  button: { btnLabel, btnLoading },
-  footer: { ftrMessage, ftrButton },
+  buttonLabel,
 }) {
   function handleSubmit(formData) {
     onSubmit(formData);
@@ -53,27 +52,20 @@ export default function AuthCard({
       <form onSubmit={form.onSubmit(handleSubmit)}>
         {children}
 
-        <Button
-          type="submit"
-          radius="md"
-          size="md"
-          fullWidth
-          loading={btnLoading}
-          mb={marginBottom}
-        >
-          {btnLabel}
+        <Button type="submit" radius="md" size="md" fullWidth mb={marginBottom}>
+          {buttonLabel}
         </Button>
       </form>
 
       <Text size="sm" ta="center">
-        {ftrMessage}
+        {"Don’t have an account? "}
         <Anchor
           size="sm"
           component="a"
           underline="never"
           onClick={handleCreateAccount}
         >
-          {ftrButton}
+          Create Account
         </Anchor>
       </Text>
     </Card>

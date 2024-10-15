@@ -1,11 +1,12 @@
 services:
-  easemind-satellite-v1:
+  juno-satellite:
     image: junobuild/satellite:latest
     ports:
       - 5987:5987
     volumes:
-      # - easemind_test_server_v1:/juno/.juno
+      - juno_satellite:/juno/.juno
       - ./juno.dev.config.mjs:/juno/juno.dev.config.mjs
       - ./target/deploy:/juno/target/deploy/
-# volumes:
-# easemind_test_server_v1:
+
+volumes:
+  juno_satellite:

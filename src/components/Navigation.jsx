@@ -9,19 +9,16 @@ import {
   Tabs,
   Stack,
 } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import IconNewChat from "../assets/icons/chat/IconNewChat.svg";
 import IconConnectCompanion from "../assets/icons/chat/IconConnect.svg";
 import IconSearch from "../assets/icons/chat/IconSearch.svg";
 
+import { USER_CHATS, GROUP_CHATS } from "../static/chat";
 import classes from "./chat/ChatList.module.css";
 
 import ChatList from "./chat/ChatList";
-
-import { useChatStore } from "../store/chat";
-import { useShallow } from "zustand/shallow";
-import { useNavigate, useLocation } from "react-router-dom";
 
 const tabsAttributes = [
   {
@@ -35,30 +32,8 @@ const tabsAttributes = [
 ];
 
 export default function ChatPage() {
-  const navigate = useNavigate();
-  const location = useLocation();
   const [activeTab, setActiveTab] = useState("peers");
   const [activeChat, setActiveChat] = useState();
-
-  // Zustand
-  const { findNewChatFn, getNavChats, chats } = useChatStore(
-    useShallow((state) => ({
-      findNewChatFn: state.findNewChat,
-      getNavChats: state.getNavChats,
-      chats: state.chats,
-    }))
-  );
-
-  useEffect(() => {
-    const response = location.pathname.split("/");
-    const computed = response && response[2] ? response[2] : null;
-    setActiveChat(computed);
-  }, [location]);
-
-  function handleChatSelect(id) {
-    navigate("/chat/" + id);
-    setActiveChat(id);
-  }
 
   const tabsHeader = tabsAttributes.map((item) => {
     const isActive = activeTab === item.value;
@@ -87,19 +62,19 @@ export default function ChatPage() {
       <Tabs.Panel value={item.value} key={item.value}>
         <Stack mt={16} gap={8}>
           {item.label === "Peers"
-            ? getNavChats().privateChat.map((chat) => (
+            ? USER_CHATS.map((chat) => (
                 <ChatList
                   {...chat}
                   key={chat.id}
-                  onSelectChat={handleChatSelect}
+                  onSelectChat={setActiveChat}
                   activeChat={activeChat}
                 />
               ))
-            : getNavChats().groupChat.map((chat) => (
+            : GROUP_CHATS.map((chat) => (
                 <ChatList
                   {...chat}
                   key={chat.id}
-                  onSelectChat={handleChatSelect}
+                  onSelectChat={setActiveChat}
                   activeChat={activeChat}
                 />
               ))}
@@ -112,51 +87,14 @@ export default function ChatPage() {
     base: 25,
   });
 
-  function findNewChat() {
-    const dummyData = {
-      users: [
-        {
-          id: "IeDexac8elb3gZ90q5s3L",
-          name: "Gabriel Alfonso",
-          image:
-            "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-9.png",
-        },
-        // {
-        //   id: "4pnFyYuxhXBGQ5lzjHpKv",
-        //   name: "Alexander Camaddo",
-        //   image:
-        //     "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-1.png",
-        // },
-        {
-          id: "CalhaQnIh3z3nOGIc6ysK",
-          name: "ICTDU",
-          image:
-            "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-3.png",
-        },
-      ],
-    };
-
-    const usersObject = dummyData.users.reduce((acc, user) => {
-      acc[user.id] = {
-        name: user.name,
-        image: user.image,
-      };
-      return acc;
-    }, {});
-
-    console.log(usersObject);
-
-    findNewChatFn({ users: usersObject });
-  }
-
   return (
     <>
       <Group w="100%" justify="space-between">
         <Title c="gray.8" size={navbarTitleFontSize}>
           Messages
         </Title>
-        <Tooltip label="Connect with someone" position="bottom">
-          <UnstyledButton onClick={findNewChat}>
+        <Tooltip label='Connect with someone' position="bottom">
+          <UnstyledButton>
             <Image src={IconConnectCompanion} w={30} />
           </UnstyledButton>
         </Tooltip>

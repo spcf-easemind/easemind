@@ -1,13 +1,5 @@
-import {
-  Stack,
-  Image,
-  Box,
-  Title,
-  UnstyledButton,
-  Paper,
-  Group,
-  Text,
-} from "@mantine/core";
+import { Stack, Image, Box, Title } from "@mantine/core";
+import HappyImage from "../assets/HappyImage.jpg";
 
 import DropDown from "../components/DropDown.jsx";
 import MembersList from "../components/MembersList.jsx";
@@ -22,134 +14,96 @@ import IconImage from "../assets/icons/input/IconImage.svg";
 import IconVideoCamera from "../assets/icons/dropdown/IconVideoCamera.svg";
 import IconLink from "../assets/icons/dropdown/IconLink.svg";
 import IconDocument from "../assets/icons/dropdown/IconDocument.svg";
-import IconLeave from "../assets/icons/buttons/IconLeave.svg";
-
 import { useDialogStore } from "../store/dialog.js";
-import { useAuthenticationStore } from "../store/authentication.js";
-import { useChatStore } from "../store/chat.js";
-import { useMemo } from "react";
-import { useParams } from "react-router-dom";
 
-// const asideData = {
-//   type: "private",
-//   members: [
-//     {
-//       id: "IeDexac8elb3gZ90q5s3L",
-//       name: "Gabriel Alfonso",
-//       role: "Admin",
-//       image:
-//         "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-9.png",
-//     },
-//     {
-//       id: "4pnFyYuxhXBGQ5lzjHpKv",
-//       name: "Alexander JC",
-//       role: "Group Member",
-//       image:
-//         "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-1.png",
-//     },
-//   ],
-//   images: [],
-//   videos: [],
-//   documents: [],
-//   links: [],
-// };
-
-const dropdownFormat = [
+const dropdownData = [
   {
     icon: IconManyPeople,
     label: "Members",
-    dataKey: "members",
+    data: [
+      {
+        id: 1,
+        name: "Gabriel Gatbonton",
+        role: "Admin",
+        image:
+          "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-9.png",
+      },
+      {
+        id: 2,
+        name: "Alexander JC",
+        role: "Group Member",
+        image:
+          "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-1.png",
+      },
+    ],
   },
   {
     icon: IconImage,
     label: "Photos",
-    dataKey: "images",
+    data: [
+      {
+        id: 1,
+        name: "Photo 1",
+        image:
+          "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-9.png",
+      },
+      {
+        id: 2,
+        name: "Photo 2",
+        image:
+          "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-1.png",
+      },
+    ],
   },
   {
     icon: IconVideoCamera,
     label: "Videos",
-    dataKey: "videos",
   },
   {
     icon: IconLink,
     label: "Links",
-    dataKey: "links",
+    data: [
+      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-1.png",
+      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-9.png",
+    ],
   },
   {
     icon: IconDocument,
     label: "Documents",
-    dataKey: "documents",
+    data: ["Sample Document 1.pdf", "Sample Document 2.docx"],
   },
 ];
 
 export default function AsidePage() {
-  const { chatRef } = useParams();
-  const loggedUser = useAuthenticationStore((state) => state.user.data);
   const toggleChatModalFn = useDialogStore((state) => state.toggleChatModal);
-  const getAsideData = useChatStore((state) => state.getAsideData);
 
-  const asideData = getAsideData(chatRef);
+  const dropdownInstances = dropdownData.map((instance) => {
+    let children = null;
 
-  console.log(asideData);
-
-  const computedDropdownInputs = useMemo(() => {
-    return dropdownFormat
-      .filter(
-        (item) => !(asideData.type === "private" && item.label === "Members")
-      )
-      .map((item) => ({
-        ...item,
-        data: asideData[item.dataKey],
-      }));
-  }, [asideData]);
-
-  const dropdownInstances = useMemo(() => {
-    return computedDropdownInputs.map((instance) => {
-      let children = null;
-
-      if (instance.label === "Members") {
-        children = (
-          <MembersList instance={instance.data} onClick={toggleChatModalFn} />
-        );
-      } else if (instance.label === "Photos") {
-        children = (
-          <Gallery>
-            <PhotoList images={instance.data} />
-          </Gallery>
-        );
-      } else if (instance.label === "Videos") {
-        children = <VideoGrid />;
-      } else if (instance.label === "Links") {
-        children = <LinkList links={instance.data} />;
-      } else if (instance.label === "Documents") {
-        children = <DocumentList documents={instance.data} />;
-      }
-
-      return (
-        <DropDown key={instance.label} {...instance}>
-          {children}
-        </DropDown>
+    if (instance.label === "Members") {
+      children = (
+        <MembersList instance={instance.data} onClick={toggleChatModalFn} />
       );
-    });
-  }, [computedDropdownInputs, toggleChatModalFn]);
+    } else if (instance.label === "Photos") {
+      children = (
+        <Gallery>
+          <PhotoList images={instance.data} />
+        </Gallery>
+      );
+    } else if (instance.label === "Videos") {
+      children = <VideoGrid />;
+    } else if (instance.label === "Links") {
+      children = <LinkList links={instance.data} />;
+    } else if (instance.label === "Documents") {
+      children = <DocumentList documents={instance.data} />;
+    }
 
-  const leaveButton = asideData.type === "group" && (
-    <UnstyledButton>
-      <Paper
-        p={16}
-        radius="md"
-        c="red.6"
-        style={{
-          backgroundColor: "var(--mantine-color-red-0)",
-        }}
-      >
-        <Group>
-          <Image w={20} h={20} src={IconLeave} />
-          <Text flex={1}>Leave Group</Text>
-        </Group>
-      </Paper>
-    </UnstyledButton>
-  );
+    return (
+      <DropDown key={instance.label} {...instance}>
+        {children}
+      </DropDown>
+    );
+  });
 
   return (
     <Stack align="center" h="inherit" py={36}>
@@ -160,16 +114,15 @@ export default function AsidePage() {
           w={90}
           h={90}
           radius="sm"
-          src={asideData.header.image}
+          src={HappyImage}
         />
         <Title ta="center" order={3}>
-          {asideData.header.name}
+          Malakas Group
         </Title>
       </Box>
 
       <Stack w="100%" gap={8}>
         {dropdownInstances}
-        {leaveButton}
       </Stack>
     </Stack>
   );
