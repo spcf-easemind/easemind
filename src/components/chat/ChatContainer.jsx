@@ -23,7 +23,11 @@ export default function ChatContainer({ data }) {
     if (data.type === "text") {
       return <ChatCard text={data.message} />;
     } else if (data.type === "image") {
-      return <ImageTruncation isLoggedIn={userLoggedIn} images={data.fileURL} />;
+      return (
+        <ImageTruncation isLoggedIn={userLoggedIn} images={data.fileURL} />
+      );
+    } else if (data.type === "document") {
+      return <ChatCard text={data.fileURL} />;
     }
   };
 

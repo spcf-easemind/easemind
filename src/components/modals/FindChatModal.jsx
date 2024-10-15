@@ -2,8 +2,7 @@ import { ActionIcon, Box, Button, Card, Modal, Stack } from "@mantine/core";
 import { IconX } from "@tabler/icons-react";
 
 export default function FindChatModal({
-  form,
-  onSubmit,
+  form: { form, onSubmit, loading },
   model: { opened, onClose },
   titleSection,
   buttonLabel,
@@ -40,7 +39,13 @@ export default function FindChatModal({
           <Stack>
             <Box ta="center">{titleSection}</Box>
             <Box flex={1}>{children}</Box>
-            <Button fullWidth type="submit" size="md" radius="sm">
+            <Button
+              loading={loading}
+              fullWidth
+              type="submit"
+              size="md"
+              radius="sm"
+            >
               {buttonLabel}
             </Button>
           </Stack>

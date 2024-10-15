@@ -1,13 +1,14 @@
 import { create } from "zustand";
 import { database, storage as firebaseStorage } from "../plugins/firebase.js";
 import { useAuthenticationStore } from "./authentication.js";
+import { useUsersStore } from "./users.js";
 import { ref, onValue, off } from "firebase/database";
 
 import {
   listChats,
   createNewChat,
   sendMessage,
-  uploadImage,
+  uploadMedia,
   serializeChatPageData,
   serializeNavData,
   serializeUserData,
@@ -37,6 +38,7 @@ export const useChatStore = create((set, get) => ({
       links: [],
     },
   },
+  loading: false,
 
   // Getters
   getNavChats: () => {
@@ -61,6 +63,37 @@ export const useChatStore = create((set, get) => ({
     return response;
   },
 
+  setChattedUsers: (loggedInUser) => {
+    const allChats = get().chats;
+    const chattedUsers = [loggedInUser.key];
+
+    allChats.forEach((chat) => {
+      const chatUsers = Object.keys(chat.users);
+      const [userId] = chatUsers.filter((user) => user !== loggedInUser.key);
+      chattedUsers.push(userId);
+    });
+
+    return chattedUsers;
+  },
+
+  setAvailableUsers: (chattedUsers, users) => {
+    const availableUsers = users.filter(
+      ({ key }) => !chattedUsers.includes(key)
+    );
+
+    let randomUser = null;
+
+    if (availableUsers.length > 0) {
+      const randomIndex = Math.floor(Math.random() * availableUsers.length);
+      randomUser = availableUsers[randomIndex];
+      console.log(randomUser);
+    } else {
+      console.log("No available users found.");
+    }
+
+    return randomUser;
+  },
+
   // Actions
   fetchChats: async (loggedInUserId) => {
     const db = database;
@@ -75,10 +108,58 @@ export const useChatStore = create((set, get) => ({
     return response;
   },
 
-  findNewChat: async ({ chatName = "", users }) => {
+  findNewChatCompanion: async (loggedInUser, value) => {
+    set(() => ({ loading: true }));
     const db = database;
-    const response = await createNewChat(db, { chatName, users });
+    const fetchUsersFn = useUsersStore.getState().getAllUsers;
+
+    // Fetch the list of users that logged in user has chatted with
+    const chattedUsers = get().setChattedUsers(loggedInUser);
+
+    // Fetch all users from juno database
+    const users = await fetchUsersFn();
+
+    // Get a random user that logged in user has not chatted with
+    const randomUser = get().setAvailableUsers(chattedUsers, users);
+
+    // Create a new users object with the random user
+    const usersData = {
+      [randomUser.key]: {
+        name: randomUser.data.fullName,
+        image: randomUser.data?.image || null,
+      },
+      [loggedInUser.key]: {
+        name: loggedInUser.fullName,
+        image: loggedInUser?.image || null,
+      },
+    };
+
+    // Initialize a new chat with the random user
+    const response = await createNewChat(db, { users: usersData });
+
+    set(() => ({ loading: false }));
     return response;
+  },
+
+  listenForChats: (loggedInUserId) => {
+    const db = database;
+    const chatsRef = ref(db, "chats");
+
+    const listener = onValue(chatsRef, async (snapshot) => {
+      const chatsData = snapshot.val();
+      console.log(chatsData);
+      // if (chatsData) {
+      //   const chats = Object.keys(chatsData).map((chatId) => ({
+      //     id: chatId,
+      //     ...chatsData[chatId],
+      //   }));
+
+      //   set(() => ({ chats: chats }));
+      // }
+    });
+    set((state) => ({
+      listeners: { ...state.listeners, [loggedInUserId]: listener },
+    }));
   },
 
   listenForMessages: (chatRef) => {
@@ -145,7 +226,7 @@ export const useChatStore = create((set, get) => ({
     const db = database;
     const storage = firebaseStorage;
 
-    const response = await uploadImage(db, storage, chatRef, formData).then(
+    const response = await uploadMedia(db, storage, chatRef, formData).then(
       (response) => {
         console.log(response);
       }
@@ -203,10 +284,16 @@ export const useChatStore = create((set, get) => ({
       group: ["users", "image", "video", "link", "document"],
     };
 
-    const queries = await chatTypes[type].reduce(async (acc, chatType) => {
-      acc[`${chatType}s`] = await queryMessagesByType(db, chatRef, chatType);
-      return acc;
-    }, {});
+    const queries = await chatTypes[type].reduce(
+      async (accPromise, chatType) => {
+        const acc = await accPromise;
+        acc[`${chatType}s`] = await queryMessagesByType(db, chatRef, chatType);
+        return acc;
+      },
+      Promise.resolve({})
+    );
+
+    console.log(queries);
     return queries;
   },
 }));

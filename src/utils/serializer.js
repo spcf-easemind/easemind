@@ -2,6 +2,7 @@ export const serializer = {
   serializeMessages: (messages) => {
     return Object.keys(messages).map((messageId) => {
       const message = messages[messageId];
+      const mediaTypes = ["image", "video", "document"];
       // const user = chatUsers[message.userId];
 
       if (message.type === "text") {
@@ -12,7 +13,7 @@ export const serializer = {
           time: message.createdAt,
           type: message.type,
         };
-      } else if (message.type === "image") {
+      } else if (mediaTypes.includes(message.type)) {
         return {
           id: messageId,
           userId: message.userKey,

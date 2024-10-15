@@ -152,6 +152,8 @@ export const useUsersStore = create((set) => ({
       data: allUsers,
       message: 'All users fetched successfully!',
     }));
+
+    return allUsers;
   },
 
   deleteUserInfo: async () => {

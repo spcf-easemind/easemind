@@ -7,6 +7,7 @@ import {
   Paper,
   Group,
   Text,
+  Avatar,
 } from "@mantine/core";
 
 import DropDown from "../components/DropDown.jsx";
@@ -88,7 +89,9 @@ export default function AsidePage() {
   const dropdownInstances = useMemo(() => {
     const noDataAvailableComponent = (message) => (
       <Paper p={16} radius="md">
-        <Text c="dimmed" size="xs" ta="center">{message}</Text>
+        <Text c="dimmed" size="xs" ta="center">
+          {message}
+        </Text>
       </Paper>
     );
 
@@ -166,14 +169,16 @@ export default function AsidePage() {
   return (
     <Stack align="center" h="inherit" py={36}>
       <Box ta="center">
-        <Image
-          display="inline-block"
-          mb={8}
-          w={90}
-          h={90}
-          radius="sm"
-          src={header.image}
-        />
+        {header.name !== "" && (
+          <Avatar
+            display="inline-block"
+            mb={8}
+            w={90}
+            h={90}
+            radius="sm"
+            src={header.image}
+          />
+        )}
         <Title ta="center" order={3}>
           {header.name}
         </Title>

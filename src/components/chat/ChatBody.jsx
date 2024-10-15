@@ -19,9 +19,10 @@ export default function ChatBody({ data, ...props }) {
     scrollToBottom();
   }, [data]);
 
-  const instances = data.map((instance) => (
-    <ChatContainer key={instance.id} data={instance} />
-  ));
+  const instances = data.map((instance) => {
+    console.log(instance);
+    return <ChatContainer key={instance.id} data={instance} />;
+  });
 
   return (
     <ScrollArea {...props} viewportRef={scrollViewport} scrollHideDelay={0}>

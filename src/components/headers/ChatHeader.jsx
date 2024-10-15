@@ -15,8 +15,14 @@ export default function ChatHeader({
       }}
     >
       <Group>
-        <Avatar radius="md" w={50} h={50} src={image} variant="transparent">
-          {" "}
+        <Avatar
+          radius="md"
+          w={50}
+          h={50}
+          src={image}
+          variant={name !== "" ? undefined : "transparent"}
+        >
+          {name !== "" ? undefined : " "}
         </Avatar>
         <div>
           <Text size="md" fw={500}>

@@ -8,7 +8,7 @@ import CheckboxList from "../components/CheckboxList.jsx";
 import FindChatModal from "../components/modals/FindChatModal.jsx";
 import FindChatTabs from "../components/tabs/FindChatTabs.jsx";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useForm, hasLength } from "@mantine/form";
 import { useDialogStore } from "../store/dialog.js";
 import { useShallow } from "zustand/shallow";
@@ -16,6 +16,7 @@ import { useChatStore } from "../store/chat.js";
 import { useAuthenticationStore } from "../store/authentication.js";
 import { useParams } from "react-router-dom";
 import useListener from "../hooks/useListener.jsx";
+// import { useUsersStore } from "../store/users.js";
 
 const padding = 18;
 
@@ -47,6 +48,8 @@ export default function ChatPage() {
     chat,
     queryAsideData,
     queryChatData,
+    findNewChatCompanion,
+    loading,
   } = useChatStore(
     useShallow((state) => ({
       chat: state.chat,
@@ -56,8 +59,21 @@ export default function ChatPage() {
       uploadImage: state.uploadImage,
       queryAsideData: state.queryAsideData,
       queryChatData: state.queryChatData,
+      findNewChatCompanion: state.findNewChatCompanion,
+      loading: state.loading,
     }))
   );
+
+  // const fetchAllUsers = useUsersStore((state) => state.getAllUsers);
+  // const users = useUsersStore((state) => state.data);
+
+  // useEffect(() => {
+  //   async function fetch() {
+  //     await fetchAllUsers();
+  //     // console.log(users);
+  //   }
+  //   fetch();
+  // }, []);
 
   // Event Listener
   const { header, chatMessages } = useListener({
@@ -67,8 +83,6 @@ export default function ChatPage() {
     listenerFn: listenForMessages,
     unsubscribeFn: unsubscribeFromChat,
   });
-
-  // console.log(header, chatMessages);
 
   // Variables
   const inputRef = useRef();
@@ -142,30 +156,32 @@ export default function ChatPage() {
   }
 
   async function handleUploadFile(files) {
-    console.log(files);
-    // const formData = {
-    //   userKey: form.getValues().userKey,
-    //   type: "image",
-    //   file: files[0],
-    // };
+    const formData = {
+      userKey: form.getValues().userKey,
+      type: files[0].type,
+      file: files[0].file,
+    };
 
-    // uploadImage(chatRef, formData).catch((error) => {
-    //   console.error("Error", error);
-    // });
+    uploadImage(chatRef, formData).catch((error) => {
+      console.error("Error", error);
+    });
   }
 
   function handleAddMembers(formData) {
     console.log(formData);
   }
 
-  function handleFindNewChat(value) {
-    console.log(value);
+  async function handleFindNewChat(value) {
+    await findNewChatCompanion(loggedUser, value);
+    findChatModalFn();
   }
 
   const FindChatModalComponents = () => {
     const title = (
       <>
-        <Title mb={8} order={3}>Connect and Share</Title>
+        <Title mb={8} order={3}>
+          Connect and Share
+        </Title>
         <Text c="dimmed" size="sm">
           Please share your feelings and thoughts. We&apos;re here to help you
           connect with someone who can support and relate to you as well.
@@ -229,8 +245,11 @@ export default function ChatPage() {
       </ChatModal>
 
       <FindChatModal
-        form={findNewChatForm}
-        onSubmit={handleFindNewChat}
+        form={{
+          form: findNewChatForm,
+          onSubmit: handleFindNewChat,
+          loading: loading,
+        }}
         model={{ opened: findChatModal, onClose: findChatModalFn }}
         titleSection={FindChatModalComponents().title}
         buttonLabel="Search"

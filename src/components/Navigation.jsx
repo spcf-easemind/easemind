@@ -23,6 +23,7 @@ import { useChatStore } from "../store/chat";
 import { useShallow } from "zustand/shallow";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDialogStore } from "../store/dialog";
+// import useListener from "../hooks/useListener";
 
 const tabsAttributes = [
   {
@@ -114,40 +115,6 @@ export default function ChatPage() {
   const navbarTitleFontSize = useMatches({
     base: 25,
   });
-
-  function findNewChat() {
-    // const dummyData = {
-    //   users: [
-    //     {
-    //       id: "IeDexac8elb3gZ90q5s3L",
-    //       name: "Gabriel Alfonso",
-    //       image:
-    //         "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-9.png",
-    //     },
-    //     // {
-    //     //   id: "4pnFyYuxhXBGQ5lzjHpKv",
-    //     //   name: "Alexander Camaddo",
-    //     //   image:
-    //     //     "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-1.png",
-    //     // },
-    //     {
-    //       id: "CalhaQnIh3z3nOGIc6ysK",
-    //       name: "ICTDU",
-    //       image:
-    //         "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-3.png",
-    //     },
-    //   ],
-    // };
-    // const usersObject = dummyData.users.reduce((acc, user) => {
-    //   acc[user.id] = {
-    //     name: user.name,
-    //     image: user.image,
-    //   };
-    //   return acc;
-    // }, {});
-    // console.log(usersObject);
-    // findNewChatFn({ users: usersObject });
-  }
 
   return (
     <>

@@ -156,6 +156,7 @@ export function serializeNavData(allChats, loggedInUserId) {
   const groupChat = [];
 
   allChats.forEach((chat) => {
+    const mediaTypes = ["image", "file", "video"];
     const lastMessage = chat.messages
       ? serializer.serializeMessages(chat.messages).slice(-1)[0]
       : null;
@@ -182,8 +183,8 @@ export function serializeNavData(allChats, loggedInUserId) {
 
         const lastMessageUser = chatUsers[whichUser];
 
-        if (lastMessage?.type === "image") {
-          return `${lastMessageUser.name}: Image`;
+        if (mediaTypes.includes(lastMessage?.type)) {
+          return `${lastMessageUser.name}: ${lastMessage.type}`;
         } else {
           return lastMessage
             ? `${lastMessageUser.name}: ${lastMessage.message}`
@@ -259,14 +260,12 @@ export function serializeAsideData(allChats, chatRef, loggedInUserId) {
 
 // Media Storing
 
-export async function uploadImage(
+export async function uploadMedia(
   db,
   storage,
   chatRef,
-  { file, userKey, type = "image" }
+  { file, userKey, type }
 ) {
-  console.log(chatRef);
-
   const fileRef = storageRef(storage, `chats/${chatRef}/${file.name}`);
 
   // Upload file to Firebase Storage
@@ -288,7 +287,7 @@ export async function uploadImage(
     .then(() => {
       return {
         status: 201,
-        message: "Image uploaded successfully!",
+        message: `${type} uploaded successfully!`,
         data: messageData,
       };
     })

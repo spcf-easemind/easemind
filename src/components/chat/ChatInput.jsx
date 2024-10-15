@@ -54,14 +54,10 @@ const ChatInput = forwardRef(({ form, onSubmit, onUpload, ...props }, ref) => {
 
       // Determine the type of each file based on its MIME type
       if (fileType.startsWith("image/")) {
-        console.log("Uploaded file is an image:", file);
         fileData.push({ type: "image", file });
       } else if (fileType.startsWith("video/")) {
-        console.log("Uploaded file is a video:", file);
         fileData.push({ type: "video", file });
       } else {
-        // Handle all other document types
-        console.log("Uploaded file is a document:", file);
         fileData.push({ type: "document", file });
       }
     }

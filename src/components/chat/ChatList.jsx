@@ -6,6 +6,7 @@ import {
   Text,
   Box,
   Group,
+  Avatar,
 } from "@mantine/core";
 
 import classes from "./ChatList.module.css";
@@ -42,7 +43,7 @@ export default function ChatList({
       onClick={() => onSelectChat(id)}
     >
       <Group align="center">
-        <Image src={userImage} w={55} radius={10} />
+        <Avatar src={userImage} w={55} h={55} radius={10} />
         <Box flex={1}>
           <Title order={5} lineClamp={1} fw={500}>
             {userName}
