@@ -15,7 +15,6 @@ import Picker from "@emoji-mart/react";
 import IconEmoticon from "../../assets/icons/input/IconEmoticon.svg";
 import IconImage from "../../assets/icons/input/IconImage.svg";
 import IconPaperClip from "../../assets/icons/input/IconPaperClip.svg";
-import { REMOVED_EMOJIS } from "../../static/chat";
 
 import { forwardRef, useEffect, useRef, useState } from "react";
 
@@ -155,7 +154,6 @@ const ChatInput = forwardRef(({ form, onSubmit, onUpload, ...props }, ref) => {
                   data={data}
                   onEmojiSelect={handleSelectEmoji}
                   emojiVersion="15"
-                  exceptEmojis={REMOVED_EMOJIS}
                 />
               </Popover.Dropdown>
 

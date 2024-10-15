@@ -145,14 +145,12 @@ export default function ChatPage() {
   async function handleSendMessage(formData) {
     const data = { ...formData };
 
-    console.log(data)
-
     sendMessage(chatRef, data)
       .catch((error) => {
         console.error("Error", error);
       })
       .finally(() => {
-        form.setFieldValue("message", "");
+        form.setFieldValue("message", " ");
         inputRef.current.focus();
       });
   }

@@ -11,10 +11,6 @@ const mainRoutes = [
     element: <HomePage />,
   },
   {
-    path: "/ease_companions",
-    element: '',
-  },
-  {
     path: "/chat",
     element: <ChatPage />,
     loader: ChatLoader,
