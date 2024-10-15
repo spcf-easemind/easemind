@@ -61,6 +61,7 @@ export const useUsersStore = create((set) => ({
             key: key,
             fullName: formData.fullName,
             status: 'offline',
+            role: formData.role
           },
         },
       });
@@ -136,11 +137,11 @@ export const useUsersStore = create((set) => ({
     });
 
     // console.log(users);
-    const userProfiles = await listAssets({
-      collection: 'userProfilePicture',
-    });
+    // const userProfiles = await listAssets({
+    //   collection: 'userProfilePicture',
+    // });
 
-    console.log('User Profiles:', userProfiles);
+    // console.log('User Profiles:', userProfiles);
 
     const allUsers = [];
     for (const user of users.items) {

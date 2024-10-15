@@ -44,6 +44,39 @@ export const usePublicMaterials = create((set) => ({
         'Distrust of Others',
       ];
 
+      const emotionCategories = [
+        'Sadness',
+        'Anxiety',
+        'Depression',
+        'Loneliness',
+        'Confusion',
+        'Frustration',
+        'Anger',
+        'Overthinking',
+        'Fear',
+        'Guilt',
+        'Shame',
+        'Hopelessness',
+        'Fatigue',
+        'Numbness',
+        'Despair',
+        'Regret',
+        'Desperation',
+        'Insecurity',
+        'Self-Doubt',
+        'Disappointment',
+        'Panic',
+        'Boredom',
+        'Vulnerability',
+        'Future Anxiety',
+        'Jealousy',
+        'Disgust',
+        'Embarrassment',
+        'Longing',
+      ];
+
+      const memberCategories = ['Ease Companion', 'Ease Buddy'];
+
       for (const category of thoughtCategories) {
         const key = nanoid();
         await setDoc({
@@ -67,68 +100,35 @@ export const usePublicMaterials = create((set) => ({
             },
           },
         });
-
-        const emotionCategories = [
-          'Sadness',
-          'Anxiety',
-          'Depression',
-          'Loneliness',
-          'Confusion',
-          'Frustration',
-          'Anger',
-          'Overthinking',
-          'Fear',
-          'Guilt',
-          'Shame',
-          'Hopelessness',
-          'Fatigue',
-          'Numbness',
-          'Despair',
-          'Regret',
-          'Desperation',
-          'Insecurity',
-          'Self-Doubt',
-          'Disappointment',
-          'Panic',
-          'Boredom',
-          'Vulnerability',
-          'Future Anxiety',
-          'Jealousy',
-          'Disgust',
-          'Embarrassment',
-          'Longing',
-        ];
-
-        for (const category of emotionCategories) {
-          const key = nanoid();
-
-          await setDoc({
-            collection: 'emotionCategories',
-            doc: {
-              key,
-              data: {
-                name: category,
-              },
-            },
-          });
-
-          await setDoc({
-            collection: 'categories',
-            doc: {
-              key,
-              data: {
-                key,
-                category: 'emotions',
-                name: category,
-              },
-            },
-          });
-        }
-
         console.log(`Category ${category} created successfully!`);
       }
 
-      const memberCategories = ['Ease Companion', 'Ease Buddy'];
+      for (const category of emotionCategories) {
+        const key = nanoid();
+
+        await setDoc({
+          collection: 'emotionCategories',
+          doc: {
+            key,
+            data: {
+              name: category,
+            },
+          },
+        });
+
+        await setDoc({
+          collection: 'categories',
+          doc: {
+            key,
+            data: {
+              key,
+              category: 'emotions',
+              name: category,
+            },
+          },
+        });
+        console.log(`Category ${category} created successfully!`);
+      }
 
       for (const category of memberCategories) {
         await setDoc({
@@ -156,16 +156,17 @@ export const usePublicMaterials = create((set) => ({
         console.log(`Category ${category} created successfully!`);
       }
       set(() => ({ loading: false }));
+      return true;
     } catch (error) {
       console.error('Error during creating categories:', error);
       set({ message: error.message, data: null });
       // Loading is False
       set(() => ({ loading: false }));
+      return false
     }
   },
   getAllCategories: async () => {
     set(() => ({ loading: true }));
-
     try {
       const categories = await listDocs({
         collection: 'categories',
@@ -200,7 +201,7 @@ export const usePublicMaterials = create((set) => ({
       for (const memberCategory of memberCategories.items) {
         memberCategoriesArray.push(memberCategory);
       }
-
+      
       const allCategoryInfo = {
         categories: categoriesArray,
         thoughtCategory: thoughtCategoriesArray,
@@ -211,14 +212,16 @@ export const usePublicMaterials = create((set) => ({
       set(() => ({
         data: allCategoryInfo,
         message: 'All users fetched successfully!',
+        loading: false
       }));
 
-      set(() => ({ loading: false }));
+      return true;
     } catch (error) {
       console.error('Error during creating categories:', error);
       set({ message: error.message, data: null });
       // Loading is False
       set(() => ({ loading: false }));
+      return false;
     }
   },
   deleteCategories: async () => {
@@ -293,12 +296,18 @@ export const usePublicMaterials = create((set) => ({
           );
         }
       }
-      set(() => ({ loading: false }));
+      set(() => ({
+        data: null,
+        message: "All Categories Deleted Successfully!", 
+        loading: false 
+      }));
+      return true;
     } catch (error) {
       console.error('Error during creating categories:', error);
       set({ message: error.message, data: null });
       // Loading is False
       set(() => ({ loading: false }));
+      return false;
     }
   },
 
