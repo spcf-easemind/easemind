@@ -159,24 +159,45 @@ export function serializeNavData(allChats, loggedInUserId) {
       : null;
 
     if (chat.type === "private") {
-      const displayUser = () => {
-        const [userId] = Object.keys(chat.users).filter(
-          (item) => item !== loggedInUserId
-        );
-        return chat.users[userId];
+      const chatUsers = chat.users;
+      const displayUsers = () => {
+        const users = Object.keys(chatUsers);
+
+        const loggedIn = users.filter((item) => item === loggedInUserId);
+        const targetUser = users.filter((item) => item !== loggedInUserId);
+
+        return {
+          users: users,
+          loggedIn: chatUsers[loggedIn],
+          targetUser: chatUsers[targetUser],
+        };
       };
 
-      const isLastMessageResponse = lastMessage
-        ? `${displayUser().name}: ${lastMessage.message}`
-        : "Message now!";
+      const isLastMessageResponse = () => {
+        const whichUser = lastMessage
+          ? displayUsers().users.filter((item) => item === lastMessage.userId)
+          : null;
+
+        const lastMessageUser = chatUsers[whichUser];
+
+        console.log(whichUser);
+
+        if (lastMessage?.type === "image") {
+          return `${lastMessageUser.name}: Image`;
+        } else {
+          return lastMessage
+            ? `${lastMessageUser.name}: ${lastMessage.message}`
+            : "Message now!";
+        }
+      };
 
       const isLastMessageTime = lastMessage ? lastMessage.time : chat.createdAt;
 
       privateChat.push({
         id: chat.id,
-        userName: displayUser().name,
-        userImage: displayUser().image,
-        text: isLastMessageResponse,
+        userName: displayUsers().targetUser.name,
+        userImage: displayUsers().targetUser.image,
+        text: isLastMessageResponse(),
         type: chat.type,
         time: isLastMessageTime,
         unread: 0,
@@ -186,7 +207,7 @@ export function serializeNavData(allChats, loggedInUserId) {
         id: chat.id,
         userName: chat.chatName,
         userImage: chat.chatImage,
-        text: isLastMessageResponse,
+        text: isLastMessageResponse(),
         type: chat.type,
         time: isLastMessageTime,
         unread: 0,
@@ -244,6 +265,8 @@ export async function uploadImage(
   chatRef,
   { file, userKey, type = "image" }
 ) {
+  console.log(chatRef);
+
   const fileRef = storageRef(storage, `chats/${chatRef}/${file.name}`);
 
   // Upload file to Firebase Storage
@@ -251,7 +274,7 @@ export async function uploadImage(
   const downloadURL = await getDownloadURL(snapshot.ref);
 
   // Save metadata to Firebase Realtime Database
-  const messageRef = databaseRef(db, `chats/${chatRef}/messages`);
+  const messageRef = child(databaseRef(db), `chats/${chatRef}/messages`);
   const newMessageRef = push(messageRef);
 
   const messageData = {
