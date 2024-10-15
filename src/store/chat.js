@@ -21,6 +21,7 @@ export const useChatStore = create((set, get) => ({
   // Getters
   getNavChats: () => {
     const allChats = get().chats;
+    
     const loggedInUserId =
       useAuthenticationStore.getState().user.data?.key || null;
 

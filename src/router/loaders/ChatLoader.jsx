@@ -10,13 +10,15 @@ export async function ChatLoader() {
 
   let resObject = null;
 
-  const response = await fetchChats(loggedUser.key);
+  if (loggedUser) {
+    const response = await fetchChats(loggedUser.key);
 
-  if (response) {
-    resObject = {
-      message: "Chats fetched successfully",
-    };
+    if (response) {
+      resObject = {
+        message: "Chats fetched successfully",
+      };
+    }
   }
+
   return resObject;
 }
-

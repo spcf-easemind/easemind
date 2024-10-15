@@ -93,44 +93,52 @@ export default function AsidePage() {
   console.log(asideData);
 
   const computedDropdownInputs = useMemo(() => {
-    return dropdownFormat
-      .filter(
-        (item) => !(asideData.type === "private" && item.label === "Members")
-      )
-      .map((item) => ({
-        ...item,
-        data: asideData[item.dataKey],
-      }));
+    return asideData.type !== ""
+      ? dropdownFormat
+          .filter(
+            (item) =>
+              !(asideData.type === "private" && item.label === "Members")
+          )
+          .map((item) => ({
+            ...item,
+            data: asideData[item.dataKey],
+          }))
+      : null;
   }, [asideData]);
 
   const dropdownInstances = useMemo(() => {
-    return computedDropdownInputs.map((instance) => {
-      let children = null;
+    return computedDropdownInputs
+      ? computedDropdownInputs.map((instance) => {
+          let children = null;
 
-      if (instance.label === "Members") {
-        children = (
-          <MembersList instance={instance.data} onClick={toggleChatModalFn} />
-        );
-      } else if (instance.label === "Photos") {
-        children = (
-          <Gallery>
-            <PhotoList images={instance.data} />
-          </Gallery>
-        );
-      } else if (instance.label === "Videos") {
-        children = <VideoGrid />;
-      } else if (instance.label === "Links") {
-        children = <LinkList links={instance.data} />;
-      } else if (instance.label === "Documents") {
-        children = <DocumentList documents={instance.data} />;
-      }
+          if (instance.label === "Members") {
+            children = (
+              <MembersList
+                instance={instance.data}
+                onClick={toggleChatModalFn}
+              />
+            );
+          } else if (instance.label === "Photos") {
+            children = (
+              <Gallery>
+                <PhotoList images={instance.data} />
+              </Gallery>
+            );
+          } else if (instance.label === "Videos") {
+            children = <VideoGrid />;
+          } else if (instance.label === "Links") {
+            children = <LinkList links={instance.data} />;
+          } else if (instance.label === "Documents") {
+            children = <DocumentList documents={instance.data} />;
+          }
 
-      return (
-        <DropDown key={instance.label} {...instance}>
-          {children}
-        </DropDown>
-      );
-    });
+          return (
+            <DropDown key={instance.label} {...instance}>
+              {children}
+            </DropDown>
+          );
+        })
+      : null;
   }, [computedDropdownInputs, toggleChatModalFn]);
 
   const leaveButton = asideData.type === "group" && (
