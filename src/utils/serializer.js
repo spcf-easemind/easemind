@@ -39,4 +39,33 @@ export const serializer = {
 
     return filteredChats;
   },
+
+  serializeChat: (chat) => {
+    const chatKey = Object.keys(chat).filter((chatId) => {
+      return chat[chatId];
+    });
+
+    // Map chat key objects into an array
+    const serializedChat = chatKey.reduce((acc, chatId) => {
+      acc = {
+        id: chatId,
+        ...chat[chatId],
+      };
+      return acc;
+    }, {});
+
+    return serializedChat;
+  },
+
+  serializeFileTypes: (messages) => {
+    return Object.keys(messages).map((messageId) => {
+      const message = messages[messageId];
+      // const user = chatUsers[message.userId];
+
+      return {
+        id: messageId,
+        ...message,
+      };
+    });
+  },
 };

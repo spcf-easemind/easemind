@@ -1,5 +1,7 @@
 .image {
   display: inline-block;
+  object-fit: cover;
   width: 100%;
+  height: rem(150px);
   border-radius: var(--mantine-spacing-lg);
 }

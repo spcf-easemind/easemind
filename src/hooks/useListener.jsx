@@ -1,18 +1,21 @@
 import { useState, useEffect, useMemo } from "react";
 
 export default function useListener({
-  chats,
+  chat,
   chatRef,
+  queryFn,
   listenerFn,
   unsubscribeFn,
-  getFn,
 }) {
   const data = useMemo(() => {
-    const ref = chatRef ?? null;
-    return getFn(ref);
-  }, [chatRef, chats]);
+    return chat;
+  }, [chat]);
 
   useEffect(() => {
+    // Call the Query
+    queryFn(chatRef);
+
+    // Add the listener
     if (chatRef) {
       listenerFn(chatRef);
     }

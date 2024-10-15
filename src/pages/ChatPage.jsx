@@ -6,7 +6,7 @@ import ChatInput from "../components/chat/ChatInput.jsx";
 import ChatModal from "../components/modals/ChatModal.jsx";
 import CheckboxList from "../components/CheckboxList.jsx";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useForm, hasLength } from "@mantine/form";
 import { useDialogStore } from "../store/dialog.js";
 import { useShallow } from "zustand/shallow";
@@ -38,31 +38,35 @@ export default function ChatPage() {
   // Zustand
   const loggedUser = useAuthenticationStore((state) => state.user.data);
   const {
-    getChatPageData,
     sendMessage,
     listenForMessages,
     unsubscribeFromChat,
     uploadImage,
-    chats,
+    chat,
+    queryAsideData,
+    queryChatData,
   } = useChatStore(
     useShallow((state) => ({
-      chats: state.chats,
-      getChatPageData: state.getChatPageData,
+      chat: state.chat,
       sendMessage: state.sendMessage,
       listenForMessages: state.listenForMessages,
       unsubscribeFromChat: state.unsubscribeFromChat,
       uploadImage: state.uploadImage,
+      queryAsideData: state.queryAsideData,
+      queryChatData: state.queryChatData,
     }))
   );
 
   // Event Listener
   const { header, chatMessages } = useListener({
-    chats,
+    chat,
     chatRef,
+    queryFn: queryChatData,
     listenerFn: listenForMessages,
     unsubscribeFn: unsubscribeFromChat,
-    getFn: getChatPageData,
   });
+
+  console.log(header, chatMessages);
 
   // Variables
   const inputRef = useRef();

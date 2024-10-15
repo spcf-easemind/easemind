@@ -12,11 +12,29 @@ import {
   serializeNavData,
   serializeUserData,
   serializeAsideData,
+  queryMessagesByType,
+  queryChatData,
 } from "../functions/firebase.js";
 
 export const useChatStore = create((set, get) => ({
   chats: [],
   listeners: {}, // To store active listeners
+  chat: {
+    header: {
+      name: "",
+      image: null,
+      lastSeen: "",
+      type: "",
+    },
+    chatMessages: [],
+    asideDataPage: {
+      users: [],
+      images: [],
+      documents: [],
+      videos: [],
+      links: [],
+    },
+  },
 
   // Getters
   getNavChats: () => {
@@ -28,12 +46,11 @@ export const useChatStore = create((set, get) => ({
     const response = serializeNavData(allChats, loggedInUserId);
     return response;
   },
-  getChatPageData: (chatRef) => {
-    const allChats = get().chats;
+  setChatPageData: (chat) => {
     const loggedInUserId =
-      useAuthenticationStore.getState().user.data.key || null;
-
-    const response = serializeChatPageData(allChats, chatRef, loggedInUserId);
+      useAuthenticationStore.getState().user.data?.key || null;
+    const response = serializeChatPageData(chat, loggedInUserId);
+    console.log("TEST", response);
     return response;
   },
 
@@ -45,10 +62,17 @@ export const useChatStore = create((set, get) => ({
 
   getAsideData: (chatRef) => {
     const allChats = get().chats;
+    const asideDataState = get().asideDataPage;
     const loggedInUserId =
       useAuthenticationStore.getState().user.data?.key || null;
 
-    const response = serializeAsideData(allChats, chatRef, loggedInUserId);
+    let response = {};
+
+    response = {
+      ...serializeAsideData(allChats, chatRef, loggedInUserId),
+      ...asideDataState,
+    };
+
     return response;
   },
 
@@ -137,5 +161,43 @@ export const useChatStore = create((set, get) => ({
       }
     );
     return response;
+  },
+
+  // Query
+  queryChatData: async (chatRef) => {
+    const db = database;
+    if (chatRef) {
+      const response = await queryChatData(db, chatRef);
+      const serializedData = get().setChatPageData(response);
+      set((state) => ({ chat: { ...state.chat, ...serializedData } }));
+    } else {
+      set(() => ({
+        chat: {
+          header: {
+            name: "",
+            image: null,
+            lastSeen: "",
+            type: "",
+          },
+          chatMessages: [],
+        },
+      }));
+    }
+  },
+  queryAsideData: async (chatRef, type) => {
+    const db = database;
+    const chatTypes = {
+      private: ["image", "video", "link", "document"],
+      group: ["users", "image", "video", "link", "document"],
+    };
+
+    const queries = await chatTypes[type].reduce(async (acc, chatType) => {
+      acc[`${chatType}s`] = await queryMessagesByType(db, chatRef, chatType);
+      return acc;
+    }, {});
+
+    set(() => ({
+      asideDataPage: queries,
+    }));
   },
 }));

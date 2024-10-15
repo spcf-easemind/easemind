@@ -156,7 +156,7 @@ export default function ChatPage() {
           Messages
         </Title>
         <Tooltip label="Connect with someone" position="bottom">
-          <UnstyledButton onClick={findNewChat}>
+          <UnstyledButton onClick={() => findNewChat()}>
             <Image src={IconConnectCompanion} w={30} />
           </UnstyledButton>
         </Tooltip>

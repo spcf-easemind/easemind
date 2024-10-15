@@ -2,8 +2,12 @@ import classes from "./PhotoList.module.css";
 
 export default function PhotoList({ images }) {
   const ColInstance = images.map((image) => (
-    <a href={image.image} key={image.image}>
-      <img src={image.image} alt="image sample" className={classes.image} />
+    <a href={image.fileURL} key={image.id}>
+      <img
+        src={image.fileURL}
+        alt={`Image Uploaded-${image.id}`}
+        className={classes.image}
+      />
     </a>
   ));
   return ColInstance;

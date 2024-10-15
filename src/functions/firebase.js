@@ -5,6 +5,10 @@ import {
   push,
   serverTimestamp,
   child,
+  query,
+  equalTo,
+  orderByChild,
+  orderByKey,
 } from "firebase/database";
 
 import {
@@ -48,6 +52,7 @@ export async function createNewChat(db, { chatName = "", users }) {
     createdAt: serverTimestamp(),
     type: "private",
     users: users,
+    id: newChatRef.key,
   };
 
   const response = await setFirebase(newChatRef, chatData)
@@ -107,37 +112,35 @@ export async function sendMessage(db, chatRef, { userKey, message, type }) {
   return response;
 }
 
-export function serializeChatPageData(allChats, chatRef, loggedInUserId) {
-  let header = {
-    name: "",
-    image: null,
-    lastSeen: "",
-  };
+export function serializeChatPageData(chat, loggedInUserId) {
+  let header = {};
   let chatMessages = [];
 
-  const chat = allChats.find((chat) => chat.id === chatRef) ?? null;
+  console.log("Check:", chat);
+  const data = serializer.serializeChat(chat);
 
-  if (chat) {
-    const messages = chat.messages;
-    const chatUsers = chat.users;
+  if (data) {
+    const messages = data.messages;
+    const chatUsers = data.users;
 
-    if (chat.type === "private") {
+    if (data.type === "private") {
       const displayUser = () => {
         const [userId] = Object.keys(chatUsers).filter(
           (item) => item !== loggedInUserId
         );
-        return chat.users[userId];
+        return data.users[userId];
       };
 
       header = {
         name: displayUser().name,
         image: displayUser().image,
         lastSeen: "Active now",
+        type: data.type,
       };
-    } else if (chat.type === "group") {
+    } else if (data.type === "group") {
       header = {
-        name: chat.chatName,
-        image: chat.chatImage,
+        name: data.chatName,
+        image: data.chatImage,
         lastSeen: "Active now",
       };
     }
@@ -294,5 +297,52 @@ export async function uploadImage(
       console.error("Error uploading image:", error);
       throw new Error(`Error uploading: ${messageType}!`);
     });
+  return response;
+}
+
+// Queries
+export async function queryChatData(db, chatRef) {
+  const chatRefPath = databaseRef(db, `chats`);
+
+  const chatQuery = query(chatRefPath, orderByKey(), equalTo(chatRef));
+
+  const response = await getFirebase(chatQuery)
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        console.log("Chat data:", data);
+        return data;
+      } else {
+        console.log("Chat not found");
+        return null;
+      }
+    })
+    .catch((error) => {
+      console.log("Error querying messages by chatRef", error);
+      return null;
+    });
+  return response;
+}
+export async function queryMessagesByType(db, chatRef, type) {
+  const messagesRef = databaseRef(db, `chats/${chatRef}/messages`); // Path to the messages under a specific chat
+  const typeQuery = query(messagesRef, orderByChild("type"), equalTo(type)); // Querying messages where type == "image" (or other types)
+
+  const response = await getFirebase(typeQuery)
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        // Returns only messages where type equals the value you are querying for
+        const data = snapshot.val();
+        console.log(`Messages of type ${type}:`, data);
+        return serializer.serializeFileTypes(data);
+      } else {
+        console.log(`No messages of type ${type}`);
+        return null;
+      }
+    })
+    .catch((error) => {
+      console.log("Error querying messages by type", error);
+      return null;
+    });
+
   return response;
 }
