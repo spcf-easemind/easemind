@@ -13,7 +13,9 @@ export const useDialogStore = create((set) => ({
     mobile: false,
   },
 
+  // Chat Page
   chatModal: false,
+  findChatModal: false,
 
   toggleDialog: () => set((state) => ({ dialog: !state.dialog })),
 
@@ -45,4 +47,8 @@ export const useDialogStore = create((set) => ({
 
   // Toggle Chat Modal
   toggleChatModal: () => set((state) => ({ chatModal: !state.chatModal })),
+
+  // Toggle Find Chat Modal
+  toggleFindChatModal: () =>
+    set((state) => ({ findChatModal: !state.findChatModal })),
 }));

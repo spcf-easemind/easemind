@@ -1,12 +1,14 @@
-import { Flex, Stack, MultiSelect } from "@mantine/core";
+import { Flex, Stack, MultiSelect, Title, Text, Tabs } from "@mantine/core";
 
 import ChatHeader from "../components/headers/ChatHeader.jsx";
 import ChatBody from "../components/chat/ChatBody.jsx";
 import ChatInput from "../components/chat/ChatInput.jsx";
 import ChatModal from "../components/modals/ChatModal.jsx";
 import CheckboxList from "../components/CheckboxList.jsx";
+import FindChatModal from "../components/modals/FindChatModal.jsx";
+import FindChatTabs from "../components/tabs/FindChatTabs.jsx";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useForm, hasLength } from "@mantine/form";
 import { useDialogStore } from "../store/dialog.js";
 import { useShallow } from "zustand/shallow";
@@ -87,6 +89,13 @@ export default function ChatPage() {
     }))
   );
 
+  const { findChatModal, findChatModalFn } = useDialogStore(
+    useShallow((state) => ({
+      findChatModal: state.findChatModal,
+      findChatModalFn: state.toggleFindChatModal,
+    }))
+  );
+
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
@@ -109,6 +118,15 @@ export default function ChatPage() {
     },
   });
 
+  const findNewChatForm = useForm({
+    mode: "controlled",
+    initialValues: {
+      thoughts: "",
+      emotions: "",
+      members: "",
+    },
+  });
+
   // Here to Call Zustand Function
   async function handleSendMessage(formData) {
     const data = { ...formData };
@@ -124,7 +142,6 @@ export default function ChatPage() {
   }
 
   async function handleUploadFile(files) {
-
     console.log(files);
     // const formData = {
     //   userKey: form.getValues().userKey,
@@ -140,6 +157,26 @@ export default function ChatPage() {
   function handleAddMembers(formData) {
     console.log(formData);
   }
+
+  function handleFindNewChat(value) {
+    console.log(value);
+  }
+
+  const FindChatModalComponents = () => {
+    const title = (
+      <>
+        <Title mb={8} order={3}>Connect and Share</Title>
+        <Text c="dimmed" size="sm">
+          Please share your feelings and thoughts. We&apos;re here to help you
+          connect with someone who can support and relate to you as well.
+        </Text>
+      </>
+    );
+
+    const tabs = <FindChatTabs form={findNewChatForm} />;
+
+    return { title, tabs };
+  };
 
   return (
     <>
@@ -167,11 +204,6 @@ export default function ChatPage() {
         onSubmit={addMembersForm.onSubmit(handleAddMembers)}
       >
         <Stack>
-          {/* <Combobox
-            data={new_friends.map(({ name }) => name)}
-            value={addMembersForm.values.members}
-            onChange={(val) => addMembersForm.setFieldValue("members", val)}
-          /> */}
           <MultiSelect
             placeholder="Search"
             rightSection={" "}
@@ -195,6 +227,17 @@ export default function ChatPage() {
           />
         </Stack>
       </ChatModal>
+
+      <FindChatModal
+        form={findNewChatForm}
+        onSubmit={handleFindNewChat}
+        model={{ opened: findChatModal, onClose: findChatModalFn }}
+        titleSection={FindChatModalComponents().title}
+        buttonLabel="Search"
+      >
+        {/* Tabs */}
+        {FindChatModalComponents().tabs}
+      </FindChatModal>
     </>
   );
 }
