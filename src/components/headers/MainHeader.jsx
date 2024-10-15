@@ -11,6 +11,7 @@ import classes from "./MainHeader.module.css";
 
 import { useCallback, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useAuthenticationStore } from "../../store/authentication";
 
 const menuLinks = [
   {
@@ -19,6 +20,7 @@ const menuLinks = [
     route: "/home",
     icon: IconHome,
     iconFilled: IconHomeFilled,
+    roles: ["user", "super-admin", "volunteer"],
   },
   {
     name: "chat",
@@ -26,6 +28,7 @@ const menuLinks = [
     route: "/chat",
     icon: IconChat,
     iconFilled: IconChatFilled,
+    roles: ["user", "super-admin", "volunteer"],
   },
   {
     name: "profile",
@@ -33,12 +36,22 @@ const menuLinks = [
     route: "/profile",
     icon: IconAccount,
     iconFilled: IconAccountFilled,
+    roles: ["user", "super-admin", "volunteer"],
+  },
+  {
+    name: "miscellaneous",
+    label: "Miscellaneous",
+    route: "/miscellaneous",
+    icon: IconAccount,
+    iconFilled: IconAccountFilled,
+    roles: ["super-admin", "volunteer"],
   },
 ];
 
 export default function MainHeader() {
   const navigate = useNavigate();
   const location = useLocation();
+  const role = useAuthenticationStore((state) => state.user.data?.role);
 
   const currentLocation = useCallback(() => {
     const response = menuLinks.find((item) =>
@@ -54,20 +67,22 @@ export default function MainHeader() {
     return navigate(route);
   }
 
-  const menuInstances = menuLinks.map((item) => {
-    const isActiveIcon = item.name === active ? item.iconFilled : item.icon;
-    return (
-      <Tooltip label={item.label} key={item.name}>
-        <UnstyledButton
-          data-active={item.name === active || undefined}
-          onClick={() => handleMenuClick(item.name, item.route)}
-          className={classes.menuIcon}
-        >
-          <Image src={isActiveIcon} w={24} />
-        </UnstyledButton>
-      </Tooltip>
-    );
-  });
+  const menuInstances = menuLinks
+    .filter(({ roles }) => roles.includes(role))
+    .map((item) => {
+      const isActiveIcon = item.name === active ? item.iconFilled : item.icon;
+      return (
+        <Tooltip label={item.label} key={item.name}>
+          <UnstyledButton
+            data-active={item.name === active || undefined}
+            onClick={() => handleMenuClick(item.name, item.route)}
+            className={classes.menuIcon}
+          >
+            <Image src={isActiveIcon} w={24} />
+          </UnstyledButton>
+        </Tooltip>
+      );
+    });
 
   return (
     <Group h="100%" justify="center" align="center" gap={96}>

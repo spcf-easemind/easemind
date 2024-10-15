@@ -1,5 +1,6 @@
 import ChatPage from "../../pages/ChatPage.jsx";
 import HomePage from "../../pages/HomePage.jsx";
+import MiscellaneousPage from "../../pages/MiscellaneousPage.jsx";
 
 // Loaders
 import { ChatLoader } from "../loaders/ChatLoader.jsx";
@@ -23,6 +24,10 @@ const mainRoutes = [
   {
     path: "/profile",
     element: "",
+  },
+  {
+    path: "/miscellaneous",
+    element: <MiscellaneousPage />,
   },
 ];
 
