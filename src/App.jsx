@@ -53,6 +53,16 @@ function App() {
     return paths.some((path) => location.pathname.startsWith(path));
   }, [location]);
 
+  const navWithoutPadding = useMemo(() => {
+    let paths = ["/home"];
+    const mapNavRoutes = navRoutes.map(({ path }) => path);
+    paths = [...paths, ...mapNavRoutes];
+
+    return paths.some((path) => location.pathname.startsWith(path))
+      ? undefined
+      : "lg";
+  }, [location]);
+
   // Adjusted logic to include /chat and /chat/:chatRef for header
   const whichHeader = includeNavigation ? <MainHeader /> : <Header />;
 
@@ -120,7 +130,7 @@ function App() {
           {whichHeader}
         </Container>
       </AppShell.Header>
-      <AppShell.Navbar p="lg">{whichNavigation}</AppShell.Navbar>
+      <AppShell.Navbar p={navWithoutPadding}>{whichNavigation}</AppShell.Navbar>
       <AppShell.Main className={withBackground}>{withContainer}</AppShell.Main>
       <AppShell.Aside
         p="md"

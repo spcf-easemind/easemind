@@ -49,27 +49,24 @@ const navLinksAttributes = [
 ];
 
 export default function HomeNavigation() {
-  const navLinks = 
-  navLinksAttributes.map((navLink) => {
-    return (
-        <Stack mt={35}>
-            <HomeNavLink {...navLink}/>
-        </Stack>
-    )
+  const navLinks = navLinksAttributes.map((navLink) => {
+    return <HomeNavLink key={navLink.label} {...navLink} />;
   });
 
   return (
     <>
-      <Group mt={8}>
-        <Avatar src={sample_user.image} w={65} h={65} radius={10}/>
-        <Box>
-          <Title order={4}>{sample_user.name}</Title>
-          <Text c="gray" size="sm">
-            {sample_user.role}
-          </Text>
-        </Box>
-      </Group>
-      {navLinks}
+      <Stack gap={0}>
+        <Group p="lg">
+          <Avatar src={sample_user.image} w={65} h={65} radius={10} />
+          <Box>
+            <Title order={4}>{sample_user.name}</Title>
+            <Text c="gray" size="sm">
+              {sample_user.role}
+            </Text>
+          </Box>
+        </Group>
+        <Stack gap={8}>{navLinks}</Stack>
+      </Stack>
     </>
   );
 }
