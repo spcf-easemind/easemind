@@ -38,14 +38,6 @@ function App() {
     sm: "90dvh",
   });
 
-  const withContainer = location.pathname.startsWith("/chat") ? (
-    <Outlet />
-  ) : (
-    <Container size={containerBreakpoint} h="100%">
-      <Outlet />
-    </Container>
-  );
-
   // Filter Routes that include Navigation
   const includeNavigation = useMemo(() => {
     let paths = [];
@@ -69,6 +61,14 @@ function App() {
     <ChatNavigation />
   ) : (
     <HomeNavigation />
+  );
+
+  const withContainer = includeNavigation ? (
+    <Outlet />
+  ) : (
+    <Container size={containerBreakpoint} h="100%">
+      <Outlet />
+    </Container>
   );
 
   const withBackground = useMemo(() => {
