@@ -1,8 +1,15 @@
-import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
-import { authSubscribe, initSatellite } from "@junobuild/core";
-import { signIn, signOut, listDocs, setDoc, getDoc, deleteDoc } from "@junobuild/core";
-import { defineConsoleConfig } from "@junobuild/config";
+import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import { authSubscribe, initSatellite } from '@junobuild/core';
+import {
+  signIn,
+  signOut,
+  listDocs,
+  setDoc,
+  getDoc,
+  deleteDoc,
+} from '@junobuild/core';
+import { defineConsoleConfig } from '@junobuild/config';
 
 export const useAuthenticationStore = create(
   persist(
@@ -32,7 +39,7 @@ export const useAuthenticationStore = create(
 
         const handleSignIn = async () => {
           await signIn(signInOptions).catch((error) => {
-            console.error("Sign-in failed:", error);
+            console.error('Sign-in failed:', error);
           });
         };
 
@@ -63,12 +70,12 @@ export const useAuthenticationStore = create(
 
       logoutInternetIdentity: async () => {
         const items = await listDocs({
-          collection: "userCredentials",
+          collection: 'userCredentials',
         });
 
         if (items.items && items.items.length > 0 && items.items[0].data) {
           const user = await getDoc({
-            collection: "users",
+            collection: 'users',
             key: userKey,
           });
 
@@ -80,16 +87,16 @@ export const useAuthenticationStore = create(
           const updatedUserData = {
             key: user.data.key,
             fullName: userData.fullName,
-            status: "offline",
+            status: 'offline',
             lastUpdated: userWithConvertedDates,
           };
           set(() => ({
             user: null,
-            message: "Loading...",
+            message: 'Loading...',
           }));
 
           await setDoc({
-            collection: "users",
+            collection: 'users',
             doc: {
               key: userKey,
               data: updatedUserData,
@@ -101,16 +108,16 @@ export const useAuthenticationStore = create(
 
           console.log(response);
 
-          sessionStorage.removeItem("authentication");
+          sessionStorage.removeItem('authentication');
 
           set(() => ({
             user: null,
-            message: "Logout Successfully!",
+            message: 'Logout Successfully!',
           }));
         } else {
           set(() => ({
             user: null,
-            message: "No account found on this identity. Please sign up first",
+            message: 'No account found on this identity. Please sign up first',
           }));
         }
       },
@@ -120,7 +127,7 @@ export const useAuthenticationStore = create(
         set(() => ({ loading: true }));
 
         const items = await listDocs({
-          collection: "userCredentials",
+          collection: 'userCredentials',
         });
 
         if (items.items && items.items.length > 0 && items.items[0].data) {
@@ -130,7 +137,7 @@ export const useAuthenticationStore = create(
             items.items[0].data.password === password
           ) {
             const user = await getDoc({
-              collection: "users",
+              collection: 'users',
               key: items.items[0].key,
             });
 
@@ -144,12 +151,13 @@ export const useAuthenticationStore = create(
             const updatedData = {
               key: userData.key,
               fullName: userData.fullName,
-              status: "online",
+              status: 'online',
+              role: userData.role,
               lastUpdated: userWithConvertedDates,
             };
 
             await setDoc({
-              collection: "users",
+              collection: 'users',
               doc: {
                 key: userKey,
                 data: updatedData,
@@ -167,7 +175,7 @@ export const useAuthenticationStore = create(
                   role: userItems.role,
                 },
               },
-              message: "Login Successfully!",
+              message: 'Login Successfully!',
             }));
 
             // Set Loading False
@@ -178,7 +186,7 @@ export const useAuthenticationStore = create(
                 ...state.user,
                 data: null,
               },
-              message: "Incorrect email or password",
+              message: 'Incorrect email or password',
             }));
 
             // Set Loading False
@@ -190,7 +198,7 @@ export const useAuthenticationStore = create(
               ...state.user,
               data: null,
             },
-            message: "No account found on this identity. Please sign up first",
+            message: 'No account found on this identity. Please sign up first',
           }));
 
           // Set Loading False
@@ -199,7 +207,7 @@ export const useAuthenticationStore = create(
       },
     }),
     {
-      name: "authentication",
+      name: 'authentication',
       storage: createJSONStorage(() => sessionStorage),
       partialize: (state) => ({ user: state.user }),
     }
@@ -211,7 +219,7 @@ function convertTimestamps(user) {
     // Convert nanoseconds to milliseconds
     const milliseconds = Number(nanos.toString().slice(0, -6));
     const date = new Date(milliseconds);
-    
+
     // Format the date as a string (e.g., "2024-03-14 15:30:45")
     return date;
   };

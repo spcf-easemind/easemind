@@ -9,15 +9,20 @@ import {
   deleteAsset,
 } from '@junobuild/core';
 import { nanoid } from 'nanoid';
+import { NavLink } from 'react-router-dom';
 
 export const usePublicMaterials = create((set) => ({
-  data: null,
-  message: null,
-  loading: false,
+  miscData: null,
+  miscMessage: null,
+  miscLoading: false,
 
   // This is all for Categories related purposes
   createCategories: async () => {
-    set(() => ({ loading: true }));
+    set(() => ({
+      miscData: null,
+      miscMessage: 'Loading...',
+      loading: true,
+    }));
 
     try {
       const thoughtCategories = [
@@ -162,18 +167,25 @@ export const usePublicMaterials = create((set) => ({
           `Category ${category} on members category seeded successfully!`
         );
       }
-      set(() => ({ loading: false }));
+      set(() => ({
+        miscData: null,
+        miscMessage: 'Categories created successfully!',
+        miscLoading: false,
+      }));
       return true;
     } catch (error) {
       console.error('Error during creating categories:', error);
-      set({ message: error.message, data: null });
+      set({ miscMessage: error.message, miscData: null, miscLoading: false });
       // Loading is False
-      set(() => ({ loading: false }));
       return false;
     }
   },
   getAllCategories: async () => {
-    set(() => ({ loading: true }));
+    set(() => ({
+      miscData: null,
+      miscMessage: 'Loading...',
+      miscLoading: true,
+    }));
     try {
       const categories = await listDocs({
         collection: 'categories',
@@ -217,22 +229,25 @@ export const usePublicMaterials = create((set) => ({
       };
 
       set(() => ({
-        data: allCategoryInfo,
-        message: 'All users fetched successfully!',
-        loading: false,
+        miscData: allCategoryInfo,
+        miscMessage: 'All users fetched successfully!',
+        miscLoading: false,
       }));
 
       return true;
     } catch (error) {
       console.error('Error during creating categories:', error);
-      set({ message: error.message, data: null });
+      set({ miscMessage: error.message, miscData: null, miscLoading: false });
       // Loading is False
-      set(() => ({ loading: false }));
       return false;
     }
   },
   deleteCategories: async () => {
-    set(() => ({ loading: true }));
+    set(() => ({
+      miscData: null,
+      miscMessage: 'Loading...',
+      miscLoading: true,
+    }));
 
     try {
       //Deleting Categories Related
@@ -260,7 +275,7 @@ export const usePublicMaterials = create((set) => ({
           });
 
           console.log(
-            `Category ${category} on categories deleted successfully!`
+            `Category ${category.name} on categories deleted successfully!`
           );
         }
       }
@@ -273,7 +288,7 @@ export const usePublicMaterials = create((set) => ({
           });
 
           console.log(
-            `Category ${thoughtCategory} on thoughtCategories deleted successfully!`
+            `Category ${thoughtCategory.name} on thoughtCategories deleted successfully!`
           );
         }
       }
@@ -286,7 +301,7 @@ export const usePublicMaterials = create((set) => ({
           });
 
           console.log(
-            `Category ${emotionCategory} on thoughtCategories deleted successfully!`
+            `Category ${emotionCategory.name} on thoughtCategories deleted successfully!`
           );
         }
       }
@@ -299,28 +314,31 @@ export const usePublicMaterials = create((set) => ({
           });
 
           console.log(
-            `Category ${memberCategory} on thoughtCategories deleted successfully!`
+            `Category ${memberCategory.name} on thoughtCategories deleted successfully!`
           );
         }
       }
       set(() => ({
-        data: null,
-        message: 'All Categories Deleted Successfully!',
-        loading: false,
+        miscData: null,
+        miscMessage: 'All Categories Deleted Successfully!',
+        miscLoading: false,
       }));
       return true;
     } catch (error) {
       console.error('Error during creating categories:', error);
-      set({ message: error.message, data: null });
+      set({ miscMessage: error.message, miscData: null, miscLoading: false });
       // Loading is False
-      set(() => ({ loading: false }));
       return false;
     }
   },
 
   // This is all for Anonymous Profile purposes
   createAnonymousNickames: async () => {
-    set(() => ({ loading: true }));
+    set(() => ({
+      miscData: null,
+      miscMessage: 'Loading...',
+      miscLoading: true,
+    }));
     try {
       const publicAnonymousNicknames = ['', '', '', '', '', '', '', '', '', ''];
 
@@ -336,79 +354,142 @@ export const usePublicMaterials = create((set) => ({
           },
         });
       }
-      set(() => ({ loading: false }));
+      set(() => ({
+        miscData: null,
+        miscMessage: 'Anonymous Nickname created successfully!',
+        miscLoading: false,
+      }));
+      return true;
     } catch (error) {
       console.error('Error during creating categories:', error);
-      set({ message: error.message, data: null });
+      set({ miscMessage: error.message, miscData: null, miscLoading: false });
       // Loading is False
-      set(() => ({ loading: false }));
+      return false;
     }
   },
 
   createAnonymousProfile: async (file) => {
-    set(() => ({ loading: true }));
+    set(() => ({
+      miscData: null,
+      miscMessage: 'Loading...',
+      miscLoading: true,
+    }));
 
     try {
+      let profileImageUrl = null;
       if (file) {
-        const filename = `${userKey}-profile`;
-        await uploadFile({
-          collection: 'userProfilePicture',
+        const key = nanoid();
+        const filename = `${key}-profile`;
+        const { downloadUrl } = await uploadFile({
+          collection: 'publicAnonymousProfiles',
           data: file,
           filename,
         });
-        console.log(`User pOr
-            `);
+
+        profileImageUrl = downloadUrl;
+
+        await setDoc({
+          collection: 'publicAnonymousProfiles',
+          doc: {
+            key,
+            data: {
+              name: filename,
+              anonymousImagePath: profileImageUrl,
+            },
+          },
+        });
       }
-      set(() => ({ loading: false }));
+
+      set(() => ({
+        miscData: null,
+        miscMessage: 'Anonymous Profile uploaded successfully!',
+        miscLoading: false,
+      }));
+
+      return true;
     } catch (error) {
       console.error('Error during creating categories:', error);
-      set({ message: error.message, data: null });
-      // Loading is False
-      set(() => ({ loading: false }));
+      set({ miscMessage: error.message, miscData: null, miscLoading: false });
+      return false;
     }
   },
 
   deleteAnonymous: async () => {
-    set(() => ({ loading: true }));
-
+    set(() => ({
+      miscData: null,
+      miscMessage: 'Loading...',
+      miscLoading: true,
+    }));
     try {
-      const publicAnonymousNicknames = await listDocs({
-        collection: 'publicAnonymousNicknames',
+      const publicAnonymousProfilesData = await listDocs({
+        collection: 'publicAnonymousProfiles',
       });
 
       const publicAnonymousProfiles = await listAssets({
-        collection: 'publicAnonymousNicknames',
+        collection: 'publicAnonymousProfiles',
       });
 
-      if (publicAnonymousNicknames) {
-        for (const publicAnonymousNickname of publicAnonymousNicknames.items) {
+      if (publicAnonymousProfilesData) {
+        for (const publicAnonymousProfileData of publicAnonymousProfilesData.items) {
           await deleteDoc({
-            collection: 'publicAnonymousNicknames',
-            doc: publicAnonymousNickname,
+            collection: 'publicAnonymousProfiles',
+            doc: publicAnonymousProfileData,
           });
           console.log(
-            `Anonymous ${publicAnonymousNickname} on anonymousNicnames deleted successfully!`
+            `Anonymous ${publicAnonymousProfileData.data.name} on anonymousNicnames deleted successfully!`
           );
         }
       }
 
       if (publicAnonymousProfiles) {
         for (const publicAnonymousProfile of publicAnonymousProfiles.items) {
-          await deleteDoc({
+          await deleteAsset({
             collection: 'publicAnonymousProfiles',
-            doc: publicAnonymousProfile,
+            fullPath: publicAnonymousProfile.fullPath,
           });
           console.log(
-            `Anonymous ${publicAnonymousProfile} on anonymousNicnames deleted successfully!`
+            `Anonymous ${publicAnonymousProfile.name} on anonymousNicnames deleted successfully!`
           );
         }
       }
-      set(() => ({ loading: false }));
+      set(() => ({
+        miscData: null,
+        miscMessage: 'Anonymous Profile deleted successfully!',
+        loading: false,
+      }));
+      return true;
     } catch (error) {
       console.error('Error during creating categories:', error);
-      set({ message: error.message, data: null });
+      set({ miscMessage: error.message, miscData: null, miscLoading: false });
       // Loading is False
-      set(() => ({ loading: false }));
+      return false;
+    }
+  },
+  getAllAnonymousProfiles: async () => {
+    set(() => ({
+      miscData: null,
+      miscMessage: 'Loading...',
+      miscLoading: false,
+    }));
+    try {
+      const allAnonymousProfiles = await listDocs({
+        collection: 'publicAnonymousProfiles',
+      });
+
+      const allAnonymousProfileArray = [];
+      for (const anonymousProfile of allAnonymousProfiles.items)
+        allAnonymousProfileArray.push(anonymousProfile.data);
+      set(() => ({
+        miscData: allAnonymousProfileArray,
+        miscMessage: 'All available anonymous profiles',
+        miscLoading: false,
+      }));
+      return true;
+    } catch (error) {
+      console.error('Error during creating categories:', error);
+      set({ miscMessage: error.message, miscData: null, miscLoading: false });
+      // Loading is False
+      return false;
     }
   },
 }));

@@ -41,9 +41,16 @@ export default defineDevConfig(() => ({
           mutablePermissions: true,
         },
         {
+          collection: 'publicAnonymousProfiles',
+          read: 'public',
+          write: 'private',
+          memory: 'heap',
+          mutablePErmissions: true,
+        },
+        {
           collection: 'userGroups',
           read: 'public',
-          write: 'public',
+          write: 'managed',
           memory: 'heap',
           mutablePermissions: true,
         },
@@ -98,6 +105,13 @@ export default defineDevConfig(() => ({
         },
         {
           collection: 'groups',
+          read: 'public',
+          write: 'private',
+          memory: 'heap',
+          mutablePermissions: true,
+        },
+        {
+          collection: 'groupProfileCollections',
           read: 'public',
           write: 'private',
           memory: 'heap',

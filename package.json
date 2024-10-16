@@ -12,7 +12,7 @@
   "dependencies": {
     "@emoji-mart/data": "^1.2.1",
     "@emoji-mart/react": "^1.1.1",
-    "@junobuild/core": "^0.0.58",
+    "@junobuild/core": "^0.0.61",
     "@mantine/colors-generator": "^7.13.2",
     "@mantine/core": "^7.13.2",
     "@mantine/dates": "^7.13.2",
@@ -35,7 +35,7 @@
   "devDependencies": {
     "@eslint/js": "^9.11.1",
     "@junobuild/config": "^0.0.14",
-    "@junobuild/vite-plugin": "^0.0.16",
+    "@junobuild/vite-plugin": "^0.0.18",
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.2",

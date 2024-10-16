@@ -25,7 +25,11 @@ const title =
 export default function LoginPage() {
   const navigate = useNavigate();
 
+  const data = useUsersStore((state) => state.data);
   const userSignUpFn = useUsersStore((state) => state.userSignUp);
+  const getAllUsersFn = useUsersStore((state) => state.getAllUsers);
+  const getUserInfoFn = useUsersStore((state) => state.getUserInfo);
+  const deleteUserInfoFn = useUsersStore((state) => state.deleteUserInfo);
   const { userLoginFn, loading } = useAuthenticationStore(
     useShallow((state) => ({
       loading: state.loading,
@@ -42,6 +46,13 @@ export default function LoginPage() {
 
   const [signupOpened, { open: handleSignupOpen, close: handleSignupClose }] =
     useDisclosure(false);
+
+  useEffect(() => {
+    // getUserInfoFn();
+    // getAllUsersFn();
+    // deleteUserInfoFn();
+    // console.log(data);
+  }, [data]);
 
   const loginForm = useForm({
     mode: 'uncontrolled',
