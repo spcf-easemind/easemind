@@ -50,10 +50,10 @@ export const useChatStore = create((set, get) => ({
     const response = serializeNavData(allChats, loggedInUserId);
     return response;
   },
-  setChatPageData: (chat) => {
+  setChatPageData: (chat, users) => {
     const loggedInUserId =
       useAuthenticationStore.getState().user.data?.key || null;
-    const response = serializeChatPageData(chat, loggedInUserId);
+    const response = serializeChatPageData(chat, loggedInUserId, users);
     return response;
   },
 
@@ -237,9 +237,11 @@ export const useChatStore = create((set, get) => ({
   // Query
   queryChatData: async (chatRef) => {
     const db = database;
+    const fetchUsersFn = useUsersStore.getState().getAllUsers;
     if (chatRef) {
       const response = await queryChatData(db, chatRef);
-      const serializedData = get().setChatPageData(response);
+      const users = await fetchUsersFn();
+      const serializedData = get().setChatPageData(response, users);
 
       const asideResponse = await get().queryAsideData(
         chatRef,

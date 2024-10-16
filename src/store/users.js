@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 import {
   setDoc,
   getDoc,
@@ -7,8 +7,8 @@ import {
   uploadFile,
   listAssets,
   deleteAsset,
-} from '@junobuild/core';
-import { nanoid } from 'nanoid';
+} from "@junobuild/core";
+import { nanoid } from "nanoid";
 
 export const useUsersStore = create((set) => ({
   data: null,
@@ -22,16 +22,16 @@ export const useUsersStore = create((set) => ({
     try {
       // const key = nanoid();
       const items = await listDocs({
-        collection: 'userCredentials',
+        collection: "userCredentials",
       });
 
       if (items.items[0]) {
-        throw new Error('This identity already have an account!.');
+        throw new Error("This identity already have an account!.");
       }
 
       const key = nanoid();
       await setDoc({
-        collection: 'userCredentials',
+        collection: "userCredentials",
         doc: {
           key,
           data: {
@@ -46,7 +46,7 @@ export const useUsersStore = create((set) => ({
       });
 
       await setDoc({
-        collection: 'userSurveys',
+        collection: "userSurveys",
         doc: {
           key,
           data: formData.survey,
@@ -54,14 +54,14 @@ export const useUsersStore = create((set) => ({
       });
 
       await setDoc({
-        collection: 'users',
+        collection: "users",
         doc: {
           key,
           data: {
             key: key,
             fullName: formData.fullName,
-            status: 'offline',
-            role: formData.role
+            status: "offline",
+            role: formData.role,
           },
         },
       });
@@ -72,13 +72,13 @@ export const useUsersStore = create((set) => ({
           fullName: formData.fullName,
           email: formData.email,
         },
-        message: 'User signed up successfully',
+        message: "User signed up successfully",
       });
 
       // Loading is False
       set(() => ({ loading: false }));
     } catch (error) {
-      console.error('Error during sign up:', error);
+      console.error("Error during sign up:", error);
       set({ message: error.message, data: null });
       // Loading is False
       set(() => ({ loading: false }));
@@ -88,16 +88,16 @@ export const useUsersStore = create((set) => ({
   getUserInfo: async () => {
     try {
       const items = await listDocs({
-        collection: 'userCredentials',
+        collection: "userCredentials",
       });
 
       const itemSurveys = await listDocs({
-        collection: 'userSurveys',
+        collection: "userSurveys",
       });
 
       if (items.items && items.items.length > 0 && items.items[0].data) {
         const user = await getDoc({
-          collection: 'users',
+          collection: "users",
           key: items.items[0].key,
         });
 
@@ -108,20 +108,20 @@ export const useUsersStore = create((set) => ({
         };
         set(() => ({
           data: userData,
-          message: 'User Fetched Successfully!',
+          message: "User Fetched Successfully!",
         }));
       } else {
-        console.log('No user data found');
+        console.log("No user data found");
         set(() => ({
           data: null,
-          message: 'No user data found',
+          message: "No user data found",
         }));
       }
     } catch (error) {
-      console.error('Error fetching user info:', error);
+      console.error("Error fetching user info:", error);
       set(() => ({
         data: null,
-        message: error.message || 'An error occurred while fetching user data',
+        message: error.message || "An error occurred while fetching user data",
       }));
     }
   },
@@ -133,7 +133,7 @@ export const useUsersStore = create((set) => ({
     // }));
 
     const users = await listDocs({
-      collection: 'users',
+      collection: "users",
     });
 
     // console.log(users);
@@ -150,7 +150,7 @@ export const useUsersStore = create((set) => ({
 
     set(() => ({
       data: allUsers,
-      message: 'All users fetched successfully!',
+      message: "All users fetched successfully!",
     }));
 
     return allUsers;
@@ -159,73 +159,73 @@ export const useUsersStore = create((set) => ({
   deleteUserInfo: async () => {
     set(() => ({
       data: null,
-      message: 'Loading...',
+      message: "Loading...",
     }));
 
     const items = await listDocs({
-      collection: 'userCredentials',
+      collection: "userCredentials",
     });
     const itemSurveys = await listDocs({
-      collection: 'userSurveys',
+      collection: "userSurveys",
     });
 
     if (items.items && items.items.length > 0 && items.items[0].data) {
       for (const item of items.items) {
         await deleteDoc({
-          collection: 'userCredentials',
+          collection: "userCredentials",
           doc: item,
         });
         set(() => ({
           data: null,
-          message: 'User credential deleted successfully!',
+          message: "User credential deleted successfully!",
         }));
       }
 
       for (const itemSurvey of itemSurveys.items) {
         await deleteDoc({
-          collection: 'userSurveys',
+          collection: "userSurveys",
           doc: itemSurvey,
         });
         set(() => ({
           data: null,
-          message: 'User surveys deleted successfully!',
+          message: "User surveys deleted successfully!",
         }));
       }
 
       const user = await getDoc({
-        collection: 'users',
+        collection: "users",
         key: items.items[0].key,
       });
 
       await deleteDoc({
-        collection: 'users',
+        collection: "users",
         doc: user,
       });
 
       set(() => ({
         data: null,
-        message: 'User deleted successfully!',
+        message: "User deleted successfully!",
       }));
 
       const userProfiles = await listAssets({
-        collection: 'userProfilePicture',
+        collection: "userProfilePicture",
       });
 
       for (const userProfile of userProfiles.items) {
         await deleteAsset({
-          collection: 'userProfilePicture',
+          collection: "userProfilePicture",
           fullPath: userProfile.fullPath,
         });
 
         set(() => ({
           data: null,
-          message: 'User profile picture deleted successfully!',
+          message: "User profile picture deleted successfully!",
         }));
       }
     } else {
       set(() => ({
         data: null,
-        message: 'There is no account created on this identity',
+        message: "There is no account created on this identity",
       }));
     }
   },
@@ -255,7 +255,7 @@ export const useUsersStore = create((set) => ({
 
     try {
       if (!fetchedData || !fetchedData.userCredentials) {
-        throw new Error('User data not available');
+        throw new Error("User data not available");
       }
 
       const userData = fetchedData.userCredentials.data;
@@ -267,7 +267,7 @@ export const useUsersStore = create((set) => ({
       if (file) {
         const filename = `${userKey}-profile`;
         const { downloadUrl } = await uploadFile({
-          collection: 'userProfilePicture',
+          collection: "userProfilePicture",
           data: file,
           filename,
         });
@@ -280,7 +280,7 @@ export const useUsersStore = create((set) => ({
       };
 
       await setDoc({
-        collection: 'userCredentials',
+        collection: "userCredentials",
         doc: {
           key: userKey,
           data: updatedData,
@@ -289,7 +289,7 @@ export const useUsersStore = create((set) => ({
       });
 
       const user = await getDoc({
-        collection: 'users',
+        collection: "users",
         key: userKey,
       });
 
@@ -299,7 +299,7 @@ export const useUsersStore = create((set) => ({
       };
 
       const updatedUser = await setDoc({
-        collection: 'users',
+        collection: "users",
         doc: {
           key: user.key,
           data: updatedUserData,
@@ -315,15 +315,15 @@ export const useUsersStore = create((set) => ({
             data: updatedData,
           },
         },
-        message: 'User Updated Successfully!',
+        message: "User Updated Successfully!",
         loading: false,
       }));
 
       return true; // Indicate successful update
     } catch (error) {
-      console.error('Error updating user info:', error);
+      console.error("Error updating user info:", error);
       set(() => ({
-        message: error.message || 'An error occurred while updating user data',
+        message: error.message || "An error occurred while updating user data",
         loading: false,
       }));
       return false; // Indicate failed update

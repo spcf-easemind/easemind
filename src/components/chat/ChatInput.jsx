@@ -37,13 +37,21 @@ const icons = [
   },
 ];
 
+const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+|[^\s]+\.com)/;
+
 const ChatInput = forwardRef(({ form, onSubmit, onUpload, ...props }, ref) => {
   const [cursorPosition, setCursorPosition] = useState(0);
   const imageInputRef = useRef(null);
   const fileInputRef = useRef(null);
 
   function handleSubmit(formData) {
-    onSubmit(formData);
+    const message = formData.message;
+
+    if (urlRegex.test(message)) {
+      onSubmit({ ...formData, type: "link", message });
+    } else {
+      onSubmit({ ...formData, type: "text", message });
+    }
   }
 
   function handleUploadFile(files) {

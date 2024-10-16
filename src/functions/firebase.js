@@ -18,6 +18,7 @@ import {
 } from "firebase/storage";
 
 import { serializer } from "../utils/serializer";
+import { format } from "date-fns";
 
 export async function listChats(db, loggedInUserId) {
   // Reference to the 'chats' node
@@ -112,11 +113,12 @@ export async function sendMessage(db, chatRef, { userKey, message, type }) {
   return response;
 }
 
-export function serializeChatPageData(chat, loggedInUserId) {
+export function serializeChatPageData(chat, loggedInUserId, users) {
   let header = {};
   let chatMessages = [];
 
   const data = serializer.serializeChat(chat);
+  const usersData = users;
 
   if (data) {
     const messages = data.messages;
@@ -127,13 +129,19 @@ export function serializeChatPageData(chat, loggedInUserId) {
         const [userId] = Object.keys(chatUsers).filter(
           (item) => item !== loggedInUserId
         );
-        return data.users[userId];
+        const targetUser = usersData.find((user) => user.key === userId);
+        const formattedStatus =
+          targetUser.data.status === "online"
+            ? "Active now"
+            : `Last seen ${format(targetUser.data.lastUpdated, "p")}`;
+        const { name, image } = data.users[userId];
+        return { name, image, lastSeen: formattedStatus };
       };
 
       header = {
         name: displayUser().name,
         image: displayUser().image,
-        lastSeen: "Active now",
+        lastSeen: displayUser().lastSeen,
         type: data.type,
       };
     } else if (data.type === "group") {
@@ -156,7 +164,7 @@ export function serializeNavData(allChats, loggedInUserId) {
   const groupChat = [];
 
   allChats.forEach((chat) => {
-    const mediaTypes = ["image", "file", "video"];
+    const mediaTypes = ["image", "document", "video"];
     const lastMessage = chat.messages
       ? serializer.serializeMessages(chat.messages).slice(-1)[0]
       : null;
@@ -279,6 +287,7 @@ export async function uploadMedia(
   const messageData = {
     userKey: userKey,
     fileURL: downloadURL,
+    fileName: file.name,
     type: type, // 'image', 'video', 'file', etc.
     createdAt: serverTimestamp(),
   };

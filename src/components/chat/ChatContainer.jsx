@@ -1,4 +1,4 @@
-import { Flex, Avatar, Text, Group, Stack } from "@mantine/core";
+import { Flex, Avatar, Text, Group, Stack, Anchor } from "@mantine/core";
 
 import ChatCard from "./ChatCard.jsx";
 import ChatBox from "./ChatBox.jsx";
@@ -7,6 +7,8 @@ import { useAuthenticationStore } from "../../store/authentication.js";
 import { format } from "date-fns";
 import { useChatStore } from "../../store/chat.js";
 import { useParams } from "react-router-dom";
+import { IconFileFilled, IconLink } from "@tabler/icons-react";
+import { formatters } from "../../utils/formatters.js";
 
 export default function ChatContainer({ data }) {
   const { chatRef } = useParams();
@@ -27,7 +29,25 @@ export default function ChatContainer({ data }) {
         <ImageTruncation isLoggedIn={userLoggedIn} images={data.fileURL} />
       );
     } else if (data.type === "document") {
-      return <ChatCard text={data.fileURL} />;
+      const fileURLComponent = (
+        <Anchor href={data.fileURL[0]} download={data.fileName}>
+          <Group align="center" gap={8}>
+            <IconFileFilled size={20} stroke={1.5} />
+            {data.fileName}
+          </Group>
+        </Anchor>
+      );
+      return <ChatCard text={fileURLComponent} />;
+    } else if (data.type === "link") {
+      const LinkComponent = (
+        <Anchor href={formatters.formatUrl(data.message)} target="_blank">
+          <Group align="center" gap={8}>
+            <IconLink size={20} stroke={1.5} />
+            {data.message}
+          </Group>
+        </Anchor>
+      );
+      return <ChatCard text={LinkComponent} />;
     }
   };
 

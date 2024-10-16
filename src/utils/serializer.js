@@ -5,7 +5,7 @@ export const serializer = {
       const mediaTypes = ["image", "video", "document"];
       // const user = chatUsers[message.userId];
 
-      if (message.type === "text") {
+      if (message.type === "text" || message.type === "link") {
         return {
           id: messageId,
           userId: message.userKey,
@@ -18,6 +18,7 @@ export const serializer = {
           id: messageId,
           userId: message.userKey,
           fileURL: [message.fileURL],
+          fileName: message.fileName,
           time: message.createdAt,
           type: message.type,
         };
