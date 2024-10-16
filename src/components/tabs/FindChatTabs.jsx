@@ -8,7 +8,7 @@ import {
 } from "@mantine/core";
 import { useMemo, useState } from "react";
 
-import PillButton from "../pills/PillButton";
+import PillButton from "../buttons/PillButton.jsx";
 
 const tabsAttributes = [
   {
