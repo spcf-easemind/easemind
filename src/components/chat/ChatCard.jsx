@@ -11,7 +11,7 @@ export default function ChatCard({ text, ...props }) {
       }}
       {...props}
     >
-      <Text size="md">{text}</Text>
+      {text}
     </Card>
   );
 }

@@ -54,10 +54,10 @@ export default function MainHeader() {
   const role = useAuthenticationStore((state) => state.user.data?.role);
 
   const currentLocation = useCallback(() => {
-    const response = menuLinks.find((item) =>
+    const response = menuLinks.filter((item) =>
       location.pathname.startsWith(item.route)
     );
-    return response.name;
+    return response[0]?.name;
   }, [location]);
 
   const [active, setActive] = useState(currentLocation());

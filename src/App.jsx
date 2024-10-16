@@ -1,4 +1,5 @@
 import classes from "./App.module.css";
+import { useMemo } from "react";
 
 // Mantine Components
 import { AppShell, Container } from "@mantine/core";
@@ -17,6 +18,7 @@ import { useDialogStore } from "./store/dialog.js";
 // React Router
 import { Outlet, useLocation } from "react-router-dom";
 import mainRoutes from "./router/modules/main-routes.jsx";
+import navRoutes from "./router/modules/nav-routes.jsx";
 
 const containerBreakpoint = 1280;
 
@@ -44,14 +46,23 @@ function App() {
     </Container>
   );
 
+  // Filter Routes that include Navigation
+  const includeNavigation = useMemo(() => {
+    let paths = [];
+    const notIncludedInMainRoutes = ["/profile", "/miscellaneous"];
+    const mapMainRoutes = mainRoutes
+      .filter(({ path }) => !notIncludedInMainRoutes.includes(path))
+      .map(({ path }) => path);
+    const mapNavRoutes = navRoutes.map(({ path }) => path);
+
+    // Final Data
+    paths = [...mapMainRoutes, ...mapNavRoutes];
+
+    return paths.some((path) => location.pathname.startsWith(path));
+  }, [location]);
+
   // Adjusted logic to include /chat and /chat/:chatRef for header
-  const whichHeader = mainRoutes
-    .map(({ path }) => path)
-    .some((path) => location.pathname.startsWith(path)) ? (
-    <MainHeader />
-  ) : (
-    <Header />
-  );
+  const whichHeader = includeNavigation ? <MainHeader /> : <Header />;
 
   // Adjusted logic to include /chat and /home for navigation
   const whichNavigation = location.pathname.startsWith("/chat") ? (
@@ -60,27 +71,30 @@ function App() {
     <HomeNavigation />
   );
 
-  const withBackground = ![
-    ...mainRoutes.map(({ path }) => path),
-    "/internet-identity",
-  ].some((path) => location.pathname.startsWith(path))
-    ? classes.bgImage
-    : null;
+  const withBackground = useMemo(() => {
+    let paths = ["internet-identity"];
+    const mapMainRoutes = mainRoutes.map(({ path }) => path);
+    const mapNavRoutes = navRoutes.map(({ path }) => path);
+
+    // Final Paths
+    paths = [...paths, ...mapMainRoutes, ...mapNavRoutes];
+
+    if (!paths.some((path) => location.pathname.startsWith(path))) {
+      return classes.bgImage;
+    }
+    return null;
+  }, []);
 
   // Collapse Drawer and Aside
-  const { handleDrawerMobile, handleDrawerDesktop } =
-    location.pathname.startsWith("/chat")
-      ? {
-          handleDrawerMobile: !drawerMobileOpened,
-          handleDrawerDesktop: !drawerDesktopOpened,
-        }
-      : { handleDrawerMobile: true, handleDrawerDesktop: true };
-
-  const { handleAsideMobile, handleAsideDesktop } =
-    location.pathname.startsWith("/chat") ||
-    location.pathname.startsWith("/home")
-      ? { handleAsideMobile: !mobileOpened, handleAsideDesktop: !desktopOpened }
-      : { handleAsideMobile: true, handleAsideDesktop: true };
+  const { handleDrawerMobile, handleDrawerDesktop } = includeNavigation
+    ? {
+        handleDrawerMobile: !drawerMobileOpened,
+        handleDrawerDesktop: !drawerDesktopOpened,
+      }
+    : { handleDrawerMobile: true, handleDrawerDesktop: true };
+  const { handleAsideMobile, handleAsideDesktop } = includeNavigation
+    ? { handleAsideMobile: !mobileOpened, handleAsideDesktop: !desktopOpened }
+    : { handleAsideMobile: true, handleAsideDesktop: true };
 
   return (
     <AppShell

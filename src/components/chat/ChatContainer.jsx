@@ -47,7 +47,7 @@ export default function ChatContainer({ data }) {
         <Anchor href={data.fileURL[0]} download={data.fileName}>
           <Group align="center" gap={8}>
             <IconFileFilled size={20} stroke={1.5} />
-            {data.fileName}
+            <Text size="md">{data.fileName}</Text>
           </Group>
         </Anchor>
       );
@@ -57,7 +57,7 @@ export default function ChatContainer({ data }) {
         <Anchor href={formatters.formatUrl(data.message)} target="_blank">
           <Group align="center" gap={8}>
             <IconLink size={20} stroke={1.5} />
-            {data.message}
+            <Text size="md">{data.message}</Text>
           </Group>
         </Anchor>
       );

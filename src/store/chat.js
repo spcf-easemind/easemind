@@ -295,7 +295,6 @@ export const useChatStore = create((set, get) => ({
       Promise.resolve({})
     );
 
-    console.log(queries);
     return queries;
   },
 }));
