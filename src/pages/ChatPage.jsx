@@ -150,7 +150,7 @@ export default function ChatPage() {
         console.error("Error", error);
       })
       .finally(() => {
-        form.setFieldValue("message", " ");
+        form.setFieldValue("message", "");
         inputRef.current.focus();
       });
   }
