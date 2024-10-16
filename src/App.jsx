@@ -7,7 +7,8 @@ import { useMatches } from "@mantine/core";
 // Components
 import Header from "./components/headers/Header.jsx";
 import MainHeader from "./components/headers/MainHeader.jsx";
-import Navigation from "./components/Navigation.jsx";
+import ChatNavigation from "./components/navigations/ChatNavigation.jsx";
+import HomeNavigation from "./components/navigations/HomeNavigation.jsx";
 import AsidePage from "./pages/AsidePage.jsx";
 
 // Zustand
@@ -52,6 +53,13 @@ function App() {
     <Header />
   );
 
+  // Adjusted logic to include /chat and /home for navigation
+  const whichNavigation = location.pathname.startsWith("/chat") ? (
+    <ChatNavigation />
+  ) : (
+    <HomeNavigation />
+  );
+
   const withBackground = ![
     ...mainRoutes.map(({ path }) => path),
     "/internet-identity",
@@ -69,7 +77,8 @@ function App() {
       : { handleDrawerMobile: true, handleDrawerDesktop: true };
 
   const { handleAsideMobile, handleAsideDesktop } =
-    location.pathname.startsWith("/chat")
+    location.pathname.startsWith("/chat") ||
+    location.pathname.startsWith("/home")
       ? { handleAsideMobile: !mobileOpened, handleAsideDesktop: !desktopOpened }
       : { handleAsideMobile: true, handleAsideDesktop: true };
 
@@ -97,9 +106,7 @@ function App() {
           {whichHeader}
         </Container>
       </AppShell.Header>
-      <AppShell.Navbar p="md">
-        <Navigation />
-      </AppShell.Navbar>
+      <AppShell.Navbar p="lg">{whichNavigation}</AppShell.Navbar>
       <AppShell.Main className={withBackground}>{withContainer}</AppShell.Main>
       <AppShell.Aside
         p="md"
