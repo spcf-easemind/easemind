@@ -20,7 +20,6 @@ export default function ChatBody({ data, ...props }) {
   }, [data]);
 
   const instances = data.map((instance) => {
-    console.log(instance);
     return <ChatContainer key={instance.id} data={instance} />;
   });
 

@@ -19,6 +19,7 @@ import {
 
 import { serializer } from "../utils/serializer";
 import { format } from "date-fns";
+import { generators } from "../utils/generators";
 
 export async function listChats(db, loggedInUserId) {
   // Reference to the 'chats' node
@@ -274,7 +275,25 @@ export async function uploadMedia(
   chatRef,
   { file, userKey, type }
 ) {
+  let messageData = {};
   const fileRef = storageRef(storage, `chats/${chatRef}/${file.name}`);
+
+  if (type === "video") {
+    const thumbnailUrl = await generators.generateThumbnail(file);
+    const thumbnailRef = storageRef(
+      storage,
+      `thumbnails/thumbnails/${chatRef}/${file.name}_thumb.jpg`
+    );
+
+    // Convert Data URL to a Blob for upload
+    const thumbnailBlob = await fetch(thumbnailUrl).then((res) => res.blob());
+
+    // Upload thumbnail to Firebase Storage
+    const snapshot = await uploadBytes(thumbnailRef, thumbnailBlob);
+    const thumbnailURL = await getDownloadURL(snapshot.ref);
+
+    messageData.thumbnailURL = thumbnailURL;
+  }
 
   // Upload file to Firebase Storage
   const snapshot = await uploadBytes(fileRef, file);
@@ -284,13 +303,16 @@ export async function uploadMedia(
   const messageRef = child(databaseRef(db), `chats/${chatRef}/messages`);
   const newMessageRef = push(messageRef);
 
-  const messageData = {
+  messageData = {
+    ...messageData,
     userKey: userKey,
     fileURL: downloadURL,
     fileName: file.name,
     type: type, // 'image', 'video', 'file', etc.
     createdAt: serverTimestamp(),
   };
+
+  console.log(messageData)
 
   const response = await setFirebase(newMessageRef, messageData)
     .then(() => {

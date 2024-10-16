@@ -12,10 +12,10 @@
 }
 
 .image {
-  width: inherit;
-  height: inherit;
+  width: rem(150px);
+  height: rem(150px);
   object-fit: cover;
-  border-radius: var(--mantine-radius-md);
+  border-radius: var(--mantine-radius-lg);
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 

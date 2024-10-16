@@ -13,7 +13,7 @@ import {
 import DropDown from "../components/DropDown.jsx";
 import MembersList from "../components/MembersList.jsx";
 import PhotoList from "../components/grid/PhotoList.jsx";
-import VideoGrid from "../components/VideoGrid.jsx";
+import VideoList from "../components/grid/VideoList.jsx";
 import LinkList from "../components/LinkList.jsx";
 import DocumentList from "../components/DocumentList.jsx";
 import Gallery from "../components/grid/Gallery.jsx";
@@ -104,7 +104,7 @@ export default function AsidePage() {
         </Gallery>
       );
     };
-    const VideoComponent = (instance) => <VideoGrid />;
+    const VideoComponent = (instance) => <VideoList videos={instance.data} />;
     const LinkComponent = (instance) => <LinkList links={instance.data} />;
     const DocumentComponent = (instance) => (
       <DocumentList documents={instance.data} />

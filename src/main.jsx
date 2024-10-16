@@ -14,8 +14,8 @@ import AppRouter from "./router/AppRouter.jsx";
 
 // Light Gallery
 import "lightgallery/css/lightgallery.css";
-import "lightgallery/css/lg-zoom.css";
 import "lightgallery/css/lg-thumbnail.css";
+import "lightgallery/css/lg-video.css";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

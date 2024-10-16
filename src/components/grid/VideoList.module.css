@@ -1,0 +1,14 @@
+.anchorStyling {
+  position: relative;
+
+  @mixin hover {
+    .overlayStyling {
+      opacity: 1;
+    }
+  }
+
+  .overlayStyling {
+    opacity: 0;
+    transition: opacity 200ms ease;
+  }
+}

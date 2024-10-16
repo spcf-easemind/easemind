@@ -1,4 +1,12 @@
-import { Flex, Avatar, Text, Group, Stack, Anchor } from "@mantine/core";
+import {
+  Flex,
+  Avatar,
+  Text,
+  Group,
+  Stack,
+  Anchor,
+  Overlay,
+} from "@mantine/core";
 
 import ChatCard from "./ChatCard.jsx";
 import ChatBox from "./ChatBox.jsx";
@@ -7,13 +15,21 @@ import { useAuthenticationStore } from "../../store/authentication.js";
 import { format } from "date-fns";
 import { useChatStore } from "../../store/chat.js";
 import { useParams } from "react-router-dom";
-import { IconFileFilled, IconLink } from "@tabler/icons-react";
+import {
+  IconFileFilled,
+  IconLink,
+  IconPlayerPlayFilled,
+} from "@tabler/icons-react";
 import { formatters } from "../../utils/formatters.js";
+import { useDialogStore } from "../../store/dialog.js";
+
+import classes from "../grid/PhotoList.module.css";
 
 export default function ChatContainer({ data }) {
   const { chatRef } = useParams();
   const userkey = useAuthenticationStore((state) => state.user.data.key);
   const getUserData = useChatStore((state) => state.getUserData);
+  const toggleGalleryFn = useDialogStore((state) => state.toggleGallery);
 
   const userLoggedIn = data.userId === userkey;
 
@@ -25,9 +41,7 @@ export default function ChatContainer({ data }) {
     if (data.type === "text") {
       return <ChatCard text={data.message} />;
     } else if (data.type === "image") {
-      return (
-        <ImageTruncation isLoggedIn={userLoggedIn} images={data.fileURL} />
-      );
+      return <ImageTruncation fileURL={data.fileURL[0]} />;
     } else if (data.type === "document") {
       const fileURLComponent = (
         <Anchor href={data.fileURL[0]} download={data.fileName}>
@@ -48,6 +62,18 @@ export default function ChatContainer({ data }) {
         </Anchor>
       );
       return <ChatCard text={LinkComponent} />;
+    } else if (data.type === "video") {
+      const VideoComponent = (
+        <Anchor pos="relative" href={data.fileURL[0]} target="_blank">
+          <ImageTruncation fileURL={data.thumbnailURL} />
+          <Overlay radius="lg" className={classes.overlayStyling}>
+            <Group justify="center" align="center" h="100%">
+              <IconPlayerPlayFilled color="white" size={40} stroke={1.5} />
+            </Group>
+          </Overlay>
+        </Anchor>
+      );
+      return VideoComponent;
     }
   };
 

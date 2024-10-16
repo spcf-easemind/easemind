@@ -14,6 +14,18 @@ export const serializer = {
           type: message.type,
         };
       } else if (mediaTypes.includes(message.type)) {
+        if (message.type === "video") {
+          return {
+            id: messageId,
+            userId: message.userKey,
+            fileURL: [message.fileURL],
+            fileName: message.fileName,
+            thumbnailURL: message.thumbnailURL,
+            time: message.createdAt,
+            type: message.type,
+          };
+        }
+
         return {
           id: messageId,
           userId: message.userKey,
