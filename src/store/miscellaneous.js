@@ -100,7 +100,9 @@ export const usePublicMaterials = create((set) => ({
             },
           },
         });
-        console.log(`Category ${category} created successfully!`);
+        console.log(
+          `Category ${category} on thought category seeded successfully!`
+        );
       }
 
       for (const category of emotionCategories) {
@@ -127,10 +129,13 @@ export const usePublicMaterials = create((set) => ({
             },
           },
         });
-        console.log(`Category ${category} created successfully!`);
+        console.log(
+          `Category ${category} on emotion category seeded successfully!`
+        );
       }
 
       for (const category of memberCategories) {
+        const key = nanoid();
         await setDoc({
           collection: 'memberCategories',
           doc: {
@@ -153,7 +158,9 @@ export const usePublicMaterials = create((set) => ({
           },
         });
 
-        console.log(`Category ${category} created successfully!`);
+        console.log(
+          `Category ${category} on members category seeded successfully!`
+        );
       }
       set(() => ({ loading: false }));
       return true;
@@ -162,7 +169,7 @@ export const usePublicMaterials = create((set) => ({
       set({ message: error.message, data: null });
       // Loading is False
       set(() => ({ loading: false }));
-      return false
+      return false;
     }
   },
   getAllCategories: async () => {
@@ -201,7 +208,7 @@ export const usePublicMaterials = create((set) => ({
       for (const memberCategory of memberCategories.items) {
         memberCategoriesArray.push(memberCategory);
       }
-      
+
       const allCategoryInfo = {
         categories: categoriesArray,
         thoughtCategory: thoughtCategoriesArray,
@@ -212,7 +219,7 @@ export const usePublicMaterials = create((set) => ({
       set(() => ({
         data: allCategoryInfo,
         message: 'All users fetched successfully!',
-        loading: false
+        loading: false,
       }));
 
       return true;
@@ -298,8 +305,8 @@ export const usePublicMaterials = create((set) => ({
       }
       set(() => ({
         data: null,
-        message: "All Categories Deleted Successfully!", 
-        loading: false 
+        message: 'All Categories Deleted Successfully!',
+        loading: false,
       }));
       return true;
     } catch (error) {
@@ -404,6 +411,4 @@ export const usePublicMaterials = create((set) => ({
       set(() => ({ loading: false }));
     }
   },
-
-  
 }));
