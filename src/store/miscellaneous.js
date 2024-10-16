@@ -101,7 +101,7 @@ export const usePublicMaterials = create((set) => ({
             data: {
               key,
               category: 'thoughts',
-              name: 'category',
+              name: category,
             },
           },
         });
@@ -269,11 +269,12 @@ export const usePublicMaterials = create((set) => ({
 
       if (categories) {
         for (const category of categories.items) {
+
           await deleteDoc({
             collection: 'categories',
             doc: category,
           });
-
+          
           console.log(
             `Category ${category.name} on categories deleted successfully!`
           );
@@ -281,6 +282,7 @@ export const usePublicMaterials = create((set) => ({
       }
 
       if (thoughtCategories) {
+        console.log("asd");
         for (const thoughtCategory of thoughtCategories.items) {
           await deleteDoc({
             collection: 'thoughtCategories',

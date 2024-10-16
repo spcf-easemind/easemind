@@ -73,10 +73,11 @@ export const useAuthenticationStore = create(
           collection: 'userCredentials',
         });
 
+        
         if (items.items && items.items.length > 0 && items.items[0].data) {
           const user = await getDoc({
             collection: 'users',
-            key: userKey,
+            key: items.items[0].key,
           });
 
           const userWithConvertedDates = convertTimestamps(user);
@@ -114,11 +115,13 @@ export const useAuthenticationStore = create(
             user: null,
             message: 'Logout Successfully!',
           }));
+          return true;
         } else {
           set(() => ({
             user: null,
             message: 'No account found on this identity. Please sign up first',
           }));
+          return false;
         }
       },
 

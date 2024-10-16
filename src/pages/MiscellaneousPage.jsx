@@ -10,12 +10,16 @@ import {
   Stack,
 } from '@mantine/core';
 import { useUsersStore } from '../store/users';
+import { useAuthenticationStore } from '../store/authentication';
 import { usePublicMaterials } from '../store/miscellaneous';
 import { useGroup } from '../store/group';
 import { useShallow } from 'zustand/shallow';
 import { useForm } from '@mantine/form';
+import { useNavigate } from 'react-router-dom';
 
 export default function MiscellaneousPage() {
+  const navigate = useNavigate();
+  const logoutUserFn = useAuthenticationStore((state) => state.logoutInternetIdentity);
   const {
     data,
     message,
@@ -149,6 +153,19 @@ export default function MiscellaneousPage() {
       }
     } catch (error) {
       console.error('Error fetching user info:', error);
+    }
+  };
+  const handleLogoutUser = async () => {
+    try {
+      const logoutSuccess = await logoutUserFn();
+      if (logoutSuccess) {
+        console.log('User logged out successfully!');
+        navigate('/login');
+      } else {
+        console.error('Failed to to logout user');
+      }
+    } catch (error) {
+      console.error('Error executing logout on user:', error);
     }
   };
 
@@ -314,9 +331,9 @@ export default function MiscellaneousPage() {
   };
   const handleCreateGroup = async () => {
     const formData = {
-      ownerKey: 'Dzmq9BH6JPBLFMlknjBO7',
+      ownerKey: "8hf6nBFEWynuXUdVLTFay",
       groupProfilePath:
-        'http://jx5yt-yyaaa-aaaal-abzbq-cai.localhost:5987/groupProfileCollections/LpPie-7aPF06qTy4X51YH-profile',
+        "http://jx5yt-yyaaa-aaaal-abzbq-cai.localhost:5987/groupProfileCollections/wJpIYti4tOGB_CgJkNVqP-profile",
       name: 'Mga Feeling Depressed',
       description:
         "I believe in creating a safe, non-judgmental space where you can freely express your thoughts and emotions without fear of being misunderstood. Everyone deserves a place where they feel heard, supported, and validated. My goal is to be that person who listens with compassion and helps you navigate the challenges you're facing. Together, we can work on finding practical solutions, building coping strategies, and restoring a sense of balance and peace in your life. Your mental well-being matters, and I’m here to support you every step of the way, helping you feel more grounded, empowered, and at ease.",
@@ -424,14 +441,17 @@ export default function MiscellaneousPage() {
         User
       </Title>
       <Group mt="md">
-        <Button onClick={handleGetUserInfo} loading={miscLoading}>
+        <Button onClick={handleGetUserInfo} loading={loading}>
           Get User Info
         </Button>
-        <Button onClick={handleGetAllUsers} loading={miscLoading}>
+        <Button onClick={handleGetAllUsers} loading={loading}>
           Get All Users
         </Button>
-        <Button onClick={handleDeleteUserInfo} loading={miscLoading}>
+        <Button onClick={handleDeleteUserInfo} loading={loading}>
           Delete User
+        </Button>
+        <Button onClick={handleLogoutUser} loading={loading}>
+          Log Out
         </Button>
       </Group>
 
