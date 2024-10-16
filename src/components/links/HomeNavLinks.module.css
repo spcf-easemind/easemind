@@ -1,0 +1,10 @@
+.linkStyling {
+  @mixin hover {
+    background-color: var(--mantine-primary-color-0);
+  }
+
+  &[data-active] {
+    background-color: var(--mantine-primary-color-0);
+    border-right: 3px solid var(--mantine-primary-color-5);
+  }
+}

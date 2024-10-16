@@ -9,7 +9,10 @@ import JoinedGroupsIcons from "../../assets/icons/navigation/JoinedGroups.svg";
 import PendingApprovalIcon from "../../assets/icons/navigation/PendingApproval.svg";
 import SavedIcon from "../../assets/icons/navigation/Saved.svg";
 
-import HomeNavLink from "../HomeNavLinks";
+import HomeNavLink from "../links/HomeNavLinks";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { set } from "date-fns";
 
 const sample_user = {
   name: "John Doe",
@@ -21,36 +24,75 @@ const navLinksAttributes = [
   {
     label: "Endless Thoughts Diary",
     icon: EndlessThoughtsDiaryIcon,
+    route: "/endless-thoughts-diary",
   },
   {
     label: "Ease Companions",
     icon: EaseCompanionIcon,
+    route: "/ease-companions",
   },
   {
     label: "Community Groups",
     icon: CommunityGroupIcon,
+    route: "/community-groups",
   },
   {
     label: "Owned Groups",
     icon: OwnedGroupsIcon,
+    route: "/owned-groups",
   },
   {
     label: "Joined Groups",
     icon: JoinedGroupsIcons,
+    route: "/joined-groups",
   },
   {
     label: "Pending Approval",
     icon: PendingApprovalIcon,
+    route: "/pending-approval",
   },
   {
     label: "Saved",
     icon: SavedIcon,
+    route: "/saved",
   },
 ];
 
 export default function HomeNavigation() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [active, setActive] = useState();
+
+  const currentLocation = () => {
+    const navLinks = navLinksAttributes.filter((item) =>
+      location.pathname.startsWith(item.route)
+    );
+
+    const response = navLinks.length > 0 ? navLinks[0].label : null;
+    setActive(response);
+  };
+
+  useEffect(() => {
+    if (location) {
+      currentLocation();
+    }
+  }, [location]);
+
+  function handleActive(link) {
+    navigate(link.route);
+    setActive(link.label);
+  }
+
   const navLinks = navLinksAttributes.map((navLink) => {
-    return <HomeNavLink key={navLink.label} {...navLink} />;
+    return (
+      <HomeNavLink
+        active={active}
+        onSelect={() => handleActive(navLink)}
+        key={navLink.label}
+        {...navLink}
+      />
+    );
   });
 
   return (
@@ -65,7 +107,7 @@ export default function HomeNavigation() {
             </Text>
           </Box>
         </Group>
-        <Stack gap={8}>{navLinks}</Stack>
+        <Stack gap={0}>{navLinks}</Stack>
       </Stack>
     </>
   );

@@ -9,7 +9,7 @@ import IconAccountFilled from "../../assets/icons/header/IconAccountFilled.svg";
 
 import classes from "./MainHeader.module.css";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuthenticationStore } from "../../store/authentication";
 
@@ -53,14 +53,21 @@ export default function MainHeader() {
   const location = useLocation();
   const role = useAuthenticationStore((state) => state.user.data?.role);
 
-  const currentLocation = useCallback(() => {
-    const response = menuLinks.filter((item) =>
+  const [active, setActive] = useState();
+
+  const currentLocation = () => {
+    const filterVal = menuLinks.filter((item) =>
       location.pathname.startsWith(item.route)
     );
-    return response[0]?.name;
-  }, [location]);
+    const response = filterVal.length > 0 ? filterVal[0].name : null;
+    setActive(response);
+  };
 
-  const [active, setActive] = useState(currentLocation());
+  useEffect(() => {
+    if (location) {
+      currentLocation();
+    }
+  }, [location]);
 
   function handleMenuClick(name, route) {
     setActive(name);
