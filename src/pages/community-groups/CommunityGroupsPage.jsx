@@ -1,7 +1,14 @@
-import { Paper, Grid } from "@mantine/core";
+import { Paper, Grid, Box } from "@mantine/core";
 import HeadingCard from "../../components/headings/HeadingCard";
 import DisplayCard from "../../components/cards/DisplayCard";
+import GroupGrid from "../../components/grid/GroupGrid";
+import { useNavigate } from "react-router-dom";
 export default function CommunityGroupsPage() {
+  const navigate = useNavigate();
+  function handleSelect(ref) {
+    navigate(`/community-groups/${ref}`);
+  }
+
   return (
     <Paper p={18}>
       <HeadingCard
@@ -9,14 +16,9 @@ export default function CommunityGroupsPage() {
         description="Discover community groups that match your interests and needs. Engage with others, share experiences, and build meaningful connections to become the best version of yourself."
       />
 
-      <Grid mt={18}>
-        <Grid.Col span={6}>
-          <DisplayCard />
-        </Grid.Col>
-        <Grid.Col span={6}>
-          <DisplayCard />
-        </Grid.Col>
-      </Grid>
+      <Box mt={18}>
+        <GroupGrid type="community" onSelect={handleSelect} />
+      </Box>
     </Paper>
   );
 }

@@ -11,81 +11,91 @@ import {
 } from "@mantine/core";
 
 import Pill from "../pills/Pill.jsx";
+import GroupMemberCard from "./GroupMemberCard.jsx";
 import HappyImage from "../../assets/HappyImage.jpg";
-import { useNavigate } from "react-router-dom";
 import { useMemo } from "react";
 
 // Max 3
 const interests = ["Sadness", "Anxiety", "Depression"];
 
-export default function DisplayCard({ variant = null }) {
-  const navigate = useNavigate();
-  function handleClick() {
-    navigate("/community-groups/1");
+export default function DisplayCard({ variant = null, buttonLabel, onSelect }) {
+  function handleClick(ref) {
+    onSelect(ref);
   }
 
-  const { header, title, description, order, pills, padding } = useMemo(() => {
-    let values = {
-      header: {
-        image: {
-          width: 44,
-          height: 44,
-        },
-        text: {
-          size: "xs",
-        },
-        button: {
-          size: "sm",
-          px: 20,
-        },
-      },
-      title: {
-        order: 5,
-        fw: 500,
-      },
-      description: {
-        size: "md",
-      },
-      order: {
-        supportInterests: 3,
-      },
-      pills: {
-        size: "md",
-      },
-      padding: 16,
-    };
-    if (variant === "view") {
-      values.header = {
-        image: {
-          width: 60,
-          height: 60,
-        },
-        text: {
-          size: "sm",
-        },
-        button: {
-          size: "md",
-          px: 24,
-        },
-      };
-      values.title = {
-        order: 3,
-        fw: 600,
-      };
-      values.description = {
-        size: "lg",
-      };
-      values.order = {
-        supportInterests: 4,
-      };
-      values.pills = {
-        size: "lg",
-      };
-      values.padding = 24;
-    }
+  const clickFn = (ref) => (variant === "view" ? undefined : handleClick(ref));
 
-    return values;
-  }, [variant]);
+  const { header, title, description, order, pills, padding, card } =
+    useMemo(() => {
+      let values = {
+        header: {
+          image: {
+            width: 44,
+            height: 44,
+          },
+          text: {
+            size: "xs",
+          },
+          button: {
+            size: "sm",
+            px: 20,
+          },
+        },
+        title: {
+          order: 5,
+          fw: 500,
+        },
+        description: {
+          size: "md",
+        },
+        order: {
+          supportInterests: 3,
+        },
+        pills: {
+          size: "md",
+        },
+        padding: 16,
+        card: {
+          style: {
+            cursor: "pointer",
+          },
+        },
+      };
+      if (variant === "view") {
+        values.header = {
+          image: {
+            width: 60,
+            height: 60,
+          },
+          text: {
+            size: "sm",
+          },
+          button: {
+            size: "md",
+            px: 24,
+          },
+        };
+        values.title = {
+          order: 3,
+          fw: 600,
+        };
+        values.description = {
+          size: "lg",
+        };
+        values.order = {
+          supportInterests: 4,
+        };
+        values.pills = {
+          size: "lg",
+        };
+        values.padding = 24;
+        values.card.style = {
+          cursor: "default",
+        };
+      }
+
+      return values;
+    }, [variant]);
 
   const pillInstances = interests.map((interest) => (
     <Pill size={pills.size} key={interest} name={interest} />
@@ -97,10 +107,10 @@ export default function DisplayCard({ variant = null }) {
       withBorder
       radius="lg"
       component="a"
-      href=""
+      style={card.style}
       onClick={(event) => {
         event.preventDefault();
-        handleClick();
+        clickFn(1);
       }}
     >
       <Grid>
@@ -125,7 +135,7 @@ export default function DisplayCard({ variant = null }) {
               size={header.button.size}
               color="sky-blue.5"
             >
-              Join
+              {buttonLabel}
             </Button>
           </Group>
         </Grid.Col>
@@ -172,6 +182,28 @@ export default function DisplayCard({ variant = null }) {
             </Box>
           </Grid.Col>
         )}
+
+        <Grid.Col order={4}>
+          <Box>
+            <Title order={title.order} fw={title.fw} mb={8}>
+              Members
+            </Title>
+
+            {/* Data */}
+            <Stack gap={8}>
+              <GroupMemberCard image={HappyImage}>
+                <Button variant="subtle" color="red.5">
+                  Remove
+                </Button>
+              </GroupMemberCard>
+              <GroupMemberCard image={HappyImage}>
+                <Button variant="subtle" color="red.5">
+                  Remove
+                </Button>
+              </GroupMemberCard>
+            </Stack>
+          </Box>
+        </Grid.Col>
       </Grid>
     </Card>
   );

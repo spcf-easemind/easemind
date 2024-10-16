@@ -1,4 +1,13 @@
-import { Group, Avatar, Title, Box, Text, Stack, NavLink } from "@mantine/core";
+import {
+  Group,
+  Avatar,
+  Title,
+  Box,
+  Text,
+  Stack,
+  NavLink,
+  ScrollArea,
+} from "@mantine/core";
 
 import SampleUserImage from "../../assets/images/SampleUserImage1.webp";
 import EndlessThoughtsDiaryIcon from "../../assets/icons/navigation/EndlessThoughtsDiary.svg";
