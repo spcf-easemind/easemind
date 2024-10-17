@@ -6,7 +6,7 @@ import ChatInput from "../components/chat/ChatInput.jsx";
 import ChatModal from "../components/modals/ChatModal.jsx";
 import CheckboxList from "../components/CheckboxList.jsx";
 import FindChatModal from "../components/modals/FindChatModal.jsx";
-import FindChatTabs from "../components/tabs/FindChatTabs.jsx";
+import InterestTabs from "../components/tabs/InterestTabs.jsx";
 
 import { useEffect, useRef } from "react";
 import { useForm, hasLength } from "@mantine/form";
@@ -189,7 +189,7 @@ export default function ChatPage() {
       </>
     );
 
-    const tabs = <FindChatTabs form={findNewChatForm} />;
+    const tabs = <InterestTabs form={findNewChatForm} />;
 
     return { title, tabs };
   };

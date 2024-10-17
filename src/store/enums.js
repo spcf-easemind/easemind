@@ -8,6 +8,7 @@ export const useEnumsStore = create((set) => ({
     members: [],
   },
 
+  //interest[thoughts]
   fetchInterestsEnum: async () => {
     const fetchInterestsFn = usePublicMaterials.getState().getAllCategories;
     const response = await fetchInterestsFn();
