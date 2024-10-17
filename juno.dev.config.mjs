@@ -50,7 +50,7 @@ export default defineDevConfig(() => ({
         {
           collection: 'userGroups',
           read: 'public',
-          write: 'managed',
+          write: 'public',
           memory: 'heap',
           mutablePermissions: true,
         },

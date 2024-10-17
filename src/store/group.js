@@ -165,16 +165,40 @@ export const useGroup = create((set) => ({
         });
 
         for (const member of formData.members) {
-          await setDoc({
+          const userGroup = await getDoc({
             collection: 'userGroups',
-            doc: {
-              key: member.key,
-              data: {
-                key,
-                groupName: formData.name,
-              },
-            },
+            key: member.key,
           });
+
+          if (userGroup) {
+            const data = {
+              key,
+              groupName: formData.name,
+            };
+
+            userGroup.data.groups.push(data);
+
+            await setDoc({
+              collection: 'userGroups',
+              data: userGroup.data,
+              version: userGroup.version,
+            });
+          } else {
+            await setDoc({
+              collection: 'userGroups',
+              doc: {
+                key: member.key,
+                data: {
+                  groups: [
+                    {
+                      key,
+                      groupName: formData.name,
+                    },
+                  ],
+                },
+              },
+            });
+          }
         }
       }
 
@@ -278,6 +302,7 @@ export const useGroup = create((set) => ({
         }
       }
 
+      console.log(userGroups);
       const userGroupInfoArray = [];
       for (const userGroupItem of userGroupArray) {
         const group = await getDoc({
@@ -288,9 +313,9 @@ export const useGroup = create((set) => ({
       }
 
       set(() => ({
-        data: userGroupInfoArray,
-        message: 'User Group List',
-        loading: false,
+        groupData: userGroupInfoArray,
+        groupMessage: 'User Group List',
+        groupLoading: false,
       }));
       return true;
     } catch (error) {
@@ -353,6 +378,64 @@ export const useGroup = create((set) => ({
         groupData: null,
         groupMessage:
           error.message || 'An error occurred while updating user data',
+        groupLoading: false,
+      }));
+      return false;
+    }
+  },
+  deleteUserGroup: async (groupKey) => {
+    set(() => ({
+      groupData: null,
+      groupMessage: 'Loading...',
+      groupLoading: true,
+    }));
+
+    try {
+      if (groupKey) {
+        const group = await getDoc({
+          collection: 'groups',
+          key: groupKey,
+        });
+
+        for (const member of group.data.members) {
+          console.log(member.key);
+          const user = await getDoc({
+            collection: 'users',
+            key: member.key,
+          });
+
+          await deleteDoc({
+            collection: 'userGroups',
+            doc: user,
+          });
+        }
+
+        await deleteDoc({
+          collection: 'groups',
+          doc: group,
+        });
+
+        console.log(memberKeyArray);
+        set(() => ({
+          groupData: null,
+          groupMessage: 'Group has been deleted successfully!',
+          groupLoading: false,
+        }));
+        return true;
+      } else {
+        set(() => ({
+          groupData: null,
+          groupMessage: 'Group key is required!',
+          groupLoading: false,
+        }));
+        return false;
+      }
+    } catch (error) {
+      console.error('Error deleting user group:', error);
+      set(() => ({
+        groupData: null,
+        groupMessage:
+          error.message || 'An error occurred while deleting user group',
         groupLoading: false,
       }));
       return false;
