@@ -9,7 +9,6 @@ import {
   getDoc,
   deleteDoc,
 } from '@junobuild/core';
-import { defineConsoleConfig } from '@junobuild/config';
 
 export const useAuthenticationStore = create(
   persist(
@@ -47,8 +46,6 @@ export const useAuthenticationStore = create(
 
         const sub = authSubscribe((userJuno) =>
           set((state) => {
-            console.log(userJuno);
-
             return {
               user: {
                 ...state.user,
@@ -68,33 +65,33 @@ export const useAuthenticationStore = create(
         return () => sub();
       },
 
-      logoutInternetIdentity: async () => {
-        const items = await listDocs({
+      logoutInternetIdentity: async (userKey) => {
+        set(() => ({
+          message: 'Loading',
+          loading: true,
+        }));
+        const userCredential = await getDoc({
           collection: 'userCredentials',
+          key: userKey,
         });
 
-        
-        if (items.items && items.items.length > 0 && items.items[0].data) {
-          const user = await getDoc({
-            collection: 'users',
-            key: items.items[0].key,
-          });
+        const user = await getDoc({
+          collection: 'users',
+          key: userKey,
+        });
 
+        if (userCredential && user) {
           const userWithConvertedDates = convertTimestamps(user);
           const userData = user.data;
           const userKey = user.key;
           const userVersion = user.version;
 
           const updatedUserData = {
-            key: user.data.key,
+            key: userKey,
             fullName: userData.fullName,
             status: 'offline',
             lastUpdated: userWithConvertedDates,
           };
-          set(() => ({
-            user: null,
-            message: 'Loading...',
-          }));
 
           await setDoc({
             collection: 'users',
@@ -109,17 +106,21 @@ export const useAuthenticationStore = create(
 
           console.log(response);
 
-          sessionStorage.removeItem('authentication');
-
           set(() => ({
-            user: null,
-            message: 'Logout Successfully!',
+            user: {
+              identity_provider: null,
+              data: null,
+            },
+            message: null,
+            loading: false,
           }));
+          // sessionStorage.removeItem('authentication');
           return true;
         } else {
           set(() => ({
             user: null,
             message: 'No account found on this identity. Please sign up first',
+            loading: false,
           }));
           return false;
         }
