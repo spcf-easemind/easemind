@@ -70,6 +70,7 @@ export default function GroupControlCard({
       ...tab,
       choices: Array.isArray(interestsEnum[tab.value])
         ? interestsEnum[tab.value].map((choice) => ({
+            tab: tab.value,
             key: choice.key,
             value: choice.data.name,
           }))
@@ -80,42 +81,26 @@ export default function GroupControlCard({
 
   // Active Pills
   const [active, setActive] = useState("thoughts");
-  const [selectedPill, setSelectedPill] = useState();
+  const [selectedPills, setSelectedPills] = useState([]);
 
-  function handleSelectPill(tab, choice) {
-    const payload = { ...choice };
-    delete payload.tab;
+  function handleSelectPill(choice) {
+    const isSelected = selectedPills.includes(choice);
 
-    if (choice) {
-      form.setFieldValue(`initialCategories.${tab}`, payload);
-    } else {
-      form.setFieldValue(`initialCategories.${tab}`, {
-        key: "",
-        value: "",
-      });
-    }
+    const updatedPills = isSelected
+      ? selectedPills.filter((pill) => pill !== choice)
+      : [...selectedPills, choice];
 
-    setSelectedPill(choice.value);
+    form.setFieldValue("initialCategories", updatedPills);
+    setSelectedPills(updatedPills);
   }
 
-  const getInterests = useMemo(() => {
-    const formValues = form.getValues().initialCategories;
-
-    const formPills = Object.entries(formValues)
-      .map(([tab, { key, value }]) => ({
-        tab,
-        key,
-        value,
-      }))
-      .filter(({ key, value }) => key !== "" && value !== "");
-    return formPills;
-  }, [form]);
+  const getInterests = form.getValues().initialCategories;
 
   // Interest Multi Inputs
   const interestsInputs = () => {
     const header = (
       <Group gap={8}>
-        {getInterests.map((item) => (
+        {getInterests.map((choice) => (
           <Pill
             styles={{
               root: {
@@ -126,9 +111,9 @@ export default function GroupControlCard({
             }}
             size="md"
             withRemoveButton
-            key={item.key}
-            onRemove={() => handleSelectPill(item.tab, null)}
-            name={item.value}
+            key={choice.key}
+            onRemove={() => handleSelectPill(choice)}
+            name={choice.value}
           ></Pill>
         ))}
       </Group>
@@ -161,14 +146,17 @@ export default function GroupControlCard({
       return (
         <Tabs.Panel value={tab.value} key={tab.value} mt={16}>
           <Group gap={8}>
-            {tab.choices.map((choice) => (
-              <PillButton
-                key={choice.key}
-                active={selectedPill}
-                name={choice.value}
-                onSelect={() => handleSelectPill(tab.value, choice)}
-              />
-            ))}
+            {tab.choices.map((choice) => {
+              const isActive = selectedPills.includes(choice);
+              return (
+                <PillButton
+                  key={choice.key}
+                  active={isActive}
+                  name={choice.value}
+                  onSelect={() => handleSelectPill(choice)}
+                />
+              );
+            })}
           </Group>
         </Tabs.Panel>
       );
@@ -195,6 +183,7 @@ export default function GroupControlCard({
 
   // Members Multi Inputs
   const [searchTerm, setSearchTerm] = useState("");
+  const usersChecked = form.getValues().initialMembers;
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -225,6 +214,7 @@ export default function GroupControlCard({
         label="Engaged with these people"
         checkboxes={filteredUsers}
         onChange={(value) => handleCheckboxSelect(value)}
+        value={usersChecked}
       />
     );
 

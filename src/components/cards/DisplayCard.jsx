@@ -123,7 +123,7 @@ export default function DisplayCard({
               <GroupMemberCard
                 image={member.profilePath}
                 name={member.fullName}
-                role={member.role}
+                role={member.groupRole}
               >
                 <Button
                   variant="subtle"

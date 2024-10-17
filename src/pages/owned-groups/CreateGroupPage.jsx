@@ -83,20 +83,7 @@ export default function CreateGroupPage() {
 
       // Initial Values
       initialMembers: [],
-      initialCategories: {
-        thoughts: {
-          key: "",
-          value: "",
-        },
-        emotions: {
-          key: "",
-          value: "",
-        },
-        members: {
-          key: "",
-          value: "",
-        },
-      },
+      initialCategories: [],
     },
 
     validate: {
@@ -118,7 +105,7 @@ export default function CreateGroupPage() {
     },
   });
 
-  function formSubmit(value) {
+  async function formSubmit(value) {
     let formData = { ...value };
 
     const mappedMembers = users
@@ -132,45 +119,33 @@ export default function CreateGroupPage() {
         groupRole: "Group Member",
       }));
 
-    const mappedCategories = Object.entries(formData.categories).map(
-      ([tab, { key, value }]) => ({ key })
-    );
+    const mappedCategories = formData.initialCategories.map(({ key }) => ({ key }));
 
+    // Reassign
     formData.members = [
       {
-        fullName: currentUserValue.data?.fullName,
+        fullName: currentUserValue.data.fullName,
         key: currentUserValue.key,
-        lastUpdated: currentUserValue.data?.lastUpdated,
-        role: currentUserValue.data?.role,
-        status: currentUserValue.data?.status,
+        lastUpdated: currentUserValue.data.lastUpdated,
+        role: currentUserValue.data.role,
+        status: currentUserValue.data.status,
         groupRole: "Group Admin",
       },
       ...mappedMembers,
     ];
     formData.categories = mappedCategories;
 
+    // Remove initial values
     delete formData.initialMembers;
+    delete formData.initialCategories;
 
     console.log(formData);
-    const response = createGroupFn(formData);
-
-    if (response) {
-      console.log("CREATEDFUCKER");
-    }
+    await createGroupFn(formData);
   }
 
   function iterateSavedData() {
     for (const key in savedForm) {
-      if (key === "categories") {
-        for (const category in savedForm[key]) {
-          form.setFieldValue(
-            `categories.${category}`,
-            savedForm[key][category]
-          );
-        }
-      } else {
-        form.setFieldValue(key, savedForm[key]);
-      }
+      form.setFieldValue(key, savedForm[key]);
     }
   }
 
