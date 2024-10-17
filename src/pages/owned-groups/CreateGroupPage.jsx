@@ -1,7 +1,7 @@
 import { Paper } from "@mantine/core";
 import GroupControlCard from "../../components/cards/GroupControlCard";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "@mantine/form";
+import { useForm, isNotEmpty, hasLength } from "@mantine/form";
 import { useEnumsStore } from "../../store/enums";
 import { useShallow } from "zustand/shallow";
 import { useEffect, useMemo } from "react";
@@ -26,10 +26,6 @@ export default function CreateGroupPage() {
   );
 
   const createGroupFn = useGroupStore((state) => state.createGroup);
-  const getAllGroupsFn = useGroupStore((state) => state.getAllGroups);
-  const groupData = useGroupStore((state) => state.groupData);
-
-  console.log(groupData);
 
   const { savedForm, setSavedForm } = useFormStore(
     useShallow((state) => ({
@@ -45,9 +41,9 @@ export default function CreateGroupPage() {
     }))
   );
 
+  // Fetch Users Enum
   useEffect(() => {
     fetchUsersFn();
-    getAllGroupsFn();
   }, []);
 
   const usersEnum = useMemo(() => {
@@ -82,7 +78,12 @@ export default function CreateGroupPage() {
       groupProfilePath: "",
       name: "",
       description: "",
-      categories: {
+      members: [],
+      categories: [],
+
+      // Initial Values
+      initialMembers: [],
+      initialCategories: {
         thoughts: {
           key: "",
           value: "",
@@ -96,8 +97,24 @@ export default function CreateGroupPage() {
           value: "",
         },
       },
-      members: [],
-      initialMembers: [],
+    },
+
+    validate: {
+      name: isNotEmpty("Name is required"),
+      description: isNotEmpty("Description is required"),
+      groupProfilePath: isNotEmpty("Group Profile is required"),
+      initialCategories: (value) => {
+        const filled = Object.values(value).some(
+          (category) => category.key || category.value
+        );
+        return filled ? null : "At least one category should be filled.";
+      },
+      initialMembers: hasLength(
+        {
+          min: 2,
+        },
+        "Please select at least 2 members"
+      ),
     },
   });
 

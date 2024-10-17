@@ -20,6 +20,7 @@ import Pill from "../pills/Pill";
 import PillButton from "../buttons/PillButton";
 import CheckboxList from "../CheckboxList.jsx";
 
+// Hooks
 import { useEffect, useMemo, useState } from "react";
 import { useEnumsStore } from "../../store/enums";
 import { useShallow } from "zustand/shallow";
@@ -45,12 +46,14 @@ const tabsAttributes = [
 
 export default function GroupControlCard({
   form: { form, onSubmit },
-  onPhotoControlClick,
   header: { title, description },
   button: { btnLabel },
   enums: { users },
+  onPhotoControlClick,
 }) {
   const navigate = useNavigate();
+
+  // Enums
   const { fetchInterestsEnumFn, interestsEnum } = useEnumsStore(
     useShallow((state) => ({
       fetchInterestsEnumFn: state.fetchInterestsEnum,
@@ -75,6 +78,7 @@ export default function GroupControlCard({
     return attributes;
   }, [interestsEnum]);
 
+  // Active Pills
   const [active, setActive] = useState("thoughts");
   const [selectedPill, setSelectedPill] = useState();
 
@@ -83,9 +87,9 @@ export default function GroupControlCard({
     delete payload.tab;
 
     if (choice) {
-      form.setFieldValue(`categories.${tab}`, payload);
+      form.setFieldValue(`initialCategories.${tab}`, payload);
     } else {
-      form.setFieldValue(`categories.${tab}`, {
+      form.setFieldValue(`initialCategories.${tab}`, {
         key: "",
         value: "",
       });
@@ -95,7 +99,7 @@ export default function GroupControlCard({
   }
 
   const getInterests = useMemo(() => {
-    const formValues = form.getValues().categories;
+    const formValues = form.getValues().initialCategories;
 
     const formPills = Object.entries(formValues)
       .map(([tab, { key, value }]) => ({
@@ -107,6 +111,7 @@ export default function GroupControlCard({
     return formPills;
   }, [form]);
 
+  // Interest Multi Inputs
   const interestsInputs = () => {
     const header = (
       <Group gap={8}>
@@ -169,7 +174,10 @@ export default function GroupControlCard({
       );
     });
     return (
-      <MultiInputsCard header={header}>
+      <MultiInputsCard
+        formError={form.errors.initialCategories}
+        header={header}
+      >
         <Tabs
           defaultValue={active}
           styles={{
@@ -185,6 +193,7 @@ export default function GroupControlCard({
     );
   };
 
+  // Members Multi Inputs
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearchChange = (event) => {
@@ -219,7 +228,11 @@ export default function GroupControlCard({
       />
     );
 
-    return <MultiInputsCard header={header}>{checkboxes}</MultiInputsCard>;
+    return (
+      <MultiInputsCard formError={form.errors.initialMembers} header={header}>
+        {checkboxes}
+      </MultiInputsCard>
+    );
   };
 
   const savedImage =
@@ -250,7 +263,11 @@ export default function GroupControlCard({
       </Box>
 
       <Stack mt={24} align="center" px={45}>
-        <PhotoControlButton image={savedImage} onClick={onPhotoControlClick} />
+        <PhotoControlButton
+          formError={form.errors.groupProfilePath}
+          image={savedImage}
+          onClick={onPhotoControlClick}
+        />
 
         <form style={{ width: "100%" }}>
           <Stack>
