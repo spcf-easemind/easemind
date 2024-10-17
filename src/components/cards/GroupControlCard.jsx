@@ -12,7 +12,7 @@ import {
   Button,
 } from "@mantine/core";
 import { IconChevronLeft, IconSearch } from "@tabler/icons-react";
-// import Dropzone from "../Dropzone.jsx";
+
 // Components
 import PhotoControlButton from "../buttons/PhotoControlButton";
 import MultiInputsCard from "./MultiInputsCard";
@@ -23,6 +23,7 @@ import CheckboxList from "../CheckboxList.jsx";
 import { useEffect, useMemo, useState } from "react";
 import { useEnumsStore } from "../../store/enums";
 import { useShallow } from "zustand/shallow";
+import { useNavigate } from "react-router-dom";
 
 const tabsAttributes = [
   {
@@ -57,7 +58,13 @@ const new_friends = [
   },
 ];
 
-export default function GroupControlCard({ form, onPhotoControlClick }) {
+export default function GroupControlCard({
+  form,
+  onPhotoControlClick,
+  header: { title, description },
+  button: { btnLabel },
+}) {
+  const navigate = useNavigate();
   const { fetchInterestsEnumFn, interestsEnum } = useEnumsStore(
     useShallow((state) => ({
       fetchInterestsEnumFn: state.fetchInterestsEnum,
@@ -149,7 +156,7 @@ export default function GroupControlCard({ form, onPhotoControlClick }) {
 
     const panels = enumArrays.map((tab) => {
       return (
-        <Tabs.Panel value={tab.value} key={tab.value}>
+        <Tabs.Panel value={tab.value} key={tab.value} mt={16}>
           <Group gap={8}>
             {tab.choices.map((choice) => (
               <PillButton
@@ -194,18 +201,16 @@ export default function GroupControlCard({ form, onPhotoControlClick }) {
           pos="absolute"
           top={0}
           left={0}
+          onClick={() => navigate("/owned-groups")}
         >
           <IconChevronLeft size={30} stroke={1.5} />
         </ActionIcon>
 
         <Box px={45}>
           <Title order={2} mb={10}>
-            Create Group
+            {title}
           </Title>
-          <Text size="sm">
-            Create a group to connect with others, share experiences, and build
-            a supportive community where everyone can grow and thrive together.
-          </Text>
+          <Text size="sm">{description}</Text>
         </Box>
       </Box>
 
@@ -223,7 +228,7 @@ export default function GroupControlCard({ form, onPhotoControlClick }) {
             {membersInputs()}
 
             <Button type="submit" fullWidth size="md">
-              Submit
+              {btnLabel}
             </Button>
           </Stack>
         </form>

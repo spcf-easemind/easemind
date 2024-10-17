@@ -14,7 +14,6 @@ import Pill from "../pills/Pill.jsx";
 import GroupMemberCard from "./GroupMemberCard.jsx";
 import HappyImage from "../../assets/HappyImage.jpg";
 import { useMemo } from "react";
-import { useDisclosure } from "@mantine/hooks";
 
 // Max 3
 const interests = ["Sadness", "Anxiety", "Depression"];
@@ -25,9 +24,8 @@ export default function DisplayCard({
   buttonLabel,
   onSelect,
   onModalSelect,
+  onButtonClick,
 }) {
-  const [opened, { toggle }] = useDisclosure();
-
   function handleClick(ref) {
     onSelect(ref);
   }
@@ -150,11 +148,23 @@ export default function DisplayCard({
       radius="lg"
       component="a"
       style={card.style}
-      onClick={(event) => {
-        event.preventDefault();
-        clickFn(1);
-      }}
+      pos="relative"
     >
+      {/* Overlay Button */}
+      {variant !== "view" && (
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 1,
+            ...card.style,
+          }}
+          onClick={() => clickFn(1)}
+        />
+      )}
       <Grid>
         <Grid.Col span={12}>
           <Group align="center">
@@ -176,6 +186,8 @@ export default function DisplayCard({
               px={header.button.px}
               size={header.button.size}
               color="sky-blue.5"
+              onClick={onButtonClick}
+              style={{ zIndex: 1 }}
             >
               {buttonLabel}
             </Button>

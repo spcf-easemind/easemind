@@ -17,17 +17,25 @@ import HomeAside from "./components/asides/HomeAside.jsx";
 import { useDialogStore } from "./store/dialog.js";
 
 // React Router
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, matchPath } from "react-router-dom";
 import mainRoutes from "./router/modules/main-routes.jsx";
 import navRoutes from "./router/modules/nav-routes.jsx";
 
 const containerBreakpoint = 1280;
 
+function routeMatcher(pattern, pathname) {
+  const result = matchPath(pattern, pathname);
+  if (result) {
+    return result.pattern.path;
+  }
+  return;
+}
+
 function App() {
   // Hooks
   const location = useLocation();
 
-  //Conditionals
+  //Zustand
   const { mobile: mobileOpened, desktop: desktopOpened } = useDialogStore(
     (state) => state.aside
   );
@@ -51,7 +59,7 @@ function App() {
     // Final Data
     paths = [...mapMainRoutes, ...mapNavRoutes];
 
-    return paths.some((path) => location.pathname.startsWith(path));
+    return paths.some((path) => routeMatcher(path, location.pathname) === path);
   }, [location]);
 
   const navWithoutPadding = useMemo(() => {
@@ -59,13 +67,26 @@ function App() {
     const mapNavRoutes = navRoutes.map(({ path }) => path);
     paths = [...paths, ...mapNavRoutes];
 
-    return paths.some((path) => location.pathname.startsWith(path))
+    return paths.some((path) => routeMatcher(path, location.pathname) === path)
       ? undefined
       : "lg";
   }, [location]);
 
   // Adjusted logic to include /chat and /chat/:chatRef for header
-  const whichHeader = includeNavigation ? <MainHeader /> : <Header />;
+  const whichHeader = useMemo(() => {
+    let paths = [];
+    const mapMainRoutes = mainRoutes.map(({ path }) => path);
+    const mapNavRoutes = navRoutes.map(({ path }) => path);
+
+    paths = [...mapMainRoutes, ...mapNavRoutes];
+    return paths.some(
+      (path) => routeMatcher(path, location.pathname) === path
+    ) ? (
+      <MainHeader />
+    ) : (
+      <Header />
+    );
+  }, [location]);
 
   // Adjusted logic to include /chat and /home for navigation
   const whichNavigation = location.pathname.startsWith("/chat") ? (
@@ -100,7 +121,7 @@ function App() {
     // Final Paths
     paths = [...paths, ...mapMainRoutes, ...mapNavRoutes];
 
-    if (!paths.some((path) => location.pathname.startsWith(path))) {
+    if (!paths.some((path) => routeMatcher(path, location.pathname) === path)) {
       return classes.bgImage;
     }
     return null;

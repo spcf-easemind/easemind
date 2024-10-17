@@ -2,7 +2,9 @@ import { Group, Paper } from "@mantine/core";
 import DisplayCard from "../../components/cards/DisplayCard";
 import GroupModal from "../../components/modals/GroupModal";
 import { useDisclosure } from "@mantine/hooks";
+import { useNavigate } from "react-router-dom";
 export default function OwnedGroupsViewPage() {
+  const navigate = useNavigate();
   const [opened, { toggle }] = useDisclosure();
 
   function handleModalSelect(value) {
@@ -15,6 +17,10 @@ export default function OwnedGroupsViewPage() {
     toggle();
   }
 
+  function handleEditGroup() {
+    navigate(`/owned-group/edit/1`);
+  }
+
   const loading = false;
 
   return (
@@ -24,6 +30,7 @@ export default function OwnedGroupsViewPage() {
         variant="view"
         type="owned"
         onModalSelect={handleModalSelect}
+        onButtonClick={handleEditGroup}
       />
       <GroupModal
         modal={{ opened: opened, onClose: toggle }}

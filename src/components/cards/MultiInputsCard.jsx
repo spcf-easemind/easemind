@@ -8,6 +8,7 @@ export default function MultiInputsCard({ header, children }) {
       </Card.Section>
 
       <Divider />
+      
 
       <ScrollArea p={16}>{children}</ScrollArea>
     </Card>

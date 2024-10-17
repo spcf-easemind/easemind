@@ -15,6 +15,10 @@ export default function OwnedGroupsPage() {
     navigate("/owned-group/create");
   }
 
+  function handleEditGroup() {
+    navigate(`/owned-group/edit/1`);
+  }
+
   return (
     <Paper>
       <HeadingCard title="Owned Groups" description={null} />
@@ -24,7 +28,11 @@ export default function OwnedGroupsPage() {
       </Box>
 
       <Box mt={18}>
-        <GroupGrid onSelect={handleSelect} type="owned" />
+        <GroupGrid
+          onButtonClick={handleEditGroup}
+          onSelect={handleSelect}
+          type="owned"
+        />
       </Box>
     </Paper>
   );
