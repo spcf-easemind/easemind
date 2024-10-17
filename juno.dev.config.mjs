@@ -117,6 +117,27 @@ export default defineDevConfig(() => ({
           memory: 'heap',
           mutablePermissions: true,
         },
+        {
+          collection: 'posts',
+          read: 'public',
+          write: 'managed',
+          memory: 'heap',
+          mutablePermissions: true,
+        },
+        {
+          collection: 'topics',
+          read: 'public',
+          write: 'managed',
+          memory: 'heap',
+          mutablePermissions: true,
+        },
+        {
+          collection: 'healthCareSuggestions',
+          read: 'public',
+          write: 'managed',
+          memory: 'heap',
+          mutablePermissions: true,
+        },
       ],
       storage: [
         {
@@ -156,6 +177,13 @@ export default defineDevConfig(() => ({
         },
         {
           collection: 'groupProfileCollections',
+          read: 'public',
+          write: 'managed',
+          memory: 'heap',
+          mutablePermissions: true,
+        },
+        {
+          collection: 'postProfileCollections',
           read: 'public',
           write: 'managed',
           memory: 'heap',

@@ -12,7 +12,8 @@ import {
 import { useUsersStore } from '../store/users';
 import { useAuthenticationStore } from '../store/authentication';
 import { usePublicMaterials } from '../store/miscellaneous';
-import { useGroup } from '../store/group';
+import { useGroupStore } from '../store/group';
+import { usePostStore } from '../store/post';
 import { useShallow } from 'zustand/shallow';
 import { useForm } from '@mantine/form';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -83,7 +84,7 @@ export default function MiscellaneousPage() {
     getUserGroupFn,
     removeMemberFn,
     deleteUserGroupFn,
-  } = useGroup(
+  } = useGroupStore(
     useShallow((state) => ({
       groupData: state.groupData,
       groupMessage: state.groupMessage,
@@ -96,6 +97,26 @@ export default function MiscellaneousPage() {
       getUserGroupFn: state.getUserGroup,
       removeMemberFn: state.removeMember,
       deleteUserGroupFn: state.deleteUserGroup,
+    }))
+  );
+
+  const {
+    postData,
+    postMessage,
+    postLoading,
+    createTopicsFn,
+    getAllTopicsFn,
+    createHealthCareSuggestionsFn,
+    getAllHealthCareSuggestionsFn,
+  } = usePostStore(
+    useShallow((state) => ({
+      postData: state.postData,
+      postMessage: state.postMessage,
+      postLoading: state.postLoading,
+      createTopicsFn: state.createTopics,
+      getAllTopicsFn: state.getAllTopics,
+      createHealthCareSuggestionsFn: state.createHealthCareSuggestions,
+      getAllHealthCareSuggestionsFn: state.getAllHealthCareSuggestions,
     }))
   );
 
@@ -370,6 +391,7 @@ export default function MiscellaneousPage() {
           lastUpdated: '2024-10-17T00:37:12.700Z',
           role: 'super-admin',
           status: 'online',
+          groupRole: 'Group Admin',
         },
         {
           fullName: 'alex',
@@ -377,6 +399,7 @@ export default function MiscellaneousPage() {
           lastUpdated: '2024-10-16T10:30:00.901Z',
           role: 'user',
           status: 'online',
+          groupRole: 'member',
         },
         // {
         //   fullName: 'alex1',
@@ -463,6 +486,66 @@ export default function MiscellaneousPage() {
       }
     } catch (error) {
       console.error('Error deleting user group:', error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleCreateTopics = async () => {
+    try {
+      const createSuccess = await createTopicsFn();
+      if (createSuccess) {
+        console.log('Topics seeded successfully!');
+      } else {
+        console.error('Failed to seed topics');
+      }
+    } catch (error) {
+      console.error('Error seeding topics:', error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleGetAllTopics = async () => {
+    try {
+      const getSuccess = await getAllTopicsFn();
+      if (getSuccess) {
+        console.log('All topics fetched successfully!', postData);
+      } else {
+        console.error('Failed to fetch all topics');
+      }
+    } catch (error) {
+      console.error('Error fetching all topics:', error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleCreateHealthCareSuggestions = async () => {
+    try {
+      const createSuccess = await createHealthCareSuggestionsFn();
+      if (createSuccess) {
+        console.log('Health care suggestions seeded successfully!', postData);
+      } else {
+        console.error('Failed to seed all health care suggestions');
+      }
+    } catch (error) {
+      console.error('Error seeding all health care suggestions:', error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleGetAllHealthCareSuggestions = async () => {
+    try {
+      const getSuccess = await getAllHealthCareSuggestionsFn();
+      if (getSuccess) {
+        console.log('Health care suggestions fetched successfully!', postData);
+      } else {
+        console.error('Failed to fetch all health care suggestions');
+      }
+    } catch (error) {
+      console.error('Error fetching all health care suggestions:', error);
     } finally {
       setIsUploading(false);
     }
@@ -564,7 +647,7 @@ export default function MiscellaneousPage() {
       {message && <p>{message}</p>}
 
       <Title order={2} mt="xl">
-        Groups Button
+        Groups Buttons
       </Title>
       <Group mt="md">
         <Button onClick={handleGetAllPublicGroupProfile} loading={groupLoading}>
@@ -604,6 +687,45 @@ export default function MiscellaneousPage() {
         </Button>
       </form>
       {message && <p>{message}</p>}
+
+      <Title order={2} mt="xl">
+        Topics Buttons
+      </Title>
+      <Group mt="md">
+        <Button onClick={handleCreateTopics} loading={postLoading}>
+          Create Topics
+        </Button>
+        <Button onClick={handleGetAllTopics} loading={postLoading}>
+          Get All Topics
+        </Button>
+      </Group>
+
+      <Title order={2} mt="xl">
+        Health Care Suggestion Buttons
+      </Title>
+      <Group mt="md">
+        <Button
+          onClick={handleCreateHealthCareSuggestions}
+          loading={postLoading}
+        >
+          Create Health Care Suggestions
+        </Button>
+        <Button
+          onClick={handleGetAllHealthCareSuggestions}
+          loading={postLoading}
+        >
+          Get All Health Care Suggestions
+        </Button>
+      </Group>
+
+      <Title order={2} mt="xl">
+        Post Buttons
+      </Title>
+      <Group mt="md">
+        <Button onClick={handleGetGroup} loading={groupLoading}>
+          Get Groups
+        </Button>
+      </Group>
     </Box>
   );
 }
