@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 import {
   setDoc,
   getDoc,
@@ -7,11 +7,11 @@ import {
   uploadFile,
   listAssets,
   deleteAsset,
-} from '@junobuild/core';
-import { nanoid } from 'nanoid';
-import { NavLink } from 'react-router-dom';
+} from "@junobuild/core";
+import { nanoid } from "nanoid";
+// import { NavLink } from "react-router-dom";
 
-export const usePublicMaterials = create((set) => ({
+export const usePublicMaterials = create((set, get) => ({
   miscData: null,
   miscMessage: null,
   miscLoading: false,
@@ -20,72 +20,72 @@ export const usePublicMaterials = create((set) => ({
   createCategories: async () => {
     set(() => ({
       miscData: null,
-      miscMessage: 'Loading...',
+      miscMessage: "Loading...",
       loading: true,
     }));
 
     try {
       const thoughtCategories = [
-        'Negative Self-Talk',
-        'Catastrophizing',
-        'Desire for Change',
-        'Seeking Validation',
-        'Fear of Judgement',
-        'Feeling Trapped',
-        'Questioning Reality',
-        'Fear of Failure',
-        'Feeling Unworthy',
-        'Questioning Reality',
-        'Self-Sabotage',
-        'Lack of Purpose',
-        'Victim Mentality',
-        'Fear of Intimacy',
-        'Inability to Move On',
-        'Fear of Rejection',
-        'Decision Avoidance',
-        'Comparisons',
-        'Ruminating',
-        'Existential Questions',
-        'Distrust of Others',
+        "Negative Self-Talk",
+        "Catastrophizing",
+        "Desire for Change",
+        "Seeking Validation",
+        "Fear of Judgement",
+        "Feeling Trapped",
+        "Questioning Reality",
+        "Fear of Failure",
+        "Feeling Unworthy",
+        "Questioning Reality",
+        "Self-Sabotage",
+        "Lack of Purpose",
+        "Victim Mentality",
+        "Fear of Intimacy",
+        "Inability to Move On",
+        "Fear of Rejection",
+        "Decision Avoidance",
+        "Comparisons",
+        "Ruminating",
+        "Existential Questions",
+        "Distrust of Others",
       ];
 
       const emotionCategories = [
-        'Sadness',
-        'Anxiety',
-        'Depression',
-        'Loneliness',
-        'Confusion',
-        'Frustration',
-        'Anger',
-        'Overthinking',
-        'Fear',
-        'Guilt',
-        'Shame',
-        'Hopelessness',
-        'Fatigue',
-        'Numbness',
-        'Despair',
-        'Regret',
-        'Desperation',
-        'Insecurity',
-        'Self-Doubt',
-        'Disappointment',
-        'Panic',
-        'Boredom',
-        'Vulnerability',
-        'Future Anxiety',
-        'Jealousy',
-        'Disgust',
-        'Embarrassment',
-        'Longing',
+        "Sadness",
+        "Anxiety",
+        "Depression",
+        "Loneliness",
+        "Confusion",
+        "Frustration",
+        "Anger",
+        "Overthinking",
+        "Fear",
+        "Guilt",
+        "Shame",
+        "Hopelessness",
+        "Fatigue",
+        "Numbness",
+        "Despair",
+        "Regret",
+        "Desperation",
+        "Insecurity",
+        "Self-Doubt",
+        "Disappointment",
+        "Panic",
+        "Boredom",
+        "Vulnerability",
+        "Future Anxiety",
+        "Jealousy",
+        "Disgust",
+        "Embarrassment",
+        "Longing",
       ];
 
-      const memberCategories = ['Ease Companion', 'Ease Buddy'];
+      const memberCategories = ["Ease Companion", "Ease Buddy"];
 
       for (const category of thoughtCategories) {
         const key = nanoid();
         await setDoc({
-          collection: 'thoughtCategories',
+          collection: "thoughtCategories",
           doc: {
             key,
             data: {
@@ -95,12 +95,12 @@ export const usePublicMaterials = create((set) => ({
         });
 
         await setDoc({
-          collection: 'categories',
+          collection: "categories",
           doc: {
             key,
             data: {
               key,
-              category: 'thoughts',
+              category: "thoughts",
               name: category,
             },
           },
@@ -114,7 +114,7 @@ export const usePublicMaterials = create((set) => ({
         const key = nanoid();
 
         await setDoc({
-          collection: 'emotionCategories',
+          collection: "emotionCategories",
           doc: {
             key,
             data: {
@@ -124,12 +124,12 @@ export const usePublicMaterials = create((set) => ({
         });
 
         await setDoc({
-          collection: 'categories',
+          collection: "categories",
           doc: {
             key,
             data: {
               key,
-              category: 'emotions',
+              category: "emotions",
               name: category,
             },
           },
@@ -142,7 +142,7 @@ export const usePublicMaterials = create((set) => ({
       for (const category of memberCategories) {
         const key = nanoid();
         await setDoc({
-          collection: 'memberCategories',
+          collection: "memberCategories",
           doc: {
             key,
             data: {
@@ -152,12 +152,12 @@ export const usePublicMaterials = create((set) => ({
         });
 
         await setDoc({
-          collection: 'categories',
+          collection: "categories",
           doc: {
             key,
             data: {
               key,
-              category: 'members',
+              category: "members",
               name: category,
             },
           },
@@ -169,12 +169,12 @@ export const usePublicMaterials = create((set) => ({
       }
       set(() => ({
         miscData: null,
-        miscMessage: 'Categories created successfully!',
+        miscMessage: "Categories created successfully!",
         miscLoading: false,
       }));
       return true;
     } catch (error) {
-      console.error('Error during creating categories:', error);
+      console.error("Error during creating categories:", error);
       set({ miscMessage: error.message, miscData: null, miscLoading: false });
       // Loading is False
       return false;
@@ -183,40 +183,47 @@ export const usePublicMaterials = create((set) => ({
   getAllCategories: async () => {
     set(() => ({
       miscData: null,
-      miscMessage: 'Loading...',
+      miscMessage: "Loading...",
       miscLoading: true,
     }));
     try {
-      const categories = await listDocs({
-        collection: 'categories',
-      });
-
-      const thoughtCategories = await listDocs({
-        collection: 'thoughtCategories',
-      });
-
-      const emotionCategories = await listDocs({
-        collection: 'emotionCategories',
-      });
-
-      const memberCategories = await listDocs({
-        collection: 'memberCategories',
-      });
-
       const categoriesArray = [];
       const thoughtCategoriesArray = [];
       const emotionCategoriesArray = [];
       const memberCategoriesArray = [];
 
+      // Categories
+      const categories = await listDocs({
+        collection: "categories",
+      });
+
       for (const category of categories.items) {
         categoriesArray.push(category);
       }
+
+      // Thoughts
+      const thoughtCategories = await listDocs({
+        collection: "thoughtCategories",
+      });
+
       for (const thoughtCategory of thoughtCategories.items) {
         thoughtCategoriesArray.push(thoughtCategory);
       }
+
+      // Emotions
+      const emotionCategories = await listDocs({
+        collection: "emotionCategories",
+      });
+
       for (const emotionCategory of emotionCategories.items) {
         emotionCategoriesArray.push(emotionCategory);
       }
+
+      // Members
+      const memberCategories = await listDocs({
+        collection: "memberCategories",
+      });
+
       for (const memberCategory of memberCategories.items) {
         memberCategoriesArray.push(memberCategory);
       }
@@ -230,13 +237,13 @@ export const usePublicMaterials = create((set) => ({
 
       set(() => ({
         miscData: allCategoryInfo,
-        miscMessage: 'All users fetched successfully!',
+        miscMessage: "All users fetched successfully!",
         miscLoading: false,
       }));
 
       return true;
     } catch (error) {
-      console.error('Error during creating categories:', error);
+      console.error("Error during creating categories:", error);
       set({ miscMessage: error.message, miscData: null, miscLoading: false });
       // Loading is False
       return false;
@@ -245,36 +252,35 @@ export const usePublicMaterials = create((set) => ({
   deleteCategories: async () => {
     set(() => ({
       miscData: null,
-      miscMessage: 'Loading...',
+      miscMessage: "Loading...",
       miscLoading: true,
     }));
 
     try {
       //Deleting Categories Related
       const categories = await listDocs({
-        collection: 'categories',
+        collection: "categories",
       });
 
       const thoughtCategories = await listDocs({
-        collection: 'thoughtCategories',
+        collection: "thoughtCategories",
       });
 
       const emotionCategories = await listDocs({
-        collection: 'emotionCategories',
+        collection: "emotionCategories",
       });
 
       const memberCategories = await listDocs({
-        collection: 'memberCategories',
+        collection: "memberCategories",
       });
 
       if (categories) {
         for (const category of categories.items) {
-
           await deleteDoc({
-            collection: 'categories',
+            collection: "categories",
             doc: category,
           });
-          
+
           console.log(
             `Category ${category.name} on categories deleted successfully!`
           );
@@ -285,7 +291,7 @@ export const usePublicMaterials = create((set) => ({
         console.log("asd");
         for (const thoughtCategory of thoughtCategories.items) {
           await deleteDoc({
-            collection: 'thoughtCategories',
+            collection: "thoughtCategories",
             doc: thoughtCategory,
           });
 
@@ -298,7 +304,7 @@ export const usePublicMaterials = create((set) => ({
       if (emotionCategories) {
         for (const emotionCategory of emotionCategories.items) {
           await deleteDoc({
-            collection: 'emotionCategories',
+            collection: "emotionCategories",
             doc: emotionCategory,
           });
 
@@ -311,7 +317,7 @@ export const usePublicMaterials = create((set) => ({
       if (emotionCategories) {
         for (const memberCategory of memberCategories.items) {
           await deleteDoc({
-            collection: 'memberCategories',
+            collection: "memberCategories",
             doc: memberCategory,
           });
 
@@ -322,12 +328,12 @@ export const usePublicMaterials = create((set) => ({
       }
       set(() => ({
         miscData: null,
-        miscMessage: 'All Categories Deleted Successfully!',
+        miscMessage: "All Categories Deleted Successfully!",
         miscLoading: false,
       }));
       return true;
     } catch (error) {
-      console.error('Error during creating categories:', error);
+      console.error("Error during creating categories:", error);
       set({ miscMessage: error.message, miscData: null, miscLoading: false });
       // Loading is False
       return false;
@@ -338,16 +344,16 @@ export const usePublicMaterials = create((set) => ({
   createAnonymousNickames: async () => {
     set(() => ({
       miscData: null,
-      miscMessage: 'Loading...',
+      miscMessage: "Loading...",
       miscLoading: true,
     }));
     try {
-      const publicAnonymousNicknames = ['', '', '', '', '', '', '', '', '', ''];
+      const publicAnonymousNicknames = ["", "", "", "", "", "", "", "", "", ""];
 
       for (const publicAnonymousNickname of publicAnonymousNicknames.items) {
         const key = nanoid();
         await setDoc({
-          collection: 'publicAnonymousNicknames',
+          collection: "publicAnonymousNicknames",
           doc: {
             key,
             doc: {
@@ -358,12 +364,12 @@ export const usePublicMaterials = create((set) => ({
       }
       set(() => ({
         miscData: null,
-        miscMessage: 'Anonymous Nickname created successfully!',
+        miscMessage: "Anonymous Nickname created successfully!",
         miscLoading: false,
       }));
       return true;
     } catch (error) {
-      console.error('Error during creating categories:', error);
+      console.error("Error during creating categories:", error);
       set({ miscMessage: error.message, miscData: null, miscLoading: false });
       // Loading is False
       return false;
@@ -373,7 +379,7 @@ export const usePublicMaterials = create((set) => ({
   createAnonymousProfile: async (file) => {
     set(() => ({
       miscData: null,
-      miscMessage: 'Loading...',
+      miscMessage: "Loading...",
       miscLoading: true,
     }));
 
@@ -383,7 +389,7 @@ export const usePublicMaterials = create((set) => ({
         const key = nanoid();
         const filename = `${key}-profile`;
         const { downloadUrl } = await uploadFile({
-          collection: 'publicAnonymousProfiles',
+          collection: "publicAnonymousProfiles",
           data: file,
           filename,
         });
@@ -391,7 +397,7 @@ export const usePublicMaterials = create((set) => ({
         profileImageUrl = downloadUrl;
 
         await setDoc({
-          collection: 'publicAnonymousProfiles',
+          collection: "publicAnonymousProfiles",
           doc: {
             key,
             data: {
@@ -404,13 +410,13 @@ export const usePublicMaterials = create((set) => ({
 
       set(() => ({
         miscData: null,
-        miscMessage: 'Anonymous Profile uploaded successfully!',
+        miscMessage: "Anonymous Profile uploaded successfully!",
         miscLoading: false,
       }));
 
       return true;
     } catch (error) {
-      console.error('Error during creating categories:', error);
+      console.error("Error during creating categories:", error);
       set({ miscMessage: error.message, miscData: null, miscLoading: false });
       return false;
     }
@@ -419,22 +425,22 @@ export const usePublicMaterials = create((set) => ({
   deleteAnonymous: async () => {
     set(() => ({
       miscData: null,
-      miscMessage: 'Loading...',
+      miscMessage: "Loading...",
       miscLoading: true,
     }));
     try {
       const publicAnonymousProfilesData = await listDocs({
-        collection: 'publicAnonymousProfiles',
+        collection: "publicAnonymousProfiles",
       });
 
       const publicAnonymousProfiles = await listAssets({
-        collection: 'publicAnonymousProfiles',
+        collection: "publicAnonymousProfiles",
       });
 
       if (publicAnonymousProfilesData) {
         for (const publicAnonymousProfileData of publicAnonymousProfilesData.items) {
           await deleteDoc({
-            collection: 'publicAnonymousProfiles',
+            collection: "publicAnonymousProfiles",
             doc: publicAnonymousProfileData,
           });
           console.log(
@@ -446,7 +452,7 @@ export const usePublicMaterials = create((set) => ({
       if (publicAnonymousProfiles) {
         for (const publicAnonymousProfile of publicAnonymousProfiles.items) {
           await deleteAsset({
-            collection: 'publicAnonymousProfiles',
+            collection: "publicAnonymousProfiles",
             fullPath: publicAnonymousProfile.fullPath,
           });
           console.log(
@@ -456,12 +462,12 @@ export const usePublicMaterials = create((set) => ({
       }
       set(() => ({
         miscData: null,
-        miscMessage: 'Anonymous Profile deleted successfully!',
+        miscMessage: "Anonymous Profile deleted successfully!",
         loading: false,
       }));
       return true;
     } catch (error) {
-      console.error('Error during creating categories:', error);
+      console.error("Error during creating categories:", error);
       set({ miscMessage: error.message, miscData: null, miscLoading: false });
       // Loading is False
       return false;
@@ -470,12 +476,12 @@ export const usePublicMaterials = create((set) => ({
   getAllAnonymousProfiles: async () => {
     set(() => ({
       miscData: null,
-      miscMessage: 'Loading...',
+      miscMessage: "Loading...",
       miscLoading: false,
     }));
     try {
       const allAnonymousProfiles = await listDocs({
-        collection: 'publicAnonymousProfiles',
+        collection: "publicAnonymousProfiles",
       });
 
       const allAnonymousProfileArray = [];
@@ -483,12 +489,12 @@ export const usePublicMaterials = create((set) => ({
         allAnonymousProfileArray.push(anonymousProfile.data);
       set(() => ({
         miscData: allAnonymousProfileArray,
-        miscMessage: 'All available anonymous profiles',
+        miscMessage: "All available anonymous profiles",
         miscLoading: false,
       }));
       return true;
     } catch (error) {
-      console.error('Error during creating categories:', error);
+      console.error("Error during creating categories:", error);
       set({ miscMessage: error.message, miscData: null, miscLoading: false });
       // Loading is False
       return false;
