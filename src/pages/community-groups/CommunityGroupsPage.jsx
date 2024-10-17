@@ -1,12 +1,36 @@
-import { Paper, Grid, Box } from "@mantine/core";
+import { Paper, Box } from "@mantine/core";
 import HeadingCard from "../../components/headings/HeadingCard";
-import DisplayCard from "../../components/cards/DisplayCard";
 import GroupGrid from "../../components/grid/GroupGrid";
 import { useNavigate } from "react-router-dom";
+import { useGroupAPIStore } from "../../store/group-api";
+import { useAuthenticationStore } from "../../store/authentication";
+import { useShallow } from "zustand/shallow";
+import { useEffect } from "react";
 export default function CommunityGroupsPage() {
   const navigate = useNavigate();
+
+  // Zustand
+  const loggedInUserKey = useAuthenticationStore(
+    (state) => state.user.data?.key
+  );
+
+  const { fetchCommunityGroupsFn, communityGroups } = useGroupAPIStore(
+    useShallow((state) => ({
+      fetchCommunityGroupsFn: state.fetchCommunityGroups,
+      communityGroups: state.communityGroups,
+    }))
+  );
+
+  useEffect(() => {
+    fetchCommunityGroupsFn(loggedInUserKey);
+  });
+
   function handleSelect(ref) {
     navigate(`/community-groups/${ref}`);
+  }
+
+  function handleJoinGroup(ref) {
+    console.log(`Join group with ref: ${ref}`);
   }
 
   return (
@@ -17,7 +41,12 @@ export default function CommunityGroupsPage() {
       />
 
       <Box mt={18}>
-        <GroupGrid type="community" onSelect={handleSelect} />
+        <GroupGrid
+          groupData={communityGroups}
+          onButtonClick={handleJoinGroup}
+          type="community"
+          onSelect={handleSelect}
+        />
       </Box>
     </Paper>
   );

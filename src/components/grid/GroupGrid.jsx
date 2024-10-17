@@ -1,4 +1,4 @@
-import { Grid } from "@mantine/core";
+import { Grid, SimpleGrid } from "@mantine/core";
 import DisplayCard from "../cards/DisplayCard";
 
 export default function GroupGrid({
@@ -19,16 +19,15 @@ export default function GroupGrid({
 
   const ColInstances = groupData.map((group) => {
     return (
-      <Grid.Col span={6} key={group.key}>
         <DisplayCard
+          key={group.key}
           instance={group}
           type={type}
           onButtonClick={onButtonClick}
           onSelect={onSelect}
           buttonLabel={btnLabel()}
         />
-      </Grid.Col>
     );
   });
-  return <Grid>{ColInstances}</Grid>;
+  return <SimpleGrid cols={2}>{ColInstances}</SimpleGrid>;
 }

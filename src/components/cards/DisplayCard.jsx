@@ -15,8 +15,17 @@ import GroupMemberCard from "./GroupMemberCard.jsx";
 import HappyImage from "../../assets/HappyImage.jpg";
 import { useMemo } from "react";
 
-// Max 3
-const interests = ["Sadness", "Anxiety", "Depression"];
+const MAX_PILLS = 3;
+
+const MAX_WORDS = 25;
+
+const truncateToWords = (text, MAX_WORDS = 25) => {
+  const words = text.split(" ");
+  return (
+    words.slice(0, MAX_WORDS).join(" ") +
+    (words.length > MAX_WORDS ? "..." : "")
+  );
+};
 
 export default function DisplayCard({
   instance,
@@ -105,9 +114,15 @@ export default function DisplayCard({
       return values;
     }, [variant]);
 
-  const pillInstances = instance.categories.map((interest) => (
-    <Pill size={pills.size} key={interest.key} name={interest.data.name} />
-  ));
+  const pillInstances = useMemo(() => {
+    const categories =
+      variant === "view"
+        ? instance.categories
+        : instance.categories.slice(0, MAX_PILLS);
+    return categories.map((interest) => (
+      <Pill size={pills.size} key={interest.key} name={interest.data.name} />
+    ));
+  }, [instance.categories, pills.size, variant]);
 
   const memberListInstance =
     type === "owned" && variant === "view" ? (
@@ -138,6 +153,9 @@ export default function DisplayCard({
         </Box>
       </Grid.Col>
     ) : undefined;
+
+  const isTruncated = (text) =>
+    variant === "view" ? text : truncateToWords(text);
 
   return (
     <Card
@@ -192,13 +210,13 @@ export default function DisplayCard({
           </Group>
         </Grid.Col>
 
-        <Grid.Col span={12}>
+        <Grid.Col span={12} >
           <Box>
             <Title order={title.order} fw={title.fw} mb={8}>
               Description
             </Title>
             <Text size={description.size} lh={1.4}>
-              {instance.description}
+              {isTruncated(instance.description)}
             </Text>
           </Box>
         </Grid.Col>
