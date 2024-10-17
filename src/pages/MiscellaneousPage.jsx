@@ -8,15 +8,15 @@ import {
   Image,
   Group,
   Stack,
-} from '@mantine/core';
-import { useUsersStore } from '../store/users';
-import { useAuthenticationStore } from '../store/authentication';
-import { usePublicMaterials } from '../store/miscellaneous';
-import { useGroupStore } from '../store/group';
-import { usePostStore } from '../store/post';
-import { useShallow } from 'zustand/shallow';
-import { useForm } from '@mantine/form';
-import { useNavigate, useLocation } from 'react-router-dom';
+} from "@mantine/core";
+import { useUsersStore } from "../store/users";
+import { useAuthenticationStore } from "../store/authentication";
+import { usePublicMaterials } from "../store/miscellaneous";
+import { useGroupStore } from "../store/group";
+import { usePostStore } from "../store/post";
+import { useShallow } from "zustand/shallow";
+import { useForm } from "@mantine/form";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function MiscellaneousPage() {
   const navigate = useNavigate();
@@ -386,20 +386,20 @@ export default function MiscellaneousPage() {
       ],
       members: [
         {
-          fullName: 'Super Admin',
-          key: '3JkiWUaMis6ziIHwRrKsK',
-          lastUpdated: '2024-10-17T00:37:12.700Z',
-          role: 'super-admin',
-          status: 'online',
-          groupRole: 'Group Admin',
+          fullName: "Super Admin",
+          key: "3JkiWUaMis6ziIHwRrKsK",
+          lastUpdated: "2024-10-17T00:37:12.700Z",
+          role: "super-admin",
+          status: "online",
+          groupRole: "Group Admin",
         },
         {
-          fullName: 'alex',
-          key: 'uOl9RnXouVl9vU1fbUXU1',
-          lastUpdated: '2024-10-16T10:30:00.901Z',
-          role: 'user',
-          status: 'online',
-          groupRole: 'member',
+          fullName: "alex",
+          key: "uOl9RnXouVl9vU1fbUXU1",
+          lastUpdated: "2024-10-16T10:30:00.901Z",
+          role: "user",
+          status: "online",
+          groupRole: "member",
         },
         // {
         //   fullName: 'alex1',
@@ -495,12 +495,12 @@ export default function MiscellaneousPage() {
     try {
       const createSuccess = await createTopicsFn();
       if (createSuccess) {
-        console.log('Topics seeded successfully!');
+        console.log("Topics seeded successfully!");
       } else {
-        console.error('Failed to seed topics');
+        console.error("Failed to seed topics");
       }
     } catch (error) {
-      console.error('Error seeding topics:', error);
+      console.error("Error seeding topics:", error);
     } finally {
       setIsUploading(false);
     }
@@ -510,12 +510,12 @@ export default function MiscellaneousPage() {
     try {
       const getSuccess = await getAllTopicsFn();
       if (getSuccess) {
-        console.log('All topics fetched successfully!', postData);
+        console.log("All topics fetched successfully!", postData);
       } else {
-        console.error('Failed to fetch all topics');
+        console.error("Failed to fetch all topics");
       }
     } catch (error) {
-      console.error('Error fetching all topics:', error);
+      console.error("Error fetching all topics:", error);
     } finally {
       setIsUploading(false);
     }
@@ -525,12 +525,12 @@ export default function MiscellaneousPage() {
     try {
       const createSuccess = await createHealthCareSuggestionsFn();
       if (createSuccess) {
-        console.log('Health care suggestions seeded successfully!', postData);
+        console.log("Health care suggestions seeded successfully!", postData);
       } else {
-        console.error('Failed to seed all health care suggestions');
+        console.error("Failed to seed all health care suggestions");
       }
     } catch (error) {
-      console.error('Error seeding all health care suggestions:', error);
+      console.error("Error seeding all health care suggestions:", error);
     } finally {
       setIsUploading(false);
     }
@@ -540,72 +540,12 @@ export default function MiscellaneousPage() {
     try {
       const getSuccess = await getAllHealthCareSuggestionsFn();
       if (getSuccess) {
-        console.log('Health care suggestions fetched successfully!', postData);
+        console.log("Health care suggestions fetched successfully!", postData);
       } else {
-        console.error('Failed to fetch all health care suggestions');
+        console.error("Failed to fetch all health care suggestions");
       }
     } catch (error) {
-      console.error('Error fetching all health care suggestions:', error);
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
-  const handleCreateTopics = async () => {
-    try {
-      const createSuccess = await createTopicsFn();
-      if (createSuccess) {
-        console.log('Topics seeded successfully!');
-      } else {
-        console.error('Failed to seed topics');
-      }
-    } catch (error) {
-      console.error('Error seeding topics:', error);
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
-  const handleGetAllTopics = async () => {
-    try {
-      const getSuccess = await getAllTopicsFn();
-      if (getSuccess) {
-        console.log('All topics fetched successfully!', postData);
-      } else {
-        console.error('Failed to fetch all topics');
-      }
-    } catch (error) {
-      console.error('Error fetching all topics:', error);
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
-  const handleCreateHealthCareSuggestions = async () => {
-    try {
-      const createSuccess = await createHealthCareSuggestionsFn();
-      if (createSuccess) {
-        console.log('Health care suggestions seeded successfully!', postData);
-      } else {
-        console.error('Failed to seed all health care suggestions');
-      }
-    } catch (error) {
-      console.error('Error seeding all health care suggestions:', error);
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
-  const handleGetAllHealthCareSuggestions = async () => {
-    try {
-      const getSuccess = await getAllHealthCareSuggestionsFn();
-      if (getSuccess) {
-        console.log('Health care suggestions fetched successfully!', postData);
-      } else {
-        console.error('Failed to fetch all health care suggestions');
-      }
-    } catch (error) {
-      console.error('Error fetching all health care suggestions:', error);
+      console.error("Error fetching all health care suggestions:", error);
     } finally {
       setIsUploading(false);
     }
