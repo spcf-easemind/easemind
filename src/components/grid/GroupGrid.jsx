@@ -1,7 +1,12 @@
 import { Grid } from "@mantine/core";
 import DisplayCard from "../cards/DisplayCard";
 
-export default function GroupGrid({ type, onSelect, onButtonClick }) {
+export default function GroupGrid({
+  groupData,
+  type,
+  onSelect,
+  onButtonClick,
+}) {
   const btnLabel = () => {
     if (type === "community") {
       return "Join";
@@ -11,22 +16,19 @@ export default function GroupGrid({ type, onSelect, onButtonClick }) {
       return "View Chat";
     }
   };
-  return (
-    <Grid>
-      <Grid.Col span={6}>
+
+  const ColInstances = groupData.map((group) => {
+    return (
+      <Grid.Col span={6} key={group.key}>
         <DisplayCard
+          instance={group}
+          type={type}
           onButtonClick={onButtonClick}
           onSelect={onSelect}
           buttonLabel={btnLabel()}
         />
       </Grid.Col>
-      <Grid.Col span={6}>
-        <DisplayCard
-          onButtonClick={onButtonClick}
-          onSelect={onSelect}
-          buttonLabel={btnLabel()}
-        />
-      </Grid.Col>
-    </Grid>
-  );
+    );
+  });
+  return <Grid>{ColInstances}</Grid>;
 }

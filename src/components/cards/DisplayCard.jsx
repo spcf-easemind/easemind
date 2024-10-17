@@ -19,6 +19,7 @@ import { useMemo } from "react";
 const interests = ["Sadness", "Anxiety", "Depression"];
 
 export default function DisplayCard({
+  instance,
   variant = null,
   type,
   buttonLabel,
@@ -104,12 +105,12 @@ export default function DisplayCard({
       return values;
     }, [variant]);
 
-  const pillInstances = interests.map((interest) => (
-    <Pill size={pills.size} key={interest} name={interest} />
+  const pillInstances = instance.categories.map((interest) => (
+    <Pill size={pills.size} key={interest.key} name={interest.data.name} />
   ));
 
   const memberListInstance =
-    type === "owned" ? (
+    type === "owned" && variant === "view" ? (
       <Grid.Col order={4}>
         <Box>
           <Title order={title.order} fw={title.fw} mb={8}>
@@ -118,24 +119,21 @@ export default function DisplayCard({
 
           {/* Data */}
           <Stack gap={8}>
-            <GroupMemberCard image={HappyImage}>
-              <Button
-                variant="subtle"
-                color="red.5"
-                onClick={() => onModalSelect("id")}
+            {instance.members.map((member) => (
+              <GroupMemberCard
+                image={member.profilePath}
+                name={member.fullName}
+                role={member.role}
               >
-                Remove
-              </Button>
-            </GroupMemberCard>
-            <GroupMemberCard image={HappyImage}>
-              <Button
-                variant="subtle"
-                color="red.5"
-                onClick={() => onModalSelect("id_2")}
-              >
-                Remove
-              </Button>
-            </GroupMemberCard>
+                <Button
+                  variant="subtle"
+                  color="red.5"
+                  onClick={() => onModalSelect(member)}
+                >
+                  Remove
+                </Button>
+              </GroupMemberCard>
+            ))}
           </Stack>
         </Box>
       </Grid.Col>
@@ -162,7 +160,7 @@ export default function DisplayCard({
             zIndex: 1,
             ...card.style,
           }}
-          onClick={() => clickFn(1)}
+          onClick={() => clickFn(instance.key)}
         />
       )}
       <Grid>
@@ -176,10 +174,10 @@ export default function DisplayCard({
             />
             <Box flex={1}>
               <Title order={title.order} fw={title.fw}>
-                Malakas Group
+                {instance.name}
               </Title>
               <Text size={header.text.size} c="dimmed">
-                100 members
+                {instance.membersCount} members
               </Text>
             </Box>
             <Button
@@ -200,9 +198,7 @@ export default function DisplayCard({
               Description
             </Title>
             <Text size={description.size} lh={1.4}>
-              I believe in creating a safe, non-judgmental space where you can
-              share your thoughts and find the support you need. Let&apos;s work
-              together to help you feel more balanced and at ease.
+              {instance.description}
             </Text>
           </Box>
         </Grid.Col>
