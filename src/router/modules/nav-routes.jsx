@@ -16,6 +16,7 @@ import EditGroupPage from "../../pages/owned-groups/EditGroupPage";
 
 // Joined Groups
 import JoinedGroupsPage from "../../pages/joined-groups/JoinedGroupsPage";
+import JoinedGroupView from "../../pages/joined-groups/JoinedGroupsPage";
 
 // Photo Control for Groups
 import PhotoControlPage from "../../pages/PhotoControlPage";
@@ -72,6 +73,10 @@ const navRoutes = [
   {
     path: "/joined-groups",
     element: <JoinedGroupsPage />,
+  },
+  {
+    path: "/joined-group/:joinedGroupRef",
+    element: <JoinedGroupView />,
   },
   {
     path: "/pending-approval",

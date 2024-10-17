@@ -6,6 +6,13 @@ import { useGroupAPIStore } from "../../store/group-api";
 import { useAuthenticationStore } from "../../store/authentication";
 import { useShallow } from "zustand/shallow";
 import { useEffect } from "react";
+
+const header = {
+  title: "Community Groups",
+  description:
+    "Discover community groups that match your interests and needs. Engage with others, share experiences, and build meaningful connections to become the best version of yourself.",
+};
+
 export default function CommunityGroupsPage() {
   const navigate = useNavigate();
 
@@ -35,10 +42,7 @@ export default function CommunityGroupsPage() {
 
   return (
     <Paper>
-      <HeadingCard
-        title="Community Groups"
-        description="Discover community groups that match your interests and needs. Engage with others, share experiences, and build meaningful connections to become the best version of yourself."
-      />
+      <HeadingCard title={header.title} description={header.description} />
 
       <Box mt={18}>
         <GroupGrid
