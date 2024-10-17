@@ -8,22 +8,6 @@ import {
   Image,
   Group,
   Stack,
-<<<<<<< Updated upstream
-} from '@mantine/core';
-import { useUsersStore } from '../store/users';
-import { useAuthenticationStore } from '../store/authentication';
-import { usePublicMaterials } from '../store/miscellaneous';
-import { useGroup } from '../store/group';
-import { useShallow } from 'zustand/shallow';
-import { useForm } from '@mantine/form';
-import { useNavigate, useLocation } from 'react-router-dom';
-
-export default function MiscellaneousPage() {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [hasFetched, setHasFetched] = useState(false);
-
-=======
 } from "@mantine/core";
 import { useUsersStore } from "../store/users";
 import { useAuthenticationStore } from "../store/authentication";
@@ -31,11 +15,13 @@ import { usePublicMaterials } from "../store/miscellaneous";
 import { useGroup } from "../store/group";
 import { useShallow } from "zustand/shallow";
 import { useForm } from "@mantine/form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function MiscellaneousPage() {
   const navigate = useNavigate();
->>>>>>> Stashed changes
+  const location = useLocation();
+  const [hasFetched, setHasFetched] = useState(false);
+
   const logoutUserFn = useAuthenticationStore(
     (state) => state.logoutInternetIdentity
   );
@@ -117,7 +103,7 @@ export default function MiscellaneousPage() {
     // getUserInfoFn();
     // getAllUsersFn();
 
-    if (location.pathname === '/miscellaneous' && !hasFetched) {
+    if (location.pathname === "/miscellaneous" && !hasFetched) {
       getUserInfoFn();
       setHasFetched(true);
     }
@@ -189,12 +175,12 @@ export default function MiscellaneousPage() {
     }
   };
   const handleLogoutUser = async () => {
-    const userKey = 'Dzmq9BH6JPBLFMlknjBO7';
+    const userKey = "Dzmq9BH6JPBLFMlknjBO7";
     try {
       const logoutSuccess = await logoutUserFn(userKey);
       if (logoutSuccess) {
-        console.log('User logged out successfully!');
-        return navigate('/login');
+        console.log("User logged out successfully!");
+        return navigate("/login");
       } else {
         console.error("Failed to to logout user");
       }
@@ -365,10 +351,10 @@ export default function MiscellaneousPage() {
   };
   const handleCreateGroup = async () => {
     const formData = {
-      ownerKey: '8hf6nBFEWynuXUdVLTFay',
+      ownerKey: "8hf6nBFEWynuXUdVLTFay",
       groupProfilePath:
-        'http://jx5yt-yyaaa-aaaal-abzbq-cai.localhost:5987/groupProfileCollections/wJpIYti4tOGB_CgJkNVqP-profile',
-      name: 'Mga Feeling Depressed',
+        "http://jx5yt-yyaaa-aaaal-abzbq-cai.localhost:5987/groupProfileCollections/wJpIYti4tOGB_CgJkNVqP-profile",
+      name: "Mga Feeling Depressed",
       description:
         "I believe in creating a safe, non-judgmental space where you can freely express your thoughts and emotions without fear of being misunderstood. Everyone deserves a place where they feel heard, supported, and validated. My goal is to be that person who listens with compassion and helps you navigate the challenges you're facing. Together, we can work on finding practical solutions, building coping strategies, and restoring a sense of balance and peace in your life. Your mental well-being matters, and I’m here to support you every step of the way, helping you feel more grounded, empowered, and at ease.",
       categories: [
