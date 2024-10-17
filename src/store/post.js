@@ -97,10 +97,10 @@ export const usePostStore = create((set) => ({
     } catch (error) {
       console.error('Error fetching all topics:', error);
       set(() => ({
-        groupData: null,
-        groupMessage:
+        postData: null,
+        postMessage:
           error.message || 'An error occurred while fetching all topics',
-        groupLoading: false,
+        postLoading: false,
       }));
       return false;
     }
@@ -190,11 +190,11 @@ export const usePostStore = create((set) => ({
     } catch (error) {
       console.error('Error fetching all health care suggestions:', error);
       set(() => ({
-        groupData: null,
-        groupMessage:
+        postData: null,
+        postMessage:
           error.message ||
           'An error occurred while fetching all health care suggestions',
-        groupLoading: false,
+        postLoading: false,
       }));
       return false;
     }
@@ -208,7 +208,7 @@ export const usePostStore = create((set) => ({
     }));
 
     try {
-      let postProfileImageUrl = null;
+      let postImageUrl = null;
 
       if (file) {
         const key = nanoid();
@@ -218,28 +218,118 @@ export const usePostStore = create((set) => ({
           data: file,
           filename,
         });
-        postProfileImageUrl = downloadUrl;
 
-        for (const topicKey of formData.topics) {
-          await getDoc({
-            collection: '',
-          });
-        }
+        postImageUrl = downloadUrl;
+
+        const createPostData = {
+          owner: formData.user.key,
+          user: formData.user,
+          postImageUrl: postImageUrl,
+          postTitle: formData.title,
+          postDescription: formData.description,
+          topics: formData.topics,
+        };
 
         await setDoc({
-          collections: 'posts',
+          collection: 'posts',
           doc: {
             key,
-            data: {
-              owner: formData.user.key,
-              user: formData.user,
-              postTitle: formData.title,
-              postDescription: formData.description,
-              topics: formData.topics,
-            },
+            data: createPostData,
           },
         });
+        set(() => ({
+          postData: null,
+          postMessage: 'Post Created Successfully!',
+          postLoading: false,
+        }));
+        return true;
+      } else {
+        set(() => ({
+          postData: null,
+          postMessage: 'Post image is required!',
+          postLoading: false,
+        }));
+        return false;
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error('Error creating post:', error);
+      set(() => ({
+        postData: null,
+        postMessage: error.message || 'An error occurred while creating post',
+        postLoading: false,
+      }));
+      return false;
+    }
+  },
+
+  getAllUserPosts: async () => {
+    set(() => ({
+      postData: null,
+      postMessage: 'Loading...',
+      postLoading: true,
+    }));
+
+    try {
+      const posts = await listDocs({
+        collection: 'posts',
+      });
+
+      const postArray = [];
+      for (const post of posts.items) {
+        postArray.push(post.data);
+      }
+
+      set(() => ({
+        postData: postArray,
+        postMessage: 'All user posts fetched successfully!',
+        postLoading: false,
+      }));
+      return true;
+    } catch (error) {
+      console.error('Error fetching all user posts:', error);
+      set(() => ({
+        postData: null,
+        postMessage:
+          error.message || 'An error occurred while fetching all user posts',
+        postLoading: false,
+      }));
+      return false;
+    }
+  },
+  deleteAllUserPosts: async () => {
+    set(() => ({
+      postData: null,
+      postMessage: 'Loading...',
+      postLoading: true,
+    }));
+    try {
+      const allUserPosts = await listDocs({
+        collection: 'posts',
+      });
+
+      for (const userPost of allUserPosts.items) {
+        await deleteDoc({
+          collection: 'posts',
+          doc: userPost,
+        });
+
+        console.log(`User Post ${userPost.data.title} deleted successfully!`);
+      }
+      set(() => ({
+        postData: null,
+        postMessage: 'All user post deleted successfully!',
+        postLoading: false,
+      }));
+      return true;
+    } catch (error) {
+      console.error('Error deleting all user posts:', error);
+      set(() => ({
+        postData: null,
+        postMessage:
+          error.message || 'An error occurred while deleting all user posts',
+        postLoading: false,
+      }));
+      return false;
+    }
   },
 }));
