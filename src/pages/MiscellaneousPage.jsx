@@ -108,6 +108,9 @@ export default function MiscellaneousPage() {
     getAllTopicsFn,
     createHealthCareSuggestionsFn,
     getAllHealthCareSuggestionsFn,
+    createPostFn,
+    getAllUserPostsFn,
+    deleteAllUserPostsFn,
   } = usePostStore(
     useShallow((state) => ({
       postData: state.postData,
@@ -117,6 +120,9 @@ export default function MiscellaneousPage() {
       getAllTopicsFn: state.getAllTopics,
       createHealthCareSuggestionsFn: state.createHealthCareSuggestions,
       getAllHealthCareSuggestionsFn: state.getAllHealthCareSuggestions,
+      createPostFn: state.createPost,
+      getAllUserPostsFn: state.getAllUserPosts,
+      deleteAllUserPostsFn: state.deleteAllUserPosts,
     }))
   );
 
@@ -551,6 +557,111 @@ export default function MiscellaneousPage() {
     }
   };
 
+  const handleCreatePost = async (values) => {
+    const { file } = values;
+    const formData1 = {
+      user: {
+        fullName: 'Super Admin',
+        key: '3JkiWUaMis6ziIHwRrKsK',
+        lastUpdated: '2024-10-17T07:06:36.176Z',
+        profileImageUrl:
+          'http://jx5yt-yyaaa-aaaal-abzbq-cai.localhost:5987/userProfilePicture/3JkiWUaMis6ziIHwRrKsK-profile',
+        role: 'super-admin',
+        status: 'online',
+      },
+      title:
+        'Anxiety is temporary, and so are tough times. You have the strength to overcome.',
+      description:
+        'Anxiety is temporary, and so are tough times. You have the strength to overcome. Remember to breathe, take breaks, and reach out when you need support. Anxiety is temporary, and so are tough times. You have the strength to overcome. Remember to breathe, take breaks, and reach out when you need support. Anxiety is temporary, and so are tough times. You have the strength to overcome. Remember to breathe, take breaks, and reach out when you need support.',
+      topics: [
+        { key: 'QZH3RM_hPBn1UDFchSe3l', name: 'Anxiety' },
+        { key: 'hskFMOgocfBaoeIJUg8-L', name: 'Anxiety Relief' },
+      ],
+    };
+
+    const formData2 = {
+      user: {
+        fullName: 'Super Admin',
+        key: '3JkiWUaMis6ziIHwRrKsK',
+        lastUpdated: '2024-10-17T07:06:36.176Z',
+        profileImageUrl:
+          'http://jx5yt-yyaaa-aaaal-abzbq-cai.localhost:5987/userProfilePicture/3JkiWUaMis6ziIHwRrKsK-profile',
+        role: 'super-admin',
+        status: 'online',
+      },
+      title: 'Self-care isn’t selfish; it’s essential. Prioritize your needs.',
+      description:
+        'Self-care isn’t selfish; it’s essential. Prioritize your needs. Remember to make time for yourself, nurture your mental health, and practice habits that bring you peace. Self-care isn’t selfish; it’s essential. Prioritize your needs. Remember to make time for yourself, nurture your mental health, and practice habits that bring you peace. Self-care isn’t selfish; it’s essential. Prioritize your needs. Remember to make time for yourself, nurture your mental health, and practice habits that bring you peace.',
+      topics: [
+        { key: 'mfcmFeTJ4sUEOviF5d1Bb', name: 'Self Care' },
+        { key: '5Puaks8iUShEIpbRd5KQg', name: 'Mindfulness' },
+      ],
+    };
+
+    const formData3 = {
+      user: {
+        fullName: 'Super Admin',
+        key: '3JkiWUaMis6ziIHwRrKsK',
+        lastUpdated: '2024-10-17T07:06:36.176Z',
+        profileImageUrl:
+          'http://jx5yt-yyaaa-aaaal-abzbq-cai.localhost:5987/userProfilePicture/3JkiWUaMis6ziIHwRrKsK-profile',
+        role: 'super-admin',
+        status: 'online',
+      },
+      title:
+        'Healing is a journey, not a destination. Take it one day at a time.',
+      description:
+        'Healing is a journey, not a destination. Take it one day at a time. Be gentle with yourself and allow your mind and heart to rest when needed. Healing is a journey, not a destination. Take it one day at a time. Be gentle with yourself and allow your mind and heart to rest when needed. Healing is a journey, not a destination. Take it one day at a time. Be gentle with yourself and allow your mind and heart to rest when needed.',
+      topics: [
+        { key: 'Z4GS2HBoYVWKfg0O402Y9', name: 'Healing Journey' },
+        { key: 'JvEBDizXvmCKJEt2XT5c2', name: 'Therapy Is Cool' },
+      ],
+    };
+
+    try {
+      const createSuccess = await createPostFn(formData3, file);
+      if (createSuccess) {
+        console.log('Post created successfully!');
+      } else {
+        console.error('Failed to create post');
+      }
+    } catch (error) {
+      console.error('Error creating post:', error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleGetAllUserPosts = async () => {
+    try {
+      const getSuccess = await getAllUserPostsFn();
+      if (getSuccess) {
+        console.log('All User Post fetched successfully!', postData);
+      } else {
+        console.error('Failed to fetch all user post');
+      }
+    } catch (error) {
+      console.error('Error fetching all user post:', error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleDeleteAllUserPosts = async () => {
+    try {
+      const deleteSuccess = await deleteAllUserPostsFn();
+      if (deleteSuccess) {
+        console.log('All User Post deleted successfully!');
+      } else {
+        console.error('Failed to delete all user post');
+      }
+    } catch (error) {
+      console.error('Error deleting all user post:', error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   return (
     <Box position="relative">
       <LoadingOverlay visible={isUploading || loading} overlayBlur={2} />
@@ -722,10 +833,24 @@ export default function MiscellaneousPage() {
         Post Buttons
       </Title>
       <Group mt="md">
-        <Button onClick={handleGetGroup} loading={groupLoading}>
-          Get Groups
+        <Button onClick={handleGetAllUserPosts} loading={postLoading}>
+          Get All User Posts
+        </Button>
+        <Button onClick={handleDeleteAllUserPosts} loading={postLoading}>
+          Delete All User Posts
         </Button>
       </Group>
+      <form onSubmit={form.onSubmit(handleCreatePost)}>
+        <FileInput
+          label="Upload file here"
+          {...form.getInputProps('file')}
+          disabled={isUploading}
+        />
+        <Button type="submit" mt="md" loading={postLoading}>
+          {isUploading ? 'Uploading...' : 'Create Anonymous Profile'}
+        </Button>
+      </form>
+      {message && <p>{message}</p>}
     </Box>
   );
 }
