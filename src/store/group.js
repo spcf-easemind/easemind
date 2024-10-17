@@ -12,7 +12,7 @@ import {
 import { nanoid } from 'nanoid';
 import { IconUser } from '@tabler/icons-react';
 
-export const useGroup = create((set) => ({
+export const useGroupStore = create((set) => ({
   groupData: null,
   groupMessage: null,
   groupLoading: false,
