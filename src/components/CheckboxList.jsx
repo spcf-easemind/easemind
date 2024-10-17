@@ -1,4 +1,4 @@
-import { Box, Checkbox, Group, Stack, Text, Image } from "@mantine/core";
+import { Box, Checkbox, Group, Stack, Text, Avatar } from "@mantine/core";
 
 export default function CheckboxList({ label, checkboxes, ...props }) {
   const checkboxInstances = checkboxes.map((checkbox) => (
@@ -9,7 +9,7 @@ export default function CheckboxList({ label, checkboxes, ...props }) {
       style={{ border: "none" }}
     >
       <Group wrap="nowrap">
-        <Image src={checkbox.image} w={44} h={44} radius="md" />
+        <Avatar src={checkbox.image} w={44} h={44} radius="md" />
         <Text fw={500} flex={1}>
           {checkbox.name}
         </Text>

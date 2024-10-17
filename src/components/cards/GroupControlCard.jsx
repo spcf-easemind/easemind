@@ -43,26 +43,12 @@ const tabsAttributes = [
   },
 ];
 
-const new_friends = [
-  {
-    id: 1,
-    name: "Alexander Camaddo",
-    image:
-      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-9.png",
-  },
-  {
-    id: 2,
-    name: "Gabriel Gatbonton",
-    image:
-      "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-1.png",
-  },
-];
-
 export default function GroupControlCard({
   form,
   onPhotoControlClick,
   header: { title, description },
   button: { btnLabel },
+  enums: { users },
 }) {
   const navigate = useNavigate();
   const { fetchInterestsEnumFn, interestsEnum } = useEnumsStore(
@@ -188,15 +174,32 @@ export default function GroupControlCard({
     );
   };
 
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredUsers = users.filter((user) =>
+    user.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const membersInputs = () => {
     const icon = <IconSearch size={20} stroke={1.5} />;
-    const header = <TextInput leftSection={icon} variant="transparent" />;
-    const checkboxes = (
-      <CheckboxList
-        label="Engaged with these people"
-        checkboxes={new_friends}
+    const header = (
+      <TextInput
+        leftSection={icon}
+        variant="transparent"
+        value={searchTerm}
+        onChange={handleSearchChange}
+        placeholder="Search users"
       />
     );
+
+    const checkboxes = (
+      <CheckboxList label="Engaged with these people" checkboxes={filteredUsers} />
+    );
+
     return <MultiInputsCard header={header}>{checkboxes}</MultiInputsCard>;
   };
 

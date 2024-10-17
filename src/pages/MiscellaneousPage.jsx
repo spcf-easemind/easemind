@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Title,
   Box,
@@ -126,7 +126,7 @@ export default function MiscellaneousPage() {
     // getUserInfoFn();
     // getAllUsersFn();
 
-    if (location.pathname === '/miscellaneous' && !hasFetched) {
+    if (location.pathname === "/miscellaneous" && !hasFetched) {
       getUserInfoFn();
       setHasFetched(true);
     }
@@ -147,12 +147,12 @@ export default function MiscellaneousPage() {
 
   useEffect(() => {
     if (miscData) {
-      console.log('Misc Data:', miscData);
+      console.log("Misc Data:", miscData);
     }
   }, [miscData]);
 
   const form = useForm({
-    mode: 'uncontrolled',
+    mode: "uncontrolled",
     initialValues: {
       file: null,
     },
@@ -162,12 +162,12 @@ export default function MiscellaneousPage() {
     try {
       const getSuccess = await getUserInfoFn();
       if (getSuccess) {
-        console.log('User Info fetched successfully!', data);
+        console.log("User Info fetched successfully!", data);
       } else {
-        console.error('Failed to fetched user info');
+        console.error("Failed to fetched user info");
       }
     } catch (error) {
-      console.error('Error fetching user info:', error);
+      console.error("Error fetching user info:", error);
     }
   };
 
@@ -175,12 +175,12 @@ export default function MiscellaneousPage() {
     try {
       const getSuccess = await getAllUsersFn();
       if (getSuccess) {
-        console.log('All User Info fetched successfully!', data);
+        console.log("All User Info fetched successfully!", data);
       } else {
-        console.error('Failed to fetched user info');
+        console.error("Failed to fetched user info");
       }
     } catch (error) {
-      console.error('Error fetching user info:', error);
+      console.error("Error fetching user info:", error);
     }
   };
 
@@ -188,26 +188,26 @@ export default function MiscellaneousPage() {
     try {
       const deleteSuccess = await deleteUserInfoFn();
       if (deleteSuccess) {
-        console.log('All User Info fetched successfully!', data);
+        console.log("All User Info fetched successfully!", data);
       } else {
-        console.error('Failed to fetched user info');
+        console.error("Failed to fetched user info");
       }
     } catch (error) {
-      console.error('Error fetching user info:', error);
+      console.error("Error fetching user info:", error);
     }
   };
   const handleLogoutUser = async () => {
-    const userKey = 'Dzmq9BH6JPBLFMlknjBO7';
+    const userKey = "Dzmq9BH6JPBLFMlknjBO7";
     try {
       const logoutSuccess = await logoutUserFn(userKey);
       if (logoutSuccess) {
-        console.log('User logged out successfully!');
-        return navigate('/login');
+        console.log("User logged out successfully!");
+        return navigate("/login");
       } else {
-        console.error('Failed to to logout user');
+        console.error("Failed to to logout user");
       }
     } catch (error) {
-      console.error('Error executing logout on user:', error);
+      console.error("Error executing logout on user:", error);
     }
   };
 
@@ -215,7 +215,7 @@ export default function MiscellaneousPage() {
     const { file } = values;
 
     if (!file) {
-      console.error('No file selected');
+      console.error("No file selected");
       return;
     }
 
@@ -225,16 +225,16 @@ export default function MiscellaneousPage() {
       if (data) {
         const updateSuccess = await updateUserInfoFn(data, file);
         if (updateSuccess) {
-          console.log('File uploaded and user info updated successfully!');
+          console.log("File uploaded and user info updated successfully!");
           getUserInfoFn(); // Fetch updated user info
         } else {
-          console.error('Failed to update user info');
+          console.error("Failed to update user info");
         }
       } else {
-        console.error('No user data available');
+        console.error("No user data available");
       }
     } catch (error) {
-      console.error('Error uploading file:', error);
+      console.error("Error uploading file:", error);
     } finally {
       setIsUploading(false);
     }
@@ -245,12 +245,12 @@ export default function MiscellaneousPage() {
     try {
       const createSuccess = await createCategoriesFn();
       if (createSuccess) {
-        console.log('All Categories created successfully!', miscData);
+        console.log("All Categories created successfully!", miscData);
       } else {
-        console.error('Failed to create all categories');
+        console.error("Failed to create all categories");
       }
     } catch (error) {
-      console.error('Error creating all category files:', error);
+      console.error("Error creating all category files:", error);
     }
   };
 
@@ -258,12 +258,12 @@ export default function MiscellaneousPage() {
     try {
       const getSuccess = await getAllCategoriesFn();
       if (getSuccess) {
-        console.log('All Categories fetched successfully!');
+        console.log("All Categories fetched successfully!");
       } else {
-        console.error('Failed to fetch all categories');
+        console.error("Failed to fetch all categories");
       }
     } catch (error) {
-      console.error('Error fetching all category files:', error);
+      console.error("Error fetching all category files:", error);
     }
   };
 
@@ -271,12 +271,12 @@ export default function MiscellaneousPage() {
     try {
       const deleteSuccess = await deleteCategoriesFn();
       if (deleteSuccess) {
-        console.log('All Categories deleted successfully!', miscData);
+        console.log("All Categories deleted successfully!", miscData);
       } else {
-        console.error('Failed to delete all categories');
+        console.error("Failed to delete all categories");
       }
     } catch (error) {
-      console.error('Error deleting all category files:', error);
+      console.error("Error deleting all category files:", error);
     }
   };
   const handleCreateAnonymousNickname = async () => {};
@@ -285,7 +285,7 @@ export default function MiscellaneousPage() {
     const { file } = values;
 
     if (!file) {
-      console.error('No file selected');
+      console.error("No file selected");
       return;
     }
 
@@ -294,13 +294,13 @@ export default function MiscellaneousPage() {
     try {
       const uploadSuccess = await createAnonymousProfileFn(file);
       if (uploadSuccess) {
-        console.log('File uploaded successfully!');
+        console.log("File uploaded successfully!");
         getAllAnonymousProfilesFn(); // Fetch updated user info
       } else {
-        console.error('Failed to upload anonymous profile');
+        console.error("Failed to upload anonymous profile");
       }
     } catch (error) {
-      console.error('Error uploading file:', error);
+      console.error("Error uploading file:", error);
     } finally {
       setIsUploading(false);
     }
@@ -310,12 +310,12 @@ export default function MiscellaneousPage() {
     try {
       const getSuccess = await getAllAnonymousProfilesFn();
       if (getSuccess) {
-        console.log('All Anonymous Profile fetched successfully!', miscData);
+        console.log("All Anonymous Profile fetched successfully!", miscData);
       } else {
-        console.error('Failed to fetch all Anonymous Profile');
+        console.error("Failed to fetch all Anonymous Profile");
       }
     } catch (error) {
-      console.error('Error fetching all Anonymous Profile files:', error);
+      console.error("Error fetching all Anonymous Profile files:", error);
     }
   };
 
@@ -323,12 +323,12 @@ export default function MiscellaneousPage() {
     try {
       const deleteSuccess = await deleteAnonymousFn();
       if (deleteSuccess) {
-        console.log('All Anonymous Profile deleted successfully!', miscData);
+        console.log("All Anonymous Profile deleted successfully!", miscData);
       } else {
-        console.error('Failed to delete all anonymous profiles');
+        console.error("Failed to delete all anonymous profiles");
       }
     } catch (error) {
-      console.error('Error deleting all Anonymous Profile files:', error);
+      console.error("Error deleting all Anonymous Profile files:", error);
     }
   };
 
@@ -336,7 +336,7 @@ export default function MiscellaneousPage() {
     const { file } = values;
 
     if (!file) {
-      console.error('No file selected');
+      console.error("No file selected");
       return;
     }
 
@@ -345,13 +345,13 @@ export default function MiscellaneousPage() {
     try {
       const uploadSuccess = await publicGroupProfileFn(file);
       if (uploadSuccess) {
-        console.log('File uploaded successfully!');
+        console.log("File uploaded successfully!");
         await getAllPublicGroupProfilesFn(); // Fetch updated user info
       } else {
-        console.error('Failed to upload public group profile');
+        console.error("Failed to upload public group profile");
       }
     } catch (error) {
-      console.error('Error uploading file:', error);
+      console.error("Error uploading file:", error);
     } finally {
       setIsUploading(false);
     }
@@ -360,29 +360,29 @@ export default function MiscellaneousPage() {
     try {
       const uploadSuccess = await getAllPublicGroupProfilesFn();
       if (uploadSuccess) {
-        console.log('All Available Public Group Profiles', groupData);
+        console.log("All Available Public Group Profiles", groupData);
         await getAllPublicGroupProfilesFn();
       } else {
-        console.error('Failed to upload public group profile');
+        console.error("Failed to upload public group profile");
       }
     } catch (error) {
-      console.error('Error uploading file:', error);
+      console.error("Error uploading file:", error);
     } finally {
       setIsUploading(false);
     }
   };
   const handleCreateGroup = async () => {
     const formData = {
-      ownerKey: '3JkiWUaMis6ziIHwRrKsK',
+      ownerKey: "3JkiWUaMis6ziIHwRrKsK",
       groupProfilePath:
-        'http://jx5yt-yyaaa-aaaal-abzbq-cai.localhost:5987/groupProfileCollections/PJpvlRItZVpx8XESSTr58-profile',
-      name: 'Mga Kupal lang pwede',
+        "http://jx5yt-yyaaa-aaaal-abzbq-cai.localhost:5987/groupProfileCollections/PJpvlRItZVpx8XESSTr58-profile",
+      name: "Mga Kupal lang pwede",
       description:
         "I believe in creating a safe, non-judgmental space where you can freely express your thoughts and emotions without fear of being misunderstood. Everyone deserves a place where they feel heard, supported, and validated. My goal is to be that person who listens with compassion and helps you navigate the challenges you're facing. Together, we can work on finding practical solutions, building coping strategies, and restoring a sense of balance and peace in your life. Your mental well-being matters, and I’m here to support you every step of the way, helping you feel more grounded, empowered, and at ease.",
       categories: [
-        { key: '6YvpSvYYFyHjp6z7UBDff' },
-        { key: '1vq2KGoLu8jzXPJnz0-kq' },
-        { key: 'HpT60sXah30yH7Ga1g_kq' },
+        { key: "6YvpSvYYFyHjp6z7UBDff" },
+        { key: "1vq2KGoLu8jzXPJnz0-kq" },
+        { key: "HpT60sXah30yH7Ga1g_kq" },
       ],
       members: [
         {
@@ -413,13 +413,13 @@ export default function MiscellaneousPage() {
     try {
       const creatSuccess = await createGroupFn(formData);
       if (creatSuccess) {
-        console.log('Group Created Successfully!');
+        console.log("Group Created Successfully!");
         await getAllGroupsFn();
       } else {
-        console.error('Failed to create group');
+        console.error("Failed to create group");
       }
     } catch (error) {
-      console.error('Error creating group:', error);
+      console.error("Error creating group:", error);
     } finally {
       setIsUploading(false);
     }
@@ -428,13 +428,13 @@ export default function MiscellaneousPage() {
     try {
       const getSuccess = await getGroupFn();
       if (getSuccess) {
-        console.log('All Groups Fetched Successfully!');
+        console.log("All Groups Fetched Successfully!");
         await getGroupFn();
       } else {
-        console.error('Failed to fetch groups');
+        console.error("Failed to fetch groups");
       }
     } catch (error) {
-      console.error('Error fetching groups:', error);
+      console.error("Error fetching groups:", error);
     } finally {
       setIsUploading(false);
     }
@@ -443,49 +443,109 @@ export default function MiscellaneousPage() {
     try {
       const getSuccess = await getAllGroupsFn();
       if (getSuccess) {
-        console.log('All Groups Fetched Successfully!');
+        console.log("All Groups Fetched Successfully!");
         await getAllGroupsFn();
-        console.log('All Groups: ', groupData);
+        console.log("All Groups: ", groupData);
       } else {
-        console.error('Failed to fetch groups');
+        console.error("Failed to fetch groups");
       }
     } catch (error) {
-      console.error('Error fetching groups:', error);
+      console.error("Error fetching groups:", error);
     } finally {
       setIsUploading(false);
     }
   };
   const handleGetUserGroup = async () => {
     const formData = {
-      userKey: '3JkiWUaMis6ziIHwRrKsK',
+      userKey: "3JkiWUaMis6ziIHwRrKsK",
     };
     try {
       const getSuccess = await getUserGroupFn(formData);
       if (getSuccess) {
-        console.log('All Groups Fetched Successfully!');
+        console.log("All Groups Fetched Successfully!");
         // await getUserGroupFn(formData);
-        console.log('All Groups: ', groupData);
+        console.log("All Groups: ", groupData);
       } else {
-        console.error('Failed to fetch groups');
+        console.error("Failed to fetch groups");
       }
     } catch (error) {
-      console.error('Error fetching groups:', error);
+      console.error("Error fetching groups:", error);
     } finally {
       setIsUploading(false);
     }
   };
   const handleRemoveMember = async () => {};
   const handleDeleteUserGroup = async () => {
-    const groupKey = 'iOgJH1CuGC3NZPn7yzkdZ';
+    const groupKey = "iOgJH1CuGC3NZPn7yzkdZ";
     try {
       const deleteSuccess = await deleteUserGroupFn(groupKey);
       if (deleteSuccess) {
-        console.log('User Group deleted successfully!');
+        console.log("User Group deleted successfully!");
       } else {
-        console.error('Failed to delete user group');
+        console.error("Failed to delete user group");
       }
     } catch (error) {
-      console.error('Error deleting user group:', error);
+      console.error("Error deleting user group:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleCreateTopics = async () => {
+    try {
+      const createSuccess = await createTopicsFn();
+      if (createSuccess) {
+        console.log('Topics seeded successfully!');
+      } else {
+        console.error('Failed to seed topics');
+      }
+    } catch (error) {
+      console.error('Error seeding topics:', error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleGetAllTopics = async () => {
+    try {
+      const getSuccess = await getAllTopicsFn();
+      if (getSuccess) {
+        console.log('All topics fetched successfully!', postData);
+      } else {
+        console.error('Failed to fetch all topics');
+      }
+    } catch (error) {
+      console.error('Error fetching all topics:', error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleCreateHealthCareSuggestions = async () => {
+    try {
+      const createSuccess = await createHealthCareSuggestionsFn();
+      if (createSuccess) {
+        console.log('Health care suggestions seeded successfully!', postData);
+      } else {
+        console.error('Failed to seed all health care suggestions');
+      }
+    } catch (error) {
+      console.error('Error seeding all health care suggestions:', error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleGetAllHealthCareSuggestions = async () => {
+    try {
+      const getSuccess = await getAllHealthCareSuggestionsFn();
+      if (getSuccess) {
+        console.log('Health care suggestions fetched successfully!', postData);
+      } else {
+        console.error('Failed to fetch all health care suggestions');
+      }
+    } catch (error) {
+      console.error('Error fetching all health care suggestions:', error);
     } finally {
       setIsUploading(false);
     }
@@ -597,11 +657,11 @@ export default function MiscellaneousPage() {
       <form onSubmit={form.onSubmit(handleSubmitFile)}>
         <FileInput
           label="Upload file here"
-          {...form.getInputProps('file')}
+          {...form.getInputProps("file")}
           disabled={isUploading}
         />
         <Button type="submit" mt="md" loading={isUploading}>
-          {isUploading ? 'Uploading...' : 'Submit'}
+          {isUploading ? "Uploading..." : "Submit"}
         </Button>
       </form>
       {message && <p>{message}</p>}
@@ -637,11 +697,11 @@ export default function MiscellaneousPage() {
       <form onSubmit={form.onSubmit(handleCreateAnonymousProfile)}>
         <FileInput
           label="Upload file here"
-          {...form.getInputProps('file')}
+          {...form.getInputProps("file")}
           disabled={isUploading}
         />
         <Button type="submit" mt="md" loading={isUploading}>
-          {isUploading ? 'Uploading...' : 'Create Anonymous Profile'}
+          {isUploading ? "Uploading..." : "Create Anonymous Profile"}
         </Button>
       </form>
       {message && <p>{message}</p>}
@@ -679,11 +739,11 @@ export default function MiscellaneousPage() {
       <form onSubmit={form.onSubmit(handlePublicGroupProfile)}>
         <FileInput
           label="Upload file here"
-          {...form.getInputProps('file')}
+          {...form.getInputProps("file")}
           disabled={isUploading}
         />
         <Button type="submit" mt="md" loading={isUploading}>
-          {isUploading ? 'Uploading...' : 'Create Public Group Profile'}
+          {isUploading ? "Uploading..." : "Create Public Group Profile"}
         </Button>
       </form>
       {message && <p>{message}</p>}

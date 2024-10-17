@@ -1,7 +1,6 @@
-import { Modal, Group, Stack, Text, Box } from "@mantine/core";
+import { Modal, Group, Stack, Text, Box, Card } from "@mantine/core";
 import { useMatches } from "@mantine/core";
 import { useCounter } from "@mantine/hooks";
-import classes from "./SurveyModal.module.css";
 
 import Heading from "../headings/Heading.jsx";
 import RolePicker from "../forms/RolePicker.jsx";
@@ -15,7 +14,10 @@ import {
 } from "../../static/register.js";
 
 export default function SurveyModal({ form, opened, onClose, onSubmit }) {
-  const [stepper, { increment, decrement, set }] = useCounter(1, { min: 1, max: 7 });
+  const [stepper, { increment, decrement, set }] = useCounter(1, {
+    min: 1,
+    max: 7,
+  });
 
   function handleFormData(data) {
     form.setValues({ ...data });
@@ -101,20 +103,17 @@ export default function SurveyModal({ form, opened, onClose, onSubmit }) {
       }}
       radius="lg"
       size={size}
-      padding={padding}
-      classNames={{
-        header: classes.modal,
-        content: classes.modal,
-      }}
+      padding={0}
       withCloseButton={false}
     >
-      <Stack justify="center" h={550}>
-        <Box>
+      <Card padding={0} bg="sky-blue.5" h={500} mih={600}>
+        <Stack ta="center" justify="center" h="35%">
           {headingInstance}
-
-          <form>{formInstance}</form>
-        </Box>
-      </Stack>
+        </Stack>
+        <form style={{ height: "65%", position: "relative" }}>
+          {formInstance}
+        </form>
+      </Card>
     </Modal>
   );
 }
