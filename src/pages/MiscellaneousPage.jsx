@@ -15,10 +15,13 @@ import { usePublicMaterials } from '../store/miscellaneous';
 import { useGroup } from '../store/group';
 import { useShallow } from 'zustand/shallow';
 import { useForm } from '@mantine/form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function MiscellaneousPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [hasFetched, setHasFetched] = useState(false);
+
   const logoutUserFn = useAuthenticationStore(
     (state) => state.logoutInternetIdentity
   );
@@ -99,7 +102,12 @@ export default function MiscellaneousPage() {
   useEffect(() => {
     // getUserInfoFn();
     // getAllUsersFn();
-    // console.log(data);
+
+    if (location.pathname === '/miscellaneous' && !hasFetched) {
+      getUserInfoFn();
+      setHasFetched(true);
+    }
+    console.log(data);
   }, [
     data,
     message,
@@ -110,6 +118,9 @@ export default function MiscellaneousPage() {
     groupData,
     groupMessage,
     groupLoading,
+    location,
+    getUserInfoFn,
+    hasFetched,
   ]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const form = useForm({

@@ -67,9 +67,14 @@ export const useAuthenticationStore = create(
 
       logoutInternetIdentity: async (userKey) => {
         set(() => ({
-          message: 'Loading',
-          loading: true,
+          user: {
+            identity_provider: null,
+            data: null,
+          },
+          message: null,
+          loading: false,
         }));
+
         const userCredential = await getDoc({
           collection: 'userCredentials',
           key: userKey,
@@ -91,6 +96,7 @@ export const useAuthenticationStore = create(
             fullName: userData.fullName,
             status: 'offline',
             lastUpdated: userWithConvertedDates,
+            role: userData.role,
           };
 
           await setDoc({
@@ -104,22 +110,15 @@ export const useAuthenticationStore = create(
 
           const response = await signOut();
 
-          console.log(response);
-
+          // sessionStorage.removeItem('authentication');
+          return true;
+        } else {
           set(() => ({
             user: {
               identity_provider: null,
               data: null,
             },
-            message: null,
-            loading: false,
-          }));
-          // sessionStorage.removeItem('authentication');
-          return true;
-        } else {
-          set(() => ({
-            user: null,
-            message: 'No account found on this identity. Please sign up first',
+            message: 'No Identity found on this account!',
             loading: false,
           }));
           return false;
