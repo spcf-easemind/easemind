@@ -10,6 +10,7 @@ import {
   getManyDocs,
 } from '@junobuild/core';
 import { nanoid } from 'nanoid';
+import { IconUser } from '@tabler/icons-react';
 
 export const useGroup = create((set) => ({
   groupData: null,
@@ -396,17 +397,33 @@ export const useGroup = create((set) => ({
           collection: 'groups',
           key: groupKey,
         });
-
+        // console.log(group.data.members);
         for (const member of group.data.members) {
-          console.log(member.key);
           const user = await getDoc({
-            collection: 'users',
+            collection: 'userGroups',
             key: member.key,
           });
 
-          await deleteDoc({
+          const updatedUserGroupsArray = [];
+
+          for (const userGroup of user.data.groups) {
+            if (
+              userGroup.key != group.key &&
+              userGroup.groupName != group.data.name
+            ) {
+              updatedUserGroupsArray.push(userGroup);
+            }
+          }
+
+          user.data.members = updatedUserGroupsArray;
+
+          await setDoc({
             collection: 'userGroups',
-            doc: user,
+            doc: {
+              key: groupKey,
+              data: user.data,
+              version: user.version,
+            },
           });
         }
 
@@ -415,7 +432,6 @@ export const useGroup = create((set) => ({
           doc: group,
         });
 
-        console.log(memberKeyArray);
         set(() => ({
           groupData: null,
           groupMessage: 'Group has been deleted successfully!',

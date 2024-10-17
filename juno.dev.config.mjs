@@ -106,7 +106,7 @@ export default defineDevConfig(() => ({
         {
           collection: 'groups',
           read: 'public',
-          write: 'private',
+          write: 'public',
           memory: 'heap',
           mutablePermissions: true,
         },
