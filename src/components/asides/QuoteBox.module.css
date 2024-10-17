@@ -1,0 +1,24 @@
+.bgImage {
+    position: relative;
+   
+  }
+
+.bgImage::before {
+    content: "";
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background-image: url(../../assets/images/background_images/DQ_bg-image1.jpg);
+    background-size: cover;
+    opacity: 0.35;
+}
+
+.textStyling {
+    position: relative;
+    font-family: "Baloo Bhai 2", sans-serif;
+    text-align: center;
+    color: var(--mantine-color-dark-7);
+}
+  

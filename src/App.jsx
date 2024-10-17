@@ -10,7 +10,8 @@ import Header from "./components/headers/Header.jsx";
 import MainHeader from "./components/headers/MainHeader.jsx";
 import ChatNavigation from "./components/navigations/ChatNavigation.jsx";
 import HomeNavigation from "./components/navigations/HomeNavigation.jsx";
-import AsidePage from "./pages/AsidePage.jsx";
+import ChatAside from "./components/asides/ChatAside.jsx";
+import HomeAside from "./components/asides/HomeAside.jsx";
 
 // Zustand
 import { useDialogStore } from "./store/dialog.js";
@@ -72,6 +73,14 @@ function App() {
   ) : (
     <HomeNavigation />
   );
+  
+  // Adjusted logic for aside
+   const whichAside = location.pathname.startsWith("/chat") ? (
+    <ChatAside />
+  ) : (
+    <HomeAside />
+  ); 
+
 
   const withContainer = includeNavigation ? (
     <Outlet />
@@ -141,7 +150,7 @@ function App() {
           overflowY: "auto",
         }}
       >
-        <AsidePage />
+        {whichAside}
       </AppShell.Aside>
       <AppShell.Footer></AppShell.Footer>
     </AppShell>

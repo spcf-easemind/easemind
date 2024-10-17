@@ -1,6 +1,5 @@
 import {
   UnstyledButton,
-  Image,
   Badge,
   Title,
   Text,
@@ -33,11 +32,18 @@ export default function ChatList({
     return format(date, "kk:mm");
   };
 
+  // Checks if this components is in the Home Aside or not
+  const isHomeAside = time === undefined;
+
   return (
     <UnstyledButton
+    p={10}
       w="100%"
-      p={10}
       className={classes.chatStyling}
+      style={{
+        backgroundColor: isHomeAside && "var(--mantine-primary-color-0)",
+        borderRadius: isHomeAside && "10px",
+      }}
       data-active={activeChat === id || undefined}
       key={id}
       onClick={() => onSelectChat(id)}
@@ -52,12 +58,14 @@ export default function ChatList({
             {text ? text : "No messages yet"}
           </Text>
         </Box>
-        <Box h={40} w={40}>
-          <Text c="gray" size="sm" align="right" truncate="end">
-            {formattedTime(time)}
-          </Text>
-          {isBadge}
-        </Box>
+        {time ? (
+          <Box h={40} w={40}>
+            <Text c="gray" size="sm" align="right" truncate="end">
+              {formattedTime(time)}
+            </Text>
+            {isBadge}
+          </Box>
+        ) : null}
       </Group>
     </UnstyledButton>
   );

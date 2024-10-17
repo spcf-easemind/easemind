@@ -1,0 +1,8 @@
+.borderStyling {
+    position: absolute;
+    bottom: 0;
+    right: -18px;
+    width: 150px;
+    height: 1.5px;
+    background-color: var(--mantine-color-gray-2);
+}
