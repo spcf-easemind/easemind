@@ -5,7 +5,7 @@ export default function CheckboxList({ label, checkboxes, ...props }) {
     <Checkbox.Card
       key={checkbox.id}
       padding={0}
-      value={checkbox.name}
+      value={checkbox.id}
       style={{ border: "none" }}
     >
       <Group wrap="nowrap">

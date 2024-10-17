@@ -6,6 +6,8 @@ import { useEnumsStore } from "../../store/enums";
 import { useShallow } from "zustand/shallow";
 import { useEffect, useMemo } from "react";
 import { useAuthenticationStore } from "../../store/authentication";
+import { useFormStore } from "../../store/form";
+import { useGroupStore } from "../../store/group";
 
 const header = {
   title: "Create Group",
@@ -22,6 +24,20 @@ export default function CreateGroupPage() {
   const loggedInUserKey = useAuthenticationStore(
     (state) => state.user.data?.key
   );
+
+  const createGroupFn = useGroupStore((state) => state.createGroup);
+  const getAllGroupsFn = useGroupStore((state) => state.getAllGroups);
+  const groupData = useGroupStore((state) => state.groupData);
+
+  console.log(groupData);
+
+  const { savedForm, setSavedForm } = useFormStore(
+    useShallow((state) => ({
+      savedForm: state.form,
+      setSavedForm: state.setForm,
+    }))
+  );
+
   const { fetchUsersFn, users } = useEnumsStore(
     useShallow((state) => ({
       fetchUsersFn: state.fetchUsersEnum,
@@ -31,9 +47,8 @@ export default function CreateGroupPage() {
 
   useEffect(() => {
     fetchUsersFn();
+    getAllGroupsFn();
   }, []);
-
-  console.log(users);
 
   const usersEnum = useMemo(() => {
     if (users.length > 0) {
@@ -56,6 +71,7 @@ export default function CreateGroupPage() {
   }, [users]);
 
   function handleAddPhotoClick() {
+    setSavedForm(form.getValues());
     navigate("/owned-group/add-photo");
   }
 
@@ -65,23 +81,87 @@ export default function CreateGroupPage() {
       ownerKey: loggedInUserKey,
       groupProfilePath: "",
       name: "",
-      categories: [],
-      members: [
-        {
-          fullName: currentUserValue.data.fullName,
-          key: currentUserValue.key,
-          lastUpdated: currentUserValue.data.lastUpdated,
-          role: "super-admin",
-          status: "online",
-          groupRole: "Group Admin",
-        },
-      ],
       description: "",
-      thoughts: "",
-      emotions: "",
-      members: "",
+      categories: {
+        thoughts: {
+          key: "",
+          value: "",
+        },
+        emotions: {
+          key: "",
+          value: "",
+        },
+        members: {
+          key: "",
+          value: "",
+        },
+      },
+      members: [],
+      initialMembers: [],
     },
   });
+
+  function formSubmit(value) {
+    let formData = { ...value };
+
+    const mappedMembers = users
+      .filter(({ key }) => formData.initialMembers.includes(key))
+      .map((item) => ({
+        fullName: item.data.fullName,
+        key: item.key,
+        lastUpdated: item.data.lastUpdated,
+        role: item.data.role,
+        status: item.data.status,
+        groupRole: "Group Member",
+      }));
+
+    const mappedCategories = Object.entries(formData.categories).map(
+      ([tab, { key, value }]) => ({ key })
+    );
+
+    formData.members = [
+      {
+        fullName: currentUserValue.data?.fullName,
+        key: currentUserValue.key,
+        lastUpdated: currentUserValue.data?.lastUpdated,
+        role: currentUserValue.data?.role,
+        status: currentUserValue.data?.status,
+        groupRole: "Group Admin",
+      },
+      ...mappedMembers,
+    ];
+    formData.categories = mappedCategories;
+
+    delete formData.initialMembers;
+
+    console.log(formData);
+    const response = createGroupFn(formData);
+
+    if (response) {
+      console.log("CREATEDFUCKER");
+    }
+  }
+
+  function iterateSavedData() {
+    for (const key in savedForm) {
+      if (key === "categories") {
+        for (const category in savedForm[key]) {
+          form.setFieldValue(
+            `categories.${category}`,
+            savedForm[key][category]
+          );
+        }
+      } else {
+        form.setFieldValue(key, savedForm[key]);
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (savedForm) {
+      iterateSavedData();
+    }
+  }, [savedForm]);
 
   return (
     <Paper>
@@ -89,7 +169,7 @@ export default function CreateGroupPage() {
         header={header}
         button={button}
         enums={{ users: usersEnum }}
-        form={form}
+        form={{ form, onSubmit: formSubmit }}
         onPhotoControlClick={handleAddPhotoClick}
       />
     </Paper>

@@ -12,7 +12,7 @@ import {
   Button,
 } from "@mantine/core";
 import { IconChevronLeft, IconSearch } from "@tabler/icons-react";
-import classes from "./GroupControlCard.module.css"
+import classes from "./GroupControlCard.module.css";
 // Components
 import PhotoControlButton from "../buttons/PhotoControlButton";
 import MultiInputsCard from "./MultiInputsCard";
@@ -44,7 +44,7 @@ const tabsAttributes = [
 ];
 
 export default function GroupControlCard({
-  form,
+  form: { form, onSubmit },
   onPhotoControlClick,
   header: { title, description },
   button: { btnLabel },
@@ -78,21 +78,32 @@ export default function GroupControlCard({
   const [active, setActive] = useState("thoughts");
   const [selectedPill, setSelectedPill] = useState();
 
-  function handleSelectPill(key, value) {
-    form.setFieldValue(key, value);
-    setSelectedPill(value);
+  function handleSelectPill(tab, choice) {
+    const payload = { ...choice };
+    delete payload.tab;
+
+    if (choice) {
+      form.setFieldValue(`categories.${tab}`, payload);
+    } else {
+      form.setFieldValue(`categories.${tab}`, {
+        key: "",
+        value: "",
+      });
+    }
+
+    setSelectedPill(choice.value);
   }
 
   const getInterests = useMemo(() => {
-    const formValues = form.getValues();
+    const formValues = form.getValues().categories;
 
-    const formPills = Object.keys(formValues)
-      .map((key) =>
-        formValues[key] === ""
-          ? undefined
-          : { keyId: key, value: formValues[key] }
-      )
-      .filter((value) => value !== undefined);
+    const formPills = Object.entries(formValues)
+      .map(([tab, { key, value }]) => ({
+        tab,
+        key,
+        value,
+      }))
+      .filter(({ key, value }) => key !== "" && value !== "");
     return formPills;
   }, [form]);
 
@@ -110,8 +121,8 @@ export default function GroupControlCard({
             }}
             size="md"
             withRemoveButton
-            key={item.value}
-            onRemove={() => handleSelectPill(item.keyId, "")}
+            key={item.key}
+            onRemove={() => handleSelectPill(item.tab, null)}
             name={item.value}
           ></Pill>
         ))}
@@ -150,7 +161,7 @@ export default function GroupControlCard({
                 key={choice.key}
                 active={selectedPill}
                 name={choice.value}
-                onSelect={(name) => handleSelectPill(tab.value, name)}
+                onSelect={() => handleSelectPill(tab.value, choice)}
               />
             ))}
           </Group>
@@ -184,6 +195,10 @@ export default function GroupControlCard({
     user.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  function handleCheckboxSelect(value) {
+    form.setFieldValue("initialMembers", value);
+  }
+
   const membersInputs = () => {
     const icon = <IconSearch size={20} stroke={1.5} />;
     const header = (
@@ -197,11 +212,20 @@ export default function GroupControlCard({
     );
 
     const checkboxes = (
-      <CheckboxList label="Engaged with these people" checkboxes={filteredUsers} />
+      <CheckboxList
+        label="Engaged with these people"
+        checkboxes={filteredUsers}
+        onChange={(value) => handleCheckboxSelect(value)}
+      />
     );
 
     return <MultiInputsCard header={header}>{checkboxes}</MultiInputsCard>;
   };
+
+  const savedImage =
+    form.getValues().groupProfilePath !== ""
+      ? form.getValues().groupProfilePath
+      : null;
 
   return (
     <Card withBorder bg="gray.0">
@@ -226,19 +250,33 @@ export default function GroupControlCard({
       </Box>
 
       <Stack mt={24} align="center" px={45}>
-        <PhotoControlButton onClick={onPhotoControlClick} />
+        <PhotoControlButton image={savedImage} onClick={onPhotoControlClick} />
 
         <form style={{ width: "100%" }}>
           <Stack>
-            <TextInput placeholder="Name your group" />
+            <TextInput
+              placeholder="Name your group"
+              key={form.key("name")}
+              {...form.getInputProps("name")}
+            />
 
-            <Textarea rows={4} placeholder="Description..." />
+            <Textarea
+              rows={4}
+              placeholder="Description..."
+              key={form.key("description")}
+              {...form.getInputProps("description")}
+            />
 
             {interestsInputs()}
 
             {membersInputs()}
 
-            <Button type="submit" fullWidth size="md">
+            <Button
+              onClick={form.onSubmit(onSubmit)}
+              type="submit"
+              fullWidth
+              size="md"
+            >
               {btnLabel}
             </Button>
           </Stack>

@@ -15,12 +15,18 @@ import { useNavigate } from "react-router-dom";
 import HappyImage from "../../assets/HappyImage.jpg";
 import { useState } from "react";
 
-export default function PhotoControlCard({ images }) {
+export default function PhotoControlCard({ images, onSubmit }) {
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState(null);
 
   function handleImageClick(image) {
     setSelectedImage(image);
+  }
+
+  function handleSubmit() {
+    if (selectedImage) {
+      onSubmit(selectedImage);
+    }
   }
 
   const imageInstances = images.map((image) => {
@@ -63,7 +69,7 @@ export default function PhotoControlCard({ images }) {
 
         <Grid>{imageInstances}</Grid>
 
-        <Button fullWidth size="md">
+        <Button fullWidth size="md" onClick={handleSubmit}>
           Save
         </Button>
       </Stack>
