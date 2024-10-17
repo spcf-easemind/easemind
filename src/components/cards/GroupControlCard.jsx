@@ -12,7 +12,7 @@ import {
   Button,
 } from "@mantine/core";
 import { IconChevronLeft, IconSearch } from "@tabler/icons-react";
-
+import classes from "./GroupControlCard.module.css"
 // Components
 import PhotoControlButton from "../buttons/PhotoControlButton";
 import MultiInputsCard from "./MultiInputsCard";
@@ -145,6 +145,7 @@ export default function GroupControlCard({
               ? "var(--mantine-primary-color-5)"
               : "var(--mantine-color-gray-6)"
           }
+          className={classes.tabStyling}
           fw={isActive ? 500 : 400}
           onClick={() => setActive(tab.value)}
           active={active === tab.value}
@@ -172,7 +173,14 @@ export default function GroupControlCard({
     });
     return (
       <MultiInputsCard header={header}>
-        <Tabs defaultValue={active}>
+        <Tabs
+          defaultValue={active}
+          styles={{
+            root: {
+              "--tabs-list-border-width": "0px",
+            },
+          }}
+        >
           <Tabs.List justify="center">{tabs}</Tabs.List>
           {panels}
         </Tabs>
