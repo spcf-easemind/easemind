@@ -1,7 +1,4 @@
-import { Stack, Title, Text, Group, Box } from "@mantine/core";
-
-import classes from "./RolePicker.module.css";
-
+import { Stack, Title, Text, Group, Box, Card } from "@mantine/core";
 import CardButton from "../buttons/CardButton.jsx";
 
 import IconManyPeople from "../../assets/icons/IconManyPeople.svg";
@@ -49,16 +46,14 @@ export default function RolePicker({ onClick }) {
         </Stack>
       </Group>
 
-      <Box className={classes.cardFooter}></Box>
-
-      <Box className={classes.footerText}>
-        <Text size="sm">
+      <Card.Section bg="white" p={16} mih={100} pos="absolute" bottom={0}>
+        <Text size="sm" ta="center">
           You are valuable, no matter the challenges you face. Your feelings,
           struggles, and experiences matter. You deserve to be seen, heard, and
           loved unconditionally. Your mental health is important, and you are
           worthy of support at every step of the way.
         </Text>
-      </Box>
+      </Card.Section>
     </>
   );
 }
