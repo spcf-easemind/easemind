@@ -14,11 +14,20 @@ import Pill from "../pills/Pill.jsx";
 import GroupMemberCard from "./GroupMemberCard.jsx";
 import HappyImage from "../../assets/HappyImage.jpg";
 import { useMemo } from "react";
+import { useDisclosure } from "@mantine/hooks";
 
 // Max 3
 const interests = ["Sadness", "Anxiety", "Depression"];
 
-export default function DisplayCard({ variant = null, buttonLabel, onSelect }) {
+export default function DisplayCard({
+  variant = null,
+  type,
+  buttonLabel,
+  onSelect,
+  onModalSelect,
+}) {
+  const [opened, { toggle }] = useDisclosure();
+
   function handleClick(ref) {
     onSelect(ref);
   }
@@ -100,6 +109,39 @@ export default function DisplayCard({ variant = null, buttonLabel, onSelect }) {
   const pillInstances = interests.map((interest) => (
     <Pill size={pills.size} key={interest} name={interest} />
   ));
+
+  const memberListInstance =
+    type === "owned" ? (
+      <Grid.Col order={4}>
+        <Box>
+          <Title order={title.order} fw={title.fw} mb={8}>
+            Members
+          </Title>
+
+          {/* Data */}
+          <Stack gap={8}>
+            <GroupMemberCard image={HappyImage}>
+              <Button
+                variant="subtle"
+                color="red.5"
+                onClick={() => onModalSelect("id")}
+              >
+                Remove
+              </Button>
+            </GroupMemberCard>
+            <GroupMemberCard image={HappyImage}>
+              <Button
+                variant="subtle"
+                color="red.5"
+                onClick={() => onModalSelect("id_2")}
+              >
+                Remove
+              </Button>
+            </GroupMemberCard>
+          </Stack>
+        </Box>
+      </Grid.Col>
+    ) : undefined;
 
   return (
     <Card
@@ -183,27 +225,7 @@ export default function DisplayCard({ variant = null, buttonLabel, onSelect }) {
           </Grid.Col>
         )}
 
-        <Grid.Col order={4}>
-          <Box>
-            <Title order={title.order} fw={title.fw} mb={8}>
-              Members
-            </Title>
-
-            {/* Data */}
-            <Stack gap={8}>
-              <GroupMemberCard image={HappyImage}>
-                <Button variant="subtle" color="red.5">
-                  Remove
-                </Button>
-              </GroupMemberCard>
-              <GroupMemberCard image={HappyImage}>
-                <Button variant="subtle" color="red.5">
-                  Remove
-                </Button>
-              </GroupMemberCard>
-            </Stack>
-          </Box>
-        </Grid.Col>
+        {memberListInstance}
       </Grid>
     </Card>
   );

@@ -1,5 +1,4 @@
-import { Box, Card, Checkbox, Group, Stack, Text, Image } from "@mantine/core";
-import { useState } from "react";
+import { Box, Checkbox, Group, Stack, Text, Image } from "@mantine/core";
 
 export default function CheckboxList({ label, checkboxes, ...props }) {
   const checkboxInstances = checkboxes.map((checkbox) => (
@@ -20,7 +19,7 @@ export default function CheckboxList({ label, checkboxes, ...props }) {
   ));
   return (
     <Box>
-      <Text size="sm" c="dimmed" mb={10}>
+      <Text size="sm" c="dimmed" mb={16}>
         {label}
       </Text>
       <Checkbox.Group {...props}>

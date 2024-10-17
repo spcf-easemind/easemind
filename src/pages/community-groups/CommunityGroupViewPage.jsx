@@ -3,8 +3,8 @@ import { Paper } from "@mantine/core";
 
 export default function CommunityGroupViewPage() {
   return (
-    <Paper p={18}>
-      <DisplayCard variant="view" buttonLabel="Join" />
+    <Paper>
+      <DisplayCard variant="view" buttonLabel="Join" type="community" />
     </Paper>
   );
 }

@@ -5,6 +5,7 @@ import "./index.css";
 // Mantine Dependencies
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
+import "@mantine/dropzone/styles.css";
 import { MantineProvider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import { theme, resolver } from "./plugins/mantine.js";

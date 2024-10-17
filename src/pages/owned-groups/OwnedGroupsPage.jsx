@@ -11,12 +11,16 @@ export default function OwnedGroupsPage() {
     navigate(`/owned-groups/${ref}`);
   }
 
+  function handleCreateGroup() {
+    navigate("/owned-group/create");
+  }
+
   return (
-    <Paper p={18}>
+    <Paper>
       <HeadingCard title="Owned Groups" description={null} />
 
       <Box mt={18}>
-        <CreateGroupButton />
+        <CreateGroupButton onClick={handleCreateGroup} />
       </Box>
 
       <Box mt={18}>

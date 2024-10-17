@@ -81,8 +81,10 @@ function App() {
     </Container>
   );
 
+  const mainPadding = includeNavigation ? 18 : undefined;
+
   const withBackground = useMemo(() => {
-    let paths = ["internet-identity"];
+    let paths = ["/internet-identity"];
     const mapMainRoutes = mainRoutes.map(({ path }) => path);
     const mapNavRoutes = navRoutes.map(({ path }) => path);
 
@@ -93,7 +95,7 @@ function App() {
       return classes.bgImage;
     }
     return null;
-  }, []);
+  }, [location]);
 
   // Collapse Drawer and Aside
   const { handleDrawerMobile, handleDrawerDesktop } = includeNavigation
@@ -108,9 +110,10 @@ function App() {
 
   return (
     <AppShell
+      padding={mainPadding}
       header={{ height: { base: 60, sm: 70 } }}
       navbar={{
-        width: {base: 300, lg: 325, xl: 350},
+        width: { base: 300, lg: 325, xl: 350 },
         breakpoint: "sm",
         collapsed: { mobile: handleDrawerMobile, desktop: handleDrawerDesktop },
       }}

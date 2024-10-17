@@ -1,5 +1,6 @@
-import { Group, Paper, Pill, ScrollArea, Tabs } from "@mantine/core";
+import { Group, Paper, ScrollArea, Tabs } from "@mantine/core";
 import { useEffect, useMemo, useState } from "react";
+import Pill from "../pills/Pill.jsx";
 
 import PillButton from "../buttons/PillButton.jsx";
 import { useEnumsStore } from "../../store/enums.js";
@@ -103,10 +104,9 @@ export default function InterestTabs({ form }) {
       size="md"
       withRemoveButton
       key={pill.value}
+      name={pill.value}
       onRemove={() => handleSelectPill(pill.keyId, "")}
-    >
-      {pill.value}
-    </Pill>
+    ></Pill>
   ));
 
   const tabContent = enumArrays.map((tab) => {

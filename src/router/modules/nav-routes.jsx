@@ -17,6 +17,9 @@ import EditGroupPage from "../../pages/owned-groups/EditGroupPage";
 // Joined Groups
 import JoinedGroupsPage from "../../pages/joined-groups/JoinedGroupsPage";
 
+// Photo Control for Groups
+import PhotoControlPage from "../../pages/PhotoControlPage";
+
 // Pending Approval
 import PendingApprovalPage from "../../pages/pending-approval/PendingApprovalPage";
 
@@ -55,6 +58,10 @@ const navRoutes = [
   {
     path: "/owned-group/create",
     element: <CreateGroupPage />,
+  },
+  {
+    path: "/owned-group/add-photo",
+    element: <PhotoControlPage />,
   },
   {
     path: "/owned-group/edit/:ownedGroupRef",
