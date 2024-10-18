@@ -12,6 +12,7 @@ import {
 import { nanoid } from "nanoid";
 import { IconUser } from "@tabler/icons-react";
 import { tr } from "date-fns/locale";
+import { defineConsoleConfig } from "@junobuild/config";
 
 export const useGroupStore = create((set) => ({
   groupData: null,
@@ -301,21 +302,9 @@ export const useGroupStore = create((set) => ({
     }));
 
     try {
-      const userGroups = await listDocs({
-        collection: "userGroups",
-      });
-
-      let userGroupKey = "";
-
-      for (const userGroup of userGroups.items) {
-        if (userGroup.key === formData.userKey) {
-          userGroupKey = userGroup.key;
-        }
-      }
-
       const userGroup = await getDoc({
         collection: "userGroups",
-        key: userGroupKey,
+        key: formData.userKey,
       });
 
       const userGroupArray = [];
@@ -724,12 +713,120 @@ export const useGroupStore = create((set) => ({
         },
       });
 
+      const group = await getDoc({
+        collection: "groups",
+        key: formData.groupPendingKey,
+      });
+
+      if (group) {
+        const user = await getDoc({
+          collection: "users",
+          key: formData.groupPendingMember.userKey,
+        });
+
+        if (user) {
+          group.data.members.push(user.data);
+          group.data.membersCount = group.data.members.length;
+
+          await setDoc({
+            collection: "groups",
+            doc: {
+              key: group.key,
+              data: group.data,
+              version: group.version,
+            },
+          });
+
+          const userGroup = await getDoc({
+            collection: "userGroups",
+            key: user.key,
+          });
+
+          const addUserGroup = {
+            key: group.key,
+            groupName: group.data.name,
+          };
+
+          userGroup.data.groups.push(addUserGroup);
+
+          await setDoc({
+            collection: "userGroups",
+            doc: {
+              key: userGroup.key,
+              data: userGroup.data,
+              version: userGroup.version,
+            },
+          });
+
+          console.log("user successfully added to the group!");
+        }
+      }
+
       set(() => ({
         groupData: null,
         groupMessage: "User Approved Successfully",
         groupLoading: false,
       }));
       return true;
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error adding user to the group:", error);
+      set(() => ({
+        groupData: null,
+        groupMessage:
+          error.message || "An error occurred while adding user to the group",
+        groupLoading: false,
+      }));
+      return false;
+    }
+  },
+
+  rejectPendingMember: async (formData) => {
+    set(() => ({
+      groupData: null,
+      groupMessage: "Loading...",
+      groupLoading: true,
+    }));
+
+    try {
+      const groupPendingMember = await getDoc({
+        collection: "groupPendingMembers",
+        key: formData.groupPendingKey,
+      });
+
+      let updatedPendingMemberArray = [];
+      for (const pendingMember of groupPendingMember.data.pendingMembers) {
+        if (pendingMember.userKey != formData.groupPendingMember.userKey) {
+          updatedPendingMemberArray.push(pendingMember);
+        }
+      }
+
+      groupPendingMember.data.pendingMembers = updatedPendingMemberArray;
+
+      await setDoc({
+        collection: "groupPendingMembers",
+        doc: {
+          key: groupPendingMember.key,
+          data: groupPendingMember.data,
+          version: groupPendingMember.version,
+        },
+      });
+
+      set(() => ({
+        groupData: null,
+        groupMessage: "User Rejected Successfully!",
+        groupLoading: false,
+      }));
+      return true;
+    } catch (error) {
+      console.error("Error rejecting user approval from the group:", error);
+      set(() => ({
+        groupData: null,
+        groupMessage:
+          error.message ||
+          "An error occurred while rejecting user approval to the group",
+        groupLoading: false,
+      }));
+      return false;
+    }
   },
 }));

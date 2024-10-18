@@ -89,6 +89,7 @@ export default function MiscellaneousPage() {
     userGroupPendingApprovalFn,
     groupPendingMembersFn,
     approvePendingMemberFn,
+    rejectPendingMemberFn,
   } = useGroupStore(
     useShallow((state) => ({
       groupData: state.groupData,
@@ -107,6 +108,7 @@ export default function MiscellaneousPage() {
       userGroupPendingApprovalFn: state.userGroupPendingApproval,
       groupPendingMembersFn: state.groupPendingMembers,
       approvePendingMemberFn: state.approvePendingMember,
+      rejectPendingMemberFn: state.rejectPendingMember,
     }))
   );
 
@@ -389,38 +391,38 @@ export default function MiscellaneousPage() {
   };
   const handleCreateGroup = async () => {
     const formData = {
-      ownerKey: "3JkiWUaMis6ziIHwRrKsK",
+      ownerKey: "Kc-vC3qsRa5uHYnuDErS9",
       groupProfilePath:
         "http://jx5yt-yyaaa-aaaal-abzbq-cai.localhost:5987/groupProfileCollections/PJpvlRItZVpx8XESSTr58-profile",
       name: "Mga Kupal lang pwede VERSION 3",
       description:
         "I believe in creating a safe, non-judgmental space where you can freely express your thoughts and emotions without fear of being misunderstood. Everyone deserves a place where they feel heard, supported, and validated. My goal is to be that person who listens with compassion and helps you navigate the challenges you're facing. Together, we can work on finding practical solutions, building coping strategies, and restoring a sense of balance and peace in your life. Your mental well-being matters, and I’m here to support you every step of the way, helping you feel more grounded, empowered, and at ease.",
       categories: [
-        { key: "6YvpSvYYFyHjp6z7UBDff" },
-        { key: "1vq2KGoLu8jzXPJnz0-kq" },
-        { key: "HpT60sXah30yH7Ga1g_kq" },
+        { key: "0odu3GeKNm23ktO-ZsGZh" },
+        { key: "-KcF2Q4_WHaJCMTlyuxGV" },
+        { key: "9AcEugJNN1MfkT9WEhbfj" },
       ],
       members: [
         {
           fullName: "Super Admin",
-          key: "3JkiWUaMis6ziIHwRrKsK",
-          lastUpdated: "2024-10-17T10:55:39.518Z",
+          key: "Kc-vC3qsRa5uHYnuDErS9",
+          lastUpdated: "2024-10-18T13:49:08.847Z",
           role: "super-admin",
           status: "online",
           groupRole: "Group Admin",
         },
         {
           fullName: "alex",
-          key: "TslCus6H3Dzc1w6kD9GEr",
-          lastUpdated: "2024-10-16T10:30:00.901Z",
+          key: "Ko9Lx1cg3v4vxU8Ljji5m",
+          lastUpdated: "2024-10-18T13:51:22.079Z",
           role: "EaseBuddy",
-          status: "offline",
+          status: "online",
           groupRole: "member",
         },
         // {
         //   fullName: "alex1",
-        //   key: "KV_NQMbT7TDrCru7ZpUlH",
-        //   lastUpdated: "2024-10-16T10:33:29.627Z",
+        //   key: "v1DNhZd_vhjIEMLEcFM4z",
+        //   lastUpdated: "2024-10-18T13:55:51.094Z",
         //   role: "EaseBuddy",
         //   status: "offline",
         //   groupRole: "member",
@@ -475,7 +477,7 @@ export default function MiscellaneousPage() {
   };
   const handleGetUserGroup = async () => {
     const formData = {
-      userKey: "uOl9RnXouVl9vU1fbUXU1",
+      userKey: "v1DNhZd_vhjIEMLEcFM4z",
     };
     try {
       const getSuccess = await getUserGroupFn(formData);
@@ -494,8 +496,8 @@ export default function MiscellaneousPage() {
   };
   const handleRemoveMember = async () => {
     const formData = {
-      groupKey: "ckvU0mpdGqIp0bkZDQf8n",
-      userKey: "vJL1OEHA9SzhDt21li-0r",
+      groupKey: "jkBOyprLvU1RA9wZz0tgU",
+      userKey: "v1DNhZd_vhjIEMLEcFM4z",
     };
 
     try {
@@ -532,7 +534,7 @@ export default function MiscellaneousPage() {
 
   const handleGetAllAvailableGroups = async () => {
     const formData = {
-      userKey: "KV_NQMbT7TDrCru7ZpUlH",
+      userKey: "v1DNhZd_vhjIEMLEcFM4z",
     };
     try {
       const getSuccess = await getAllAvailableGroupsFn(formData);
@@ -550,8 +552,8 @@ export default function MiscellaneousPage() {
 
   const handleJoinUserGroup = async () => {
     const formData = {
-      groupKey: "Ts7m-76XNCHuaAdMSrWzN",
-      userKey: "KV_NQMbT7TDrCru7ZpUlH",
+      groupKey: "jkBOyprLvU1RA9wZz0tgU",
+      userKey: "v1DNhZd_vhjIEMLEcFM4z",
     };
     try {
       const joinSuccess = await joinUserGroupFn(formData);
@@ -572,7 +574,7 @@ export default function MiscellaneousPage() {
 
   const handleUserGroupPendingApproval = async () => {
     const formData = {
-      userKey: "3JkiWUaMis6ziIHwRrKsK",
+      userKey: "Kc-vC3qsRa5uHYnuDErS9",
     };
     try {
       const getSuccess = await userGroupPendingApprovalFn(formData);
@@ -590,7 +592,7 @@ export default function MiscellaneousPage() {
 
   const handleGroupPendingMembers = async () => {
     const formData = {
-      groupKey: "Ts7m-76XNCHuaAdMSrWzN",
+      groupKey: "jkBOyprLvU1RA9wZz0tgU",
     };
     try {
       const getSuccess = await groupPendingMembersFn(formData);
@@ -608,11 +610,11 @@ export default function MiscellaneousPage() {
 
   const handleApprovePendingMember = async () => {
     const formData = {
-      groupPendingKey: "Ts7m-76XNCHuaAdMSrWzN",
+      groupPendingKey: "jkBOyprLvU1RA9wZz0tgU",
       groupPendingMember: {
         groupRole: "member",
         name: "alex1",
-        userKey: "KV_NQMbT7TDrCru7ZpUlH",
+        userKey: "v1DNhZd_vhjIEMLEcFM4z",
       },
     };
 
@@ -625,6 +627,29 @@ export default function MiscellaneousPage() {
       }
     } catch (error) {
       console.error("Error approving user from group:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleRejectPendingMember = async () => {
+    const formData = {
+      groupPendingKey: "jkBOyprLvU1RA9wZz0tgU",
+      groupPendingMember: {
+        groupRole: "member",
+        name: "alex1",
+        userKey: "v1DNhZd_vhjIEMLEcFM4z",
+      },
+    };
+    try {
+      const rejectSuccess = await rejectPendingMemberFn(formData);
+      if (rejectSuccess) {
+        console.log("User approval rejected successfully!");
+      } else {
+        console.error("Failed reject user from the group.");
+      }
+    } catch (error) {
+      console.error("Error rejecting approval of user:", error);
     } finally {
       setIsUploading(false);
     }
@@ -929,6 +954,9 @@ export default function MiscellaneousPage() {
         </Button>
         <Button onClick={handleApprovePendingMember} loading={groupLoading}>
           Approve User
+        </Button>
+        <Button onClick={handleRejectPendingMember} loading={groupLoading}>
+          Reject User
         </Button>
       </Group>
 
