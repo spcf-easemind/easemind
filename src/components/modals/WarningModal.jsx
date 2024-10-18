@@ -9,10 +9,9 @@ import {
 } from "@mantine/core";
 import { IconX } from "@tabler/icons-react";
 
-export default function GroupModal({
+export default function WarningModal({
   modal: { opened, onClose },
-  form: { onClick, loading },
-  target,
+  form: { onClick, loading, message, title },
 }) {
   return (
     <Modal
@@ -30,7 +29,7 @@ export default function GroupModal({
       <Card padding={0}>
         <Card.Section p={20} withBorder>
           <Group justify="space-between">
-            <Title order={3}>Remove from group?</Title>
+            <Title order={3}>{title}</Title>
             <ActionIcon
               onClick={onClose}
               radius="lg"
@@ -43,11 +42,7 @@ export default function GroupModal({
         </Card.Section>
 
         <Card.Section p={20}>
-          <Text mb={16}>
-            Are you sure you want to remove <strong>“{target}”</strong> from the
-            group? Once removed, all associated data will no longer be
-            accessible unless they rejoin.
-          </Text>
+          <Text mb={16}>{message}</Text>
 
           <Group justify="end">
             <Button onClick={onClose} variant="light">

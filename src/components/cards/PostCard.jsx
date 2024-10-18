@@ -59,9 +59,7 @@ export default function PostCard({ onPopoverSelect }) {
             onClick={(option) => onPopoverSelect(option, "1")}
             options={popoverOptions}
           >
-            <ActionIcon radius="xl" variant="subtle" color="black">
-              <IconDotsVertical size={30} stroke={1.5} />
-            </ActionIcon>
+            <IconDotsVertical size={30} stroke={1.5} />
           </ActionsBox>
         </Group>
 

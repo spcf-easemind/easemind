@@ -7,10 +7,19 @@ import {
   Paper,
   Divider,
   Stack,
+  ActionIcon
 } from "@mantine/core";
+import { useState } from "react";
 
 import classes from "./ActionsBox.module.css";
 export default function ActionsBox({ options, children, onClick }) {
+  const [opened, setOpened] = useState(false);
+
+  const handleOptionClick = (value) => {
+    onClick(value);
+    setOpened(false);
+  };
+
   const postOptions = (
     <Paper p={0}>
       <Stack gap={0}>
@@ -25,7 +34,7 @@ export default function ActionsBox({ options, children, onClick }) {
                 w={150}
                 key={item.value}
                 className={classes.styledButton}
-                onClick={() => onClick(item.value)}
+                onClick={() => handleOptionClick(item.value)}
               >
                 <Group gap={10}>
                   <Image src={item.icon} w={15} h={15} fit="contain"></Image>
@@ -43,8 +52,17 @@ export default function ActionsBox({ options, children, onClick }) {
   );
 
   return (
-    <Popover position="bottom-end">
-      <Popover.Target>{children}</Popover.Target>
+    <Popover position="bottom-end" opened={opened} onChange={setOpened}>
+      <Popover.Target>
+        <ActionIcon
+          radius="xl"
+          variant="subtle"
+          color="black"
+          onClick={() => setOpened((o) => !o)}
+        >
+          {children}
+        </ActionIcon>
+      </Popover.Target>
       <Popover.Dropdown p={0}>{postOptions}</Popover.Dropdown>
     </Popover>
   );

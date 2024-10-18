@@ -35,9 +35,7 @@ export default function PendingApprovalCard() {
         bg="sky-blue.0"
       >
         <ActionsBox options={popoverOptions}>
-          <ActionIcon variant="subtle" radius="xl" color="black">
-            <IconDotsVertical size={20} stroke={1.5} />
-          </ActionIcon>
+          <IconDotsVertical size={20} stroke={1.5} />
         </ActionsBox>
       </GroupMemberCard>
     </Card>

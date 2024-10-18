@@ -1,6 +1,6 @@
 import { Paper } from "@mantine/core";
 import DisplayCard from "../../components/cards/DisplayCard";
-import GroupModal from "../../components/modals/GroupModal";
+import WarningModal from "../../components/modals/WarningModal";
 import { useDisclosure } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
@@ -46,6 +46,9 @@ export default function OwnedGroupsViewPage() {
 
   const modalTargetName = modalTarget ? modalTarget.fullName : "";
 
+  const title = `Remove from group?`;
+  const message = `Are you sure you want to remove ${modalTarget} from the group? Once removed, all associated data will no longer be accessible unless they rejoin.`;
+
   return (
     ownedGroup && (
       <Paper>
@@ -57,10 +60,14 @@ export default function OwnedGroupsViewPage() {
           onModalSelect={handleModalSelect}
           onButtonClick={handleEditGroup}
         />
-        <GroupModal
-          target={modalTargetName}
+        <WarningModal
           modal={{ opened: opened, onClose: toggle }}
-          form={{ onClick: handleModalClick, loading: groupLoading }}
+          form={{
+            onClick: handleModalClick,
+            loading: groupLoading,
+            message,
+            title,
+          }}
         />
       </Paper>
     )

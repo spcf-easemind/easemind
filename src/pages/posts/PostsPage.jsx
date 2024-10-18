@@ -4,6 +4,8 @@ import DisplayCard from "../../components/cards/DisplayCard";
 import CreateButtonCard from "../../components/buttons/CreateButtonCard";
 import PostCard from "../../components/cards/PostCard";
 import { useNavigate } from "react-router-dom";
+import WarningModal from "../../components/modals/WarningModal";
+import { useDisclosure } from "@mantine/hooks";
 
 const header = {
   title: "Posts",
@@ -88,6 +90,7 @@ const userData = {
 
 export default function PostsPage() {
   const navigate = useNavigate();
+  const [opened, { toggle }] = useDisclosure();
 
   function handleCreatePost() {
     navigate("/posts/create");
@@ -103,9 +106,16 @@ export default function PostsPage() {
     if (option === "edit") {
       navigate(`/post/edit/${postRef}`);
     } else if (option === "delete") {
-      console.log("Delete post"); // Action
+      toggle();
     }
   }
+
+  function handleModalConfirmation() {
+    toggle();
+  }
+
+  const message = `Are you sure you want to remove this post? Once removed, all associated data will no longer be accessible.`;
+
   return (
     <Paper>
       <HeadingCard title={header.title} description={header.description} />
@@ -128,6 +138,11 @@ export default function PostsPage() {
       <Stack mt={18}>
         <PostCard onPopoverSelect={handlePopoverSelect} />
       </Stack>
+
+      <WarningModal
+        form={{ onClick: handleModalConfirmation, loading: false, message, title: "Remove Post?" }}
+        modal={{ opened: opened, onClose: toggle }}
+      />
     </Paper>
   );
 }

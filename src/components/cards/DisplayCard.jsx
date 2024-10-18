@@ -9,7 +9,6 @@ import {
   Grid,
   Avatar,
   SimpleGrid,
-  ActionIcon,
 } from "@mantine/core";
 
 import Pill from "../pills/Pill.jsx";
@@ -258,9 +257,7 @@ export default function DisplayCard({
         onClick={(option) => onButtonClick(option, "1")}
         options={popoverOptions}
       >
-        <ActionIcon radius="xl" variant="subtle" color="black">
-          <IconDotsVertical size={30} stroke={1.5} />
-        </ActionIcon>
+        <IconDotsVertical size={30} stroke={1.5} />
       </ActionsBox>
     ) : (
       <Button
