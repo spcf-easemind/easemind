@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Title,
   Box,
@@ -8,15 +8,15 @@ import {
   Image,
   Group,
   Stack,
-} from '@mantine/core';
-import { useUsersStore } from '../store/users';
-import { useAuthenticationStore } from '../store/authentication';
-import { usePublicMaterials } from '../store/miscellaneous';
-import { useGroupStore } from '../store/group';
-import { usePostStore } from '../store/post';
-import { useShallow } from 'zustand/shallow';
-import { useForm } from '@mantine/form';
-import { useNavigate, useLocation } from 'react-router-dom';
+} from "@mantine/core";
+import { useUsersStore } from "../store/users";
+import { useAuthenticationStore } from "../store/authentication";
+import { usePublicMaterials } from "../store/miscellaneous";
+import { useGroupStore } from "../store/group";
+import { usePostStore } from "../store/post";
+import { useShallow } from "zustand/shallow";
+import { useForm } from "@mantine/form";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function MiscellaneousPage() {
   const navigate = useNavigate();
@@ -83,7 +83,12 @@ export default function MiscellaneousPage() {
     getAllGroupsFn,
     getUserGroupFn,
     removeMemberFn,
-    deleteUserGroupFn,
+    deleteGroupFn,
+    getAllAvailableGroupsFn,
+    joinUserGroupFn,
+    userGroupPendingApprovalFn,
+    groupPendingMembersFn,
+    approvePendingMemberFn,
   } = useGroupStore(
     useShallow((state) => ({
       groupData: state.groupData,
@@ -96,7 +101,12 @@ export default function MiscellaneousPage() {
       getAllGroupsFn: state.getAllGroups,
       getUserGroupFn: state.getUserGroup,
       removeMemberFn: state.removeMember,
-      deleteUserGroupFn: state.deleteUserGroup,
+      deleteGroupFn: state.deleteGroup,
+      getAllAvailableGroupsFn: state.getAllAvailableGroups,
+      joinUserGroupFn: state.joinUserGroup,
+      userGroupPendingApprovalFn: state.userGroupPendingApproval,
+      groupPendingMembersFn: state.groupPendingMembers,
+      approvePendingMemberFn: state.approvePendingMember,
     }))
   );
 
@@ -132,7 +142,7 @@ export default function MiscellaneousPage() {
     // getUserInfoFn();
     // getAllUsersFn();
 
-    if (location.pathname === '/miscellaneous' && !hasFetched) {
+    if (location.pathname === "/miscellaneous" && !hasFetched) {
       getUserInfoFn();
       setHasFetched(true);
     }
@@ -153,12 +163,12 @@ export default function MiscellaneousPage() {
 
   useEffect(() => {
     if (miscData) {
-      console.log('Misc Data:', miscData);
+      console.log("Misc Data:", miscData);
     }
   }, [miscData]);
 
   const form = useForm({
-    mode: 'uncontrolled',
+    mode: "uncontrolled",
     initialValues: {
       file: null,
     },
@@ -168,12 +178,12 @@ export default function MiscellaneousPage() {
     try {
       const getSuccess = await getUserInfoFn();
       if (getSuccess) {
-        console.log('User Info fetched successfully!', data);
+        console.log("User Info fetched successfully!", data);
       } else {
-        console.error('Failed to fetched user info');
+        console.error("Failed to fetched user info");
       }
     } catch (error) {
-      console.error('Error fetching user info:', error);
+      console.error("Error fetching user info:", error);
     }
   };
 
@@ -181,12 +191,12 @@ export default function MiscellaneousPage() {
     try {
       const getSuccess = await getAllUsersFn();
       if (getSuccess) {
-        console.log('All User Info fetched successfully!', data);
+        console.log("All User Info fetched successfully!", data);
       } else {
-        console.error('Failed to fetched user info');
+        console.error("Failed to fetched user info");
       }
     } catch (error) {
-      console.error('Error fetching user info:', error);
+      console.error("Error fetching user info:", error);
     }
   };
 
@@ -194,26 +204,26 @@ export default function MiscellaneousPage() {
     try {
       const deleteSuccess = await deleteUserInfoFn();
       if (deleteSuccess) {
-        console.log('All User Info fetched successfully!', data);
+        console.log("All User Info fetched successfully!", data);
       } else {
-        console.error('Failed to fetched user info');
+        console.error("Failed to fetched user info");
       }
     } catch (error) {
-      console.error('Error fetching user info:', error);
+      console.error("Error fetching user info:", error);
     }
   };
   const handleLogoutUser = async () => {
-    const userKey = 'Dzmq9BH6JPBLFMlknjBO7';
+    const userKey = "Dzmq9BH6JPBLFMlknjBO7";
     try {
       const logoutSuccess = await logoutUserFn(userKey);
       if (logoutSuccess) {
-        console.log('User logged out successfully!');
-        return navigate('/login');
+        console.log("User logged out successfully!");
+        return navigate("/login");
       } else {
-        console.error('Failed to to logout user');
+        console.error("Failed to to logout user");
       }
     } catch (error) {
-      console.error('Error executing logout on user:', error);
+      console.error("Error executing logout on user:", error);
     }
   };
 
@@ -221,7 +231,7 @@ export default function MiscellaneousPage() {
     const { file } = values;
 
     if (!file) {
-      console.error('No file selected');
+      console.error("No file selected");
       return;
     }
 
@@ -231,16 +241,16 @@ export default function MiscellaneousPage() {
       if (data) {
         const updateSuccess = await updateUserInfoFn(data, file);
         if (updateSuccess) {
-          console.log('File uploaded and user info updated successfully!');
+          console.log("File uploaded and user info updated successfully!");
           getUserInfoFn(); // Fetch updated user info
         } else {
-          console.error('Failed to update user info');
+          console.error("Failed to update user info");
         }
       } else {
-        console.error('No user data available');
+        console.error("No user data available");
       }
     } catch (error) {
-      console.error('Error uploading file:', error);
+      console.error("Error uploading file:", error);
     } finally {
       setIsUploading(false);
     }
@@ -251,12 +261,12 @@ export default function MiscellaneousPage() {
     try {
       const createSuccess = await createCategoriesFn();
       if (createSuccess) {
-        console.log('All Categories created successfully!', miscData);
+        console.log("All Categories created successfully!", miscData);
       } else {
-        console.error('Failed to create all categories');
+        console.error("Failed to create all categories");
       }
     } catch (error) {
-      console.error('Error creating all category files:', error);
+      console.error("Error creating all category files:", error);
     }
   };
 
@@ -264,12 +274,12 @@ export default function MiscellaneousPage() {
     try {
       const getSuccess = await getAllCategoriesFn();
       if (getSuccess) {
-        console.log('All Categories fetched successfully!');
+        console.log("All Categories fetched successfully!");
       } else {
-        console.error('Failed to fetch all categories');
+        console.error("Failed to fetch all categories");
       }
     } catch (error) {
-      console.error('Error fetching all category files:', error);
+      console.error("Error fetching all category files:", error);
     }
   };
 
@@ -277,12 +287,12 @@ export default function MiscellaneousPage() {
     try {
       const deleteSuccess = await deleteCategoriesFn();
       if (deleteSuccess) {
-        console.log('All Categories deleted successfully!', miscData);
+        console.log("All Categories deleted successfully!", miscData);
       } else {
-        console.error('Failed to delete all categories');
+        console.error("Failed to delete all categories");
       }
     } catch (error) {
-      console.error('Error deleting all category files:', error);
+      console.error("Error deleting all category files:", error);
     }
   };
   const handleCreateAnonymousNickname = async () => {};
@@ -291,7 +301,7 @@ export default function MiscellaneousPage() {
     const { file } = values;
 
     if (!file) {
-      console.error('No file selected');
+      console.error("No file selected");
       return;
     }
 
@@ -300,13 +310,13 @@ export default function MiscellaneousPage() {
     try {
       const uploadSuccess = await createAnonymousProfileFn(file);
       if (uploadSuccess) {
-        console.log('File uploaded successfully!');
+        console.log("File uploaded successfully!");
         getAllAnonymousProfilesFn(); // Fetch updated user info
       } else {
-        console.error('Failed to upload anonymous profile');
+        console.error("Failed to upload anonymous profile");
       }
     } catch (error) {
-      console.error('Error uploading file:', error);
+      console.error("Error uploading file:", error);
     } finally {
       setIsUploading(false);
     }
@@ -316,12 +326,12 @@ export default function MiscellaneousPage() {
     try {
       const getSuccess = await getAllAnonymousProfilesFn();
       if (getSuccess) {
-        console.log('All Anonymous Profile fetched successfully!', miscData);
+        console.log("All Anonymous Profile fetched successfully!", miscData);
       } else {
-        console.error('Failed to fetch all Anonymous Profile');
+        console.error("Failed to fetch all Anonymous Profile");
       }
     } catch (error) {
-      console.error('Error fetching all Anonymous Profile files:', error);
+      console.error("Error fetching all Anonymous Profile files:", error);
     }
   };
 
@@ -329,12 +339,12 @@ export default function MiscellaneousPage() {
     try {
       const deleteSuccess = await deleteAnonymousFn();
       if (deleteSuccess) {
-        console.log('All Anonymous Profile deleted successfully!', miscData);
+        console.log("All Anonymous Profile deleted successfully!", miscData);
       } else {
-        console.error('Failed to delete all anonymous profiles');
+        console.error("Failed to delete all anonymous profiles");
       }
     } catch (error) {
-      console.error('Error deleting all Anonymous Profile files:', error);
+      console.error("Error deleting all Anonymous Profile files:", error);
     }
   };
 
@@ -342,7 +352,7 @@ export default function MiscellaneousPage() {
     const { file } = values;
 
     if (!file) {
-      console.error('No file selected');
+      console.error("No file selected");
       return;
     }
 
@@ -351,13 +361,13 @@ export default function MiscellaneousPage() {
     try {
       const uploadSuccess = await publicGroupProfileFn(file);
       if (uploadSuccess) {
-        console.log('File uploaded successfully!');
+        console.log("File uploaded successfully!");
         await getAllPublicGroupProfilesFn(); // Fetch updated user info
       } else {
-        console.error('Failed to upload public group profile');
+        console.error("Failed to upload public group profile");
       }
     } catch (error) {
-      console.error('Error uploading file:', error);
+      console.error("Error uploading file:", error);
     } finally {
       setIsUploading(false);
     }
@@ -366,84 +376,84 @@ export default function MiscellaneousPage() {
     try {
       const uploadSuccess = await getAllPublicGroupProfilesFn();
       if (uploadSuccess) {
-        console.log('All Available Public Group Profiles', groupData);
+        console.log("All Available Public Group Profiles", groupData);
         await getAllPublicGroupProfilesFn();
       } else {
-        console.error('Failed to upload public group profile');
+        console.error("Failed to upload public group profile");
       }
     } catch (error) {
-      console.error('Error uploading file:', error);
+      console.error("Error uploading file:", error);
     } finally {
       setIsUploading(false);
     }
   };
   const handleCreateGroup = async () => {
     const formData = {
-      ownerKey: '3JkiWUaMis6ziIHwRrKsK',
+      ownerKey: "3JkiWUaMis6ziIHwRrKsK",
       groupProfilePath:
-        'http://jx5yt-yyaaa-aaaal-abzbq-cai.localhost:5987/groupProfileCollections/PJpvlRItZVpx8XESSTr58-profile',
-      name: 'Mga Kupal lang pwede',
+        "http://jx5yt-yyaaa-aaaal-abzbq-cai.localhost:5987/groupProfileCollections/PJpvlRItZVpx8XESSTr58-profile",
+      name: "Mga Kupal lang pwede VERSION 3",
       description:
         "I believe in creating a safe, non-judgmental space where you can freely express your thoughts and emotions without fear of being misunderstood. Everyone deserves a place where they feel heard, supported, and validated. My goal is to be that person who listens with compassion and helps you navigate the challenges you're facing. Together, we can work on finding practical solutions, building coping strategies, and restoring a sense of balance and peace in your life. Your mental well-being matters, and I’m here to support you every step of the way, helping you feel more grounded, empowered, and at ease.",
       categories: [
-        { key: '6YvpSvYYFyHjp6z7UBDff' },
-        { key: '1vq2KGoLu8jzXPJnz0-kq' },
-        { key: 'HpT60sXah30yH7Ga1g_kq' },
+        { key: "6YvpSvYYFyHjp6z7UBDff" },
+        { key: "1vq2KGoLu8jzXPJnz0-kq" },
+        { key: "HpT60sXah30yH7Ga1g_kq" },
       ],
       members: [
         {
-          fullName: 'Super Admin',
-          key: '3JkiWUaMis6ziIHwRrKsK',
-          lastUpdated: '2024-10-17T10:55:39.518Z',
-          role: 'super-admin',
-          status: 'online',
-          groupRole: 'Group Admin',
+          fullName: "Super Admin",
+          key: "3JkiWUaMis6ziIHwRrKsK",
+          lastUpdated: "2024-10-17T10:55:39.518Z",
+          role: "super-admin",
+          status: "online",
+          groupRole: "Group Admin",
         },
         {
-          fullName: 'alex',
-          key: 'uOl9RnXouVl9vU1fbUXU1',
-          lastUpdated: '2024-10-16T10:30:00.901Z',
-          role: 'user',
-          status: 'online',
-          groupRole: 'member',
+          fullName: "alex",
+          key: "TslCus6H3Dzc1w6kD9GEr",
+          lastUpdated: "2024-10-16T10:30:00.901Z",
+          role: "EaseBuddy",
+          status: "offline",
+          groupRole: "member",
         },
-        {
-          fullName: 'alex1',
-          key: 'vJL1OEHA9SzhDt21li-0r',
-          lastUpdated: '2024-10-16T10:33:29.627Z',
-          role: 'user',
-          status: 'online',
-          groupRole: 'member',
-        },
+        // {
+        //   fullName: "alex1",
+        //   key: "KV_NQMbT7TDrCru7ZpUlH",
+        //   lastUpdated: "2024-10-16T10:33:29.627Z",
+        //   role: "EaseBuddy",
+        //   status: "offline",
+        //   groupRole: "member",
+        // },
       ],
     };
     try {
       const creatSuccess = await createGroupFn(formData);
       if (creatSuccess) {
-        console.log('Group Created Successfully!');
+        console.log("Group Created Successfully!");
         await getAllGroupsFn();
       } else {
-        console.error('Failed to create group');
+        console.error("Failed to create group");
       }
     } catch (error) {
-      console.error('Error creating group:', error);
+      console.error("Error creating group:", error);
     } finally {
       setIsUploading(false);
     }
   };
   const handleGetGroup = async () => {
     const formData = {
-      groupKey: 'KuldakKe0997u0w2f2z3W',
+      groupKey: "KuldakKe0997u0w2f2z3W",
     };
     try {
       const getSuccess = await getGroupFn(formData);
       if (getSuccess) {
-        console.log('Group Fetched Successfully!', groupData);
+        console.log("Group Fetched Successfully!", groupData);
       } else {
-        console.error('Failed to fetch groups');
+        console.error("Failed to fetch groups");
       }
     } catch (error) {
-      console.error('Error fetching groups:', error);
+      console.error("Error fetching groups:", error);
     } finally {
       setIsUploading(false);
     }
@@ -452,49 +462,169 @@ export default function MiscellaneousPage() {
     try {
       const getSuccess = await getAllGroupsFn();
       if (getSuccess) {
-        console.log('All Groups Fetched Successfully!');
-        await getAllGroupsFn();
-        console.log('All Groups: ', groupData);
+        console.log("All Groups Fetched Successfully!");
+        console.log("All Groups: ", groupData);
       } else {
-        console.error('Failed to fetch groups');
+        console.error("Failed to fetch groups");
       }
     } catch (error) {
-      console.error('Error fetching groups:', error);
+      console.error("Error fetching groups:", error);
     } finally {
       setIsUploading(false);
     }
   };
   const handleGetUserGroup = async () => {
     const formData = {
-      userKey: '3JkiWUaMis6ziIHwRrKsK',
+      userKey: "uOl9RnXouVl9vU1fbUXU1",
     };
     try {
       const getSuccess = await getUserGroupFn(formData);
       if (getSuccess) {
-        console.log('All Groups Fetched Successfully!');
+        console.log("All Groups Fetched Successfully!");
         // await getUserGroupFn(formData);
-        console.log('All Groups: ', groupData);
+        console.log("All Groups: ", groupData);
       } else {
-        console.error('Failed to fetch groups');
+        console.error("Failed to fetch groups");
       }
     } catch (error) {
-      console.error('Error fetching groups:', error);
+      console.error("Error fetching groups:", error);
     } finally {
       setIsUploading(false);
     }
   };
-  const handleRemoveMember = async () => {};
-  const handleDeleteUserGroup = async () => {
-    const groupKey = 'iOgJH1CuGC3NZPn7yzkdZ';
+  const handleRemoveMember = async () => {
+    const formData = {
+      groupKey: "ckvU0mpdGqIp0bkZDQf8n",
+      userKey: "vJL1OEHA9SzhDt21li-0r",
+    };
+
     try {
-      const deleteSuccess = await deleteUserGroupFn(groupKey);
-      if (deleteSuccess) {
-        console.log('User Group deleted successfully!');
+      const removeSuccess = await removeMemberFn(formData);
+      if (removeSuccess) {
+        console.log("User has been removed on the group successfully!");
       } else {
-        console.error('Failed to delete user group');
+        console.error("Failed to remove user from the group");
       }
     } catch (error) {
-      console.error('Error deleting user group:', error);
+      console.error("Error removing user from the group:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+  const handleDeleteGroup = async () => {
+    const formData = {
+      groupKey: "ckvU0mpdGqIp0bkZDQf8n",
+    };
+
+    try {
+      const deleteSuccess = await deleteGroupFn(formData);
+      if (deleteSuccess) {
+        console.log("User Group deleted successfully!");
+      } else {
+        console.error("Failed to delete user group");
+      }
+    } catch (error) {
+      console.error("Error deleting user group:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleGetAllAvailableGroups = async () => {
+    const formData = {
+      userKey: "KV_NQMbT7TDrCru7ZpUlH",
+    };
+    try {
+      const getSuccess = await getAllAvailableGroupsFn(formData);
+      if (getSuccess) {
+        console.log("All available groups fetched successfully!", groupData);
+      } else {
+        console.error("Failed to fetched all available groups");
+      }
+    } catch (error) {
+      console.error("Error fetching all available groups:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleJoinUserGroup = async () => {
+    const formData = {
+      groupKey: "Ts7m-76XNCHuaAdMSrWzN",
+      userKey: "KV_NQMbT7TDrCru7ZpUlH",
+    };
+    try {
+      const joinSuccess = await joinUserGroupFn(formData);
+      if (joinSuccess) {
+        console.log(
+          "User joined successfully and waiting for approval!",
+          groupData
+        );
+      } else {
+        console.error("Failed to join groups");
+      }
+    } catch (error) {
+      console.error("Error joining user to the group:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleUserGroupPendingApproval = async () => {
+    const formData = {
+      userKey: "3JkiWUaMis6ziIHwRrKsK",
+    };
+    try {
+      const getSuccess = await userGroupPendingApprovalFn(formData);
+      if (getSuccess) {
+        console.log("All user owned groups fetched successfully!", groupData);
+      } else {
+        console.error("Failed to fetch all user owned groups.");
+      }
+    } catch (error) {
+      console.error("Error fetching all user owned groups:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleGroupPendingMembers = async () => {
+    const formData = {
+      groupKey: "Ts7m-76XNCHuaAdMSrWzN",
+    };
+    try {
+      const getSuccess = await groupPendingMembersFn(formData);
+      if (getSuccess) {
+        console.log("Group Pending Members fetched successfully!", groupData);
+      } else {
+        console.error("Failed to fetch group pending members");
+      }
+    } catch (error) {
+      console.error("Error fetching group pending members:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleApprovePendingMember = async () => {
+    const formData = {
+      groupPendingKey: "Ts7m-76XNCHuaAdMSrWzN",
+      groupPendingMember: {
+        groupRole: "member",
+        name: "alex1",
+        userKey: "KV_NQMbT7TDrCru7ZpUlH",
+      },
+    };
+
+    try {
+      const approveSuccess = await approvePendingMemberFn(formData);
+      if (approveSuccess) {
+        console.log("User Approved successfully!", groupData);
+      } else {
+        console.error("Failed to approve user from group");
+      }
+    } catch (error) {
+      console.error("Error approving user from group:", error);
     } finally {
       setIsUploading(false);
     }
@@ -504,12 +634,12 @@ export default function MiscellaneousPage() {
     try {
       const createSuccess = await createTopicsFn();
       if (createSuccess) {
-        console.log('Topics seeded successfully!');
+        console.log("Topics seeded successfully!");
       } else {
-        console.error('Failed to seed topics');
+        console.error("Failed to seed topics");
       }
     } catch (error) {
-      console.error('Error seeding topics:', error);
+      console.error("Error seeding topics:", error);
     } finally {
       setIsUploading(false);
     }
@@ -519,12 +649,12 @@ export default function MiscellaneousPage() {
     try {
       const getSuccess = await getAllTopicsFn();
       if (getSuccess) {
-        console.log('All topics fetched successfully!', postData);
+        console.log("All topics fetched successfully!", postData);
       } else {
-        console.error('Failed to fetch all topics');
+        console.error("Failed to fetch all topics");
       }
     } catch (error) {
-      console.error('Error fetching all topics:', error);
+      console.error("Error fetching all topics:", error);
     } finally {
       setIsUploading(false);
     }
@@ -534,12 +664,12 @@ export default function MiscellaneousPage() {
     try {
       const createSuccess = await createHealthCareSuggestionsFn();
       if (createSuccess) {
-        console.log('Health care suggestions seeded successfully!', postData);
+        console.log("Health care suggestions seeded successfully!", postData);
       } else {
-        console.error('Failed to seed all health care suggestions');
+        console.error("Failed to seed all health care suggestions");
       }
     } catch (error) {
-      console.error('Error seeding all health care suggestions:', error);
+      console.error("Error seeding all health care suggestions:", error);
     } finally {
       setIsUploading(false);
     }
@@ -549,12 +679,12 @@ export default function MiscellaneousPage() {
     try {
       const getSuccess = await getAllHealthCareSuggestionsFn();
       if (getSuccess) {
-        console.log('Health care suggestions fetched successfully!', postData);
+        console.log("Health care suggestions fetched successfully!", postData);
       } else {
-        console.error('Failed to fetch all health care suggestions');
+        console.error("Failed to fetch all health care suggestions");
       }
     } catch (error) {
-      console.error('Error fetching all health care suggestions:', error);
+      console.error("Error fetching all health care suggestions:", error);
     } finally {
       setIsUploading(false);
     }
@@ -564,72 +694,72 @@ export default function MiscellaneousPage() {
     const { file } = values;
     const formData1 = {
       user: {
-        fullName: 'Super Admin',
-        key: '3JkiWUaMis6ziIHwRrKsK',
-        lastUpdated: '2024-10-17T07:06:36.176Z',
+        fullName: "Super Admin",
+        key: "3JkiWUaMis6ziIHwRrKsK",
+        lastUpdated: "2024-10-17T07:06:36.176Z",
         profileImageUrl:
-          'http://jx5yt-yyaaa-aaaal-abzbq-cai.localhost:5987/userProfilePicture/3JkiWUaMis6ziIHwRrKsK-profile',
-        role: 'super-admin',
-        status: 'online',
+          "http://jx5yt-yyaaa-aaaal-abzbq-cai.localhost:5987/userProfilePicture/3JkiWUaMis6ziIHwRrKsK-profile",
+        role: "super-admin",
+        status: "online",
       },
       title:
-        'Anxiety is temporary, and so are tough times. You have the strength to overcome.',
+        "Anxiety is temporary, and so are tough times. You have the strength to overcome.",
       description:
-        'Anxiety is temporary, and so are tough times. You have the strength to overcome. Remember to breathe, take breaks, and reach out when you need support. Anxiety is temporary, and so are tough times. You have the strength to overcome. Remember to breathe, take breaks, and reach out when you need support. Anxiety is temporary, and so are tough times. You have the strength to overcome. Remember to breathe, take breaks, and reach out when you need support.',
+        "Anxiety is temporary, and so are tough times. You have the strength to overcome. Remember to breathe, take breaks, and reach out when you need support. Anxiety is temporary, and so are tough times. You have the strength to overcome. Remember to breathe, take breaks, and reach out when you need support. Anxiety is temporary, and so are tough times. You have the strength to overcome. Remember to breathe, take breaks, and reach out when you need support.",
       topics: [
-        { key: 'QZH3RM_hPBn1UDFchSe3l', name: 'Anxiety' },
-        { key: 'hskFMOgocfBaoeIJUg8-L', name: 'Anxiety Relief' },
+        { key: "QZH3RM_hPBn1UDFchSe3l", name: "Anxiety" },
+        { key: "hskFMOgocfBaoeIJUg8-L", name: "Anxiety Relief" },
       ],
     };
 
     const formData2 = {
       user: {
-        fullName: 'Super Admin',
-        key: '3JkiWUaMis6ziIHwRrKsK',
-        lastUpdated: '2024-10-17T07:06:36.176Z',
+        fullName: "Super Admin",
+        key: "3JkiWUaMis6ziIHwRrKsK",
+        lastUpdated: "2024-10-17T07:06:36.176Z",
         profileImageUrl:
-          'http://jx5yt-yyaaa-aaaal-abzbq-cai.localhost:5987/userProfilePicture/3JkiWUaMis6ziIHwRrKsK-profile',
-        role: 'super-admin',
-        status: 'online',
+          "http://jx5yt-yyaaa-aaaal-abzbq-cai.localhost:5987/userProfilePicture/3JkiWUaMis6ziIHwRrKsK-profile",
+        role: "super-admin",
+        status: "online",
       },
-      title: 'Self-care isn’t selfish; it’s essential. Prioritize your needs.',
+      title: "Self-care isn’t selfish; it’s essential. Prioritize your needs.",
       description:
-        'Self-care isn’t selfish; it’s essential. Prioritize your needs. Remember to make time for yourself, nurture your mental health, and practice habits that bring you peace. Self-care isn’t selfish; it’s essential. Prioritize your needs. Remember to make time for yourself, nurture your mental health, and practice habits that bring you peace. Self-care isn’t selfish; it’s essential. Prioritize your needs. Remember to make time for yourself, nurture your mental health, and practice habits that bring you peace.',
+        "Self-care isn’t selfish; it’s essential. Prioritize your needs. Remember to make time for yourself, nurture your mental health, and practice habits that bring you peace. Self-care isn’t selfish; it’s essential. Prioritize your needs. Remember to make time for yourself, nurture your mental health, and practice habits that bring you peace. Self-care isn’t selfish; it’s essential. Prioritize your needs. Remember to make time for yourself, nurture your mental health, and practice habits that bring you peace.",
       topics: [
-        { key: 'mfcmFeTJ4sUEOviF5d1Bb', name: 'Self Care' },
-        { key: '5Puaks8iUShEIpbRd5KQg', name: 'Mindfulness' },
+        { key: "mfcmFeTJ4sUEOviF5d1Bb", name: "Self Care" },
+        { key: "5Puaks8iUShEIpbRd5KQg", name: "Mindfulness" },
       ],
     };
 
     const formData3 = {
       user: {
-        fullName: 'Super Admin',
-        key: '3JkiWUaMis6ziIHwRrKsK',
-        lastUpdated: '2024-10-17T07:06:36.176Z',
+        fullName: "Super Admin",
+        key: "3JkiWUaMis6ziIHwRrKsK",
+        lastUpdated: "2024-10-17T07:06:36.176Z",
         profileImageUrl:
-          'http://jx5yt-yyaaa-aaaal-abzbq-cai.localhost:5987/userProfilePicture/3JkiWUaMis6ziIHwRrKsK-profile',
-        role: 'super-admin',
-        status: 'online',
+          "http://jx5yt-yyaaa-aaaal-abzbq-cai.localhost:5987/userProfilePicture/3JkiWUaMis6ziIHwRrKsK-profile",
+        role: "super-admin",
+        status: "online",
       },
       title:
-        'Healing is a journey, not a destination. Take it one day at a time.',
+        "Healing is a journey, not a destination. Take it one day at a time.",
       description:
-        'Healing is a journey, not a destination. Take it one day at a time. Be gentle with yourself and allow your mind and heart to rest when needed. Healing is a journey, not a destination. Take it one day at a time. Be gentle with yourself and allow your mind and heart to rest when needed. Healing is a journey, not a destination. Take it one day at a time. Be gentle with yourself and allow your mind and heart to rest when needed.',
+        "Healing is a journey, not a destination. Take it one day at a time. Be gentle with yourself and allow your mind and heart to rest when needed. Healing is a journey, not a destination. Take it one day at a time. Be gentle with yourself and allow your mind and heart to rest when needed. Healing is a journey, not a destination. Take it one day at a time. Be gentle with yourself and allow your mind and heart to rest when needed.",
       topics: [
-        { key: 'Z4GS2HBoYVWKfg0O402Y9', name: 'Healing Journey' },
-        { key: 'JvEBDizXvmCKJEt2XT5c2', name: 'Therapy Is Cool' },
+        { key: "Z4GS2HBoYVWKfg0O402Y9", name: "Healing Journey" },
+        { key: "JvEBDizXvmCKJEt2XT5c2", name: "Therapy Is Cool" },
       ],
     };
 
     try {
       const createSuccess = await createPostFn(formData3, file);
       if (createSuccess) {
-        console.log('Post created successfully!');
+        console.log("Post created successfully!");
       } else {
-        console.error('Failed to create post');
+        console.error("Failed to create post");
       }
     } catch (error) {
-      console.error('Error creating post:', error);
+      console.error("Error creating post:", error);
     } finally {
       setIsUploading(false);
     }
@@ -639,12 +769,12 @@ export default function MiscellaneousPage() {
     try {
       const getSuccess = await getAllUserPostsFn();
       if (getSuccess) {
-        console.log('All User Post fetched successfully!', postData);
+        console.log("All User Post fetched successfully!", postData);
       } else {
-        console.error('Failed to fetch all user post');
+        console.error("Failed to fetch all user post");
       }
     } catch (error) {
-      console.error('Error fetching all user post:', error);
+      console.error("Error fetching all user post:", error);
     } finally {
       setIsUploading(false);
     }
@@ -654,12 +784,12 @@ export default function MiscellaneousPage() {
     try {
       const deleteSuccess = await deleteAllUserPostsFn();
       if (deleteSuccess) {
-        console.log('All User Post deleted successfully!');
+        console.log("All User Post deleted successfully!");
       } else {
-        console.error('Failed to delete all user post');
+        console.error("Failed to delete all user post");
       }
     } catch (error) {
-      console.error('Error deleting all user post:', error);
+      console.error("Error deleting all user post:", error);
     } finally {
       setIsUploading(false);
     }
@@ -711,11 +841,11 @@ export default function MiscellaneousPage() {
       <form onSubmit={form.onSubmit(handleSubmitFile)}>
         <FileInput
           label="Upload file here"
-          {...form.getInputProps('file')}
+          {...form.getInputProps("file")}
           disabled={isUploading}
         />
         <Button type="submit" mt="md" loading={isUploading}>
-          {isUploading ? 'Uploading...' : 'Submit'}
+          {isUploading ? "Uploading..." : "Submit"}
         </Button>
       </form>
       {message && <p>{message}</p>}
@@ -751,11 +881,11 @@ export default function MiscellaneousPage() {
       <form onSubmit={form.onSubmit(handleCreateAnonymousProfile)}>
         <FileInput
           label="Upload file here"
-          {...form.getInputProps('file')}
+          {...form.getInputProps("file")}
           disabled={isUploading}
         />
         <Button type="submit" mt="md" loading={isUploading}>
-          {isUploading ? 'Uploading...' : 'Create Anonymous Profile'}
+          {isUploading ? "Uploading..." : "Create Anonymous Profile"}
         </Button>
       </form>
       {message && <p>{message}</p>}
@@ -782,8 +912,23 @@ export default function MiscellaneousPage() {
         <Button onClick={handleRemoveMember} loading={groupLoading}>
           Remove Member
         </Button>
-        <Button onClick={handleDeleteUserGroup} loading={groupLoading}>
-          Delete User Group
+        <Button onClick={handleDeleteGroup} loading={groupLoading}>
+          Delete Group
+        </Button>
+        <Button onClick={handleGetAllAvailableGroups} loading={groupLoading}>
+          View Available Group
+        </Button>
+        <Button onClick={handleJoinUserGroup} loading={groupLoading}>
+          Join Group
+        </Button>
+        <Button onClick={handleUserGroupPendingApproval} loading={groupLoading}>
+          Get User Owned Group Pending Approval
+        </Button>
+        <Button onClick={handleGroupPendingMembers} loading={groupLoading}>
+          Group Pending Members
+        </Button>
+        <Button onClick={handleApprovePendingMember} loading={groupLoading}>
+          Approve User
         </Button>
       </Group>
 
@@ -793,11 +938,11 @@ export default function MiscellaneousPage() {
       <form onSubmit={form.onSubmit(handlePublicGroupProfile)}>
         <FileInput
           label="Upload file here"
-          {...form.getInputProps('file')}
+          {...form.getInputProps("file")}
           disabled={isUploading}
         />
         <Button type="submit" mt="md" loading={isUploading}>
-          {isUploading ? 'Uploading...' : 'Create Public Group Profile'}
+          {isUploading ? "Uploading..." : "Create Public Group Profile"}
         </Button>
       </form>
       {message && <p>{message}</p>}
@@ -846,11 +991,11 @@ export default function MiscellaneousPage() {
       <form onSubmit={form.onSubmit(handleCreatePost)}>
         <FileInput
           label="Upload file here"
-          {...form.getInputProps('file')}
+          {...form.getInputProps("file")}
           disabled={isUploading}
         />
         <Button type="submit" mt="md" loading={postLoading}>
-          {isUploading ? 'Uploading...' : 'Create Anonymous Profile'}
+          {isUploading ? "Uploading..." : "Create Anonymous Profile"}
         </Button>
       </form>
       {message && <p>{message}</p>}

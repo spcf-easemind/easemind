@@ -9,6 +9,7 @@ import { useDialogStore } from "../store/dialog.js";
 import { useShallow } from "zustand/shallow";
 import { useNavigate } from "react-router-dom";
 import { useUsersStore } from "../store/users.js";
+import { useGroupStore } from "../store/group.js";
 import { useCallback, useEffect } from "react";
 
 import SurveyModal from "../components/modals/SurveyModal.jsx";
@@ -18,6 +19,7 @@ import { LOGIN_INPUTS } from "../static/authentication.js";
 
 import { parse, format } from "date-fns";
 import { useAuthenticationStore } from "../store/authentication.js";
+import { startOfMinuteWithOptions } from "date-fns/fp";
 
 const title =
   "In a world filled with hardships, why don't we prioritize our happiness and mental well-being instead?";
@@ -25,11 +27,24 @@ const title =
 export default function LoginPage() {
   const navigate = useNavigate();
 
-  const data = useUsersStore((state) => state.data);
-  const userSignUpFn = useUsersStore((state) => state.userSignUp);
-  const getAllUsersFn = useUsersStore((state) => state.getAllUsers);
-  const getUserInfoFn = useUsersStore((state) => state.getUserInfo);
-  const deleteUserInfoFn = useUsersStore((state) => state.deleteUserInfo);
+  const { data, userSignUpFn, getAllUsersFn, getUserInfoFn, deleteUserInfoFn } =
+    useUsersStore(
+      useShallow((state) => ({
+        data: state.data,
+        userSignUpFn: state.userSignUp,
+        getAllUsersFn: state.getAllUsers,
+        getUserInfoFn: state.getUserInfo,
+        deleteUserInfoFn: state.deleteUserInfo,
+      }))
+    );
+
+  const { groupData, getUserGroupFn } = useGroupStore(
+    useShallow((state) => ({
+      groupData: state.groupData,
+      getUserGroupFn: state.getUserGroup,
+    }))
+  );
+
   const { userLoginFn, loading } = useAuthenticationStore(
     useShallow((state) => ({
       loading: state.loading,
@@ -48,11 +63,15 @@ export default function LoginPage() {
     useDisclosure(false);
 
   useEffect(() => {
+    // const formData = {
+    //   userKey: "uOl9RnXouVl9vU1fbUXU1",
+    // };
+    // getUserGroupFn(formData);
     // getUserInfoFn();
     // getAllUsersFn();
     // deleteUserInfoFn();
-    // console.log(data);
-  }, [data]);
+    console.log(data);
+  }, []);
 
   const loginForm = useForm({
     mode: "uncontrolled",

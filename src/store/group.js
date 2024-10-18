@@ -11,6 +11,7 @@ import {
 } from "@junobuild/core";
 import { nanoid } from "nanoid";
 import { IconUser } from "@tabler/icons-react";
+import { tr } from "date-fns/locale";
 
 export const useGroupStore = create((set) => ({
   groupData: null,
@@ -114,14 +115,6 @@ export const useGroupStore = create((set) => ({
       const key = nanoid();
 
       if (formData && formData.groupProfilePath) {
-        // const filename = `${key}-profile`;
-        // const { downloadUrl } = await uploadFile({
-        //   collection: 'groupProfiles',
-        //   data: file,
-        //   filename,
-        // });
-        // groupImageUrl = downloadUrl;
-
         let groupImageUrl = formData.groupProfilePath;
 
         const user = await getDoc({
@@ -165,6 +158,16 @@ export const useGroupStore = create((set) => ({
           },
         });
 
+        await setDoc({
+          collection: "groupPendingMembers",
+          doc: {
+            key,
+            data: {
+              pendingMembers: [],
+            },
+          },
+        });
+
         for (const member of formData.members) {
           const userGroup = await getDoc({
             collection: "userGroups",
@@ -181,8 +184,11 @@ export const useGroupStore = create((set) => ({
 
             await setDoc({
               collection: "userGroups",
-              data: userGroup.data,
-              version: userGroup.version,
+              doc: {
+                key: userGroup.key,
+                data: userGroup.data,
+                version: userGroup.version,
+              },
             });
           } else {
             await setDoc({
@@ -205,7 +211,7 @@ export const useGroupStore = create((set) => ({
 
       set(() => ({
         groupData: null,
-        groupMessage: "Group created successfully!",
+        groupMEssage: "Group created successfully!",
         groupLoading: true,
       }));
       return true;
@@ -348,19 +354,43 @@ export const useGroupStore = create((set) => ({
         key: formData.groupKey,
       });
 
-      const userGroups = await getDoc({
-        collection: "userGroups",
-        key: formData.userKey,
-      });
-
       const updatedMembersArray = [];
-      for (let member of group.members) {
+      for (let member of group.data.members) {
         if (member.key && member.key != formData.userKey) {
           updatedMembersArray.push(member);
+        } else {
+          const userGroup = await getDoc({
+            collection: "userGroups",
+            key: member.key,
+          });
+
+          let updateUserGroupArray = [];
+          for (const groupOfUser of userGroup.data.groups) {
+            if (group.key != groupOfUser.key) {
+              updateUserGroupArray.push(groupOfUser);
+            }
+          }
+
+          userGroup.data.groups = updateUserGroupArray;
+
+          await setDoc({
+            collection: "userGroups",
+            doc: {
+              key: userGroup.key,
+              data: userGroup.data,
+              version: userGroup.version,
+            },
+          });
+
+          console.log(
+            `This group ${group.data.name} user removed successfully!`
+          );
         }
       }
 
       group.data.members = updatedMembersArray;
+      const membersLength = group.data.members.length;
+      group.data.membersCount = membersLength;
 
       await setDoc({
         collection: "groups",
@@ -368,23 +398,6 @@ export const useGroupStore = create((set) => ({
           key: formData.groupKey,
           data: group.data,
           version: group.version,
-        },
-      });
-
-      const updatedUserGroupArray = [];
-      for (const userGroup of userGroups.data.groups) {
-        if (group && userGroup != group.key)
-          updatedUserGroupArray.push(userGroup);
-      }
-
-      userGroups.data.groups = updatedUserGroupArray;
-
-      await setDoc({
-        collection: "userGroups",
-        doc: {
-          key: userGroups.key,
-          data: userGroups.data,
-          version: userGroups.version,
         },
       });
 
@@ -406,96 +419,141 @@ export const useGroupStore = create((set) => ({
       return false;
     }
   },
-  deleteUserGroup: async (groupKey) => {
+
+  deleteGroup: async (formData) => {
     set(() => ({
       groupData: null,
       groupMessage: "Loading...",
       groupLoading: true,
     }));
 
-    const allUserGroup = await listDocs({
-      collection: "userGroups",
-    });
+    try {
+      if (formData.groupKey) {
+        const group = await getDoc({
+          collection: "groups",
+          key: formData.groupKey,
+        });
 
-    for (const userGroup of allUserGroup.items) {
-      await deleteDoc({
-        collection: "userGroups",
-        doc: userGroup,
-      });
+        for (const groupMember of group.data.members) {
+          const userGroup = await getDoc({
+            collection: "userGroups",
+            key: groupMember.key,
+          });
+
+          let updateUserGroups = [];
+          for (const groupOfUser of userGroup.data.groups) {
+            if (group.key != groupOfUser.key) {
+              updateUserGroups.push(groupOfUser);
+            }
+          }
+
+          userGroup.data.groups = updateUserGroups;
+
+          await setDoc({
+            collection: "userGroups",
+            doc: {
+              key: userGroup.key,
+              data: userGroup.data,
+              version: userGroup.version,
+            },
+          });
+          console.log("This group has been removed on the user list of groups");
+        }
+
+        await deleteDoc({
+          collection: "groups",
+          doc: group,
+        });
+
+        set(() => ({
+          groupData: null,
+          groupMessage: "Group deleted successfully!",
+          groupLoading: false,
+        }));
+
+        return true;
+      } else {
+        set(() => ({
+          groupData: null,
+          groupMessage: "Group key is required!",
+          groupLoading: false,
+        }));
+        return false;
+      }
+    } catch (error) {
+      console.error("Error deleting user group:", error);
+      set(() => ({
+        groupData: null,
+        groupMessage:
+          error.message || "An error occurred while deleting user group",
+        groupLoading: false,
+      }));
+      return false;
     }
+  },
 
+  getAllAvailableGroups: async (formData) => {
     set(() => ({
       groupData: null,
-      groupMessage: "All group users deleted successfully!",
-      groupLoading: false,
+      groupMessage: "Loading...",
+      groupLoading: true,
     }));
-    return true;
 
-    // try {
-    //   if (groupKey) {
-    //     const group = await getDoc({
-    //       collection: 'groups',
-    //       key: groupKey,
-    //     });
-    //     // console.log(group.data.members);
-    //     for (const member of group.data.members) {
-    //       const user = await getDoc({
-    //         collection: 'userGroups',
-    //         key: member.key,
-    //       });
+    try {
+      const groups = await listDocs({
+        collection: "groups",
+      });
 
-    //       const updatedUserGroupsArray = [];
+      const userGroup = await getDoc({
+        collection: "userGroups",
+        key: formData.userKey,
+      });
 
-    //       for (const userGroup of user.data.groups) {
-    //         if (
-    //           userGroup.key != group.key &&
-    //           userGroup.groupName != group.data.name
-    //         ) {
-    //           updatedUserGroupsArray.push(userGroup);
-    //         }
-    //       }
+      const userGroupKeys = new Set(
+        userGroup.data.groups.map((group) => group.key)
+      );
 
-    //       user.data.members = updatedUserGroupsArray;
+      let availableGroups = [];
 
-    //       await setDoc({
-    //         collection: 'userGroups',
-    //         doc: {
-    //           key: groupKey,
-    //           data: user.data,
-    //           version: user.version,
-    //         },
-    //       });
-    //     }
+      for (const group of groups.items) {
+        if (!userGroupKeys.has(group.key)) {
+          const groupPendingMembers = await getDoc({
+            collection: "groupPendingMembers",
+            key: group.key,
+          });
 
-    //     await deleteDoc({
-    //       collection: 'groups',
-    //       doc: group,
-    //     });
+          let userAlreadyJoined = groupPendingMembers.data.pendingMembers.some(
+            (pendingMember) => pendingMember.userKey === formData.userKey
+          );
 
-    //     set(() => ({
-    //       groupData: null,
-    //       groupMessage: 'Group has been deleted successfully!',
-    //       groupLoading: false,
-    //     }));
-    //     return true;
-    //   } else {
-    //     set(() => ({
-    //       groupData: null,
-    //       groupMessage: 'Group key is required!',
-    //       groupLoading: false,
-    //     }));
-    //     return false;
-    //   }
-    // } catch (error) {
-    //   console.error('Error deleting user group:', error);
-    //   set(() => ({
-    //     groupData: null,
-    //     groupMessage:
-    //       error.message || 'An error occurred while deleting user group',
-    //     groupLoading: false,
-    //   }));
-    //   return false;
-    // }
+          const updatedGroupData = {
+            ...group.data,
+            userJoinStatus: userAlreadyJoined,
+          };
+
+          availableGroups.push(updatedGroupData);
+        }
+      }
+
+      // Set state with the fetched groups
+      set(() => ({
+        groupData: availableGroups,
+        groupMessage: "Available groups for user fetched successfully!",
+        groupLoading: false,
+      }));
+
+      return true;
+    } catch (error) {
+      console.error("Error fetching available group for user:", error);
+      set(() => ({
+        groupData: null,
+        groupMessage:
+          error.message ||
+          "An error occurred while fetching all available group for user",
+        groupLoading: false,
+      }));
+      return false;
+    }
   },
 
   joinUserGroup: async (formData) => {
@@ -505,42 +563,36 @@ export const useGroupStore = create((set) => ({
       groupLoading: true,
     }));
     try {
-      const userGroup = await getDoc({
-        collection: "userGroups",
-        key: formData.userKey,
-      });
-
       const group = await getDoc({
         collection: "groups",
         key: formData.groupKey,
       });
 
-      if (userGroup && group) {
-        const data = {
-          key: group.key,
-          groupName: group.data.name,
+      const groupPendingMembers = await getDoc({
+        collection: "groupPendingMembers",
+        key: group.key,
+      });
+
+      if (group && groupPendingMembers) {
+        const user = await getDoc({
+          collection: "users",
+          key: formData.userKey,
+        });
+
+        const newPendingMember = {
+          userKey: user.key,
+          name: user.data.fullName,
+          groupRole: "member",
         };
 
-        userGroup.data.groups.push(data);
+        groupPendingMembers.data.pendingMembers.push(newPendingMember);
 
         await setDoc({
-          collection: "userGroups",
-          data: userGroup.data,
-          version: userGroup.version,
-        });
-      } else {
-        await setDoc({
-          collection: "userGroups",
+          collection: "groupPendingMembers",
           doc: {
-            key: formData.userKey,
-            data: {
-              groups: [
-                {
-                  key: group.key,
-                  groupName: group.data.name,
-                },
-              ],
-            },
+            key: groupPendingMembers.key,
+            data: groupPendingMembers.data,
+            version: groupPendingMembers.version,
           },
         });
       }
@@ -561,5 +613,123 @@ export const useGroupStore = create((set) => ({
       }));
       return false;
     }
+  },
+
+  userGroupPendingApproval: async (formData) => {
+    set(() => ({
+      groupData: null,
+      groupMessage: "Loading...",
+      groupLoading: true,
+    }));
+
+    try {
+      const allGroups = await listDocs({
+        collection: "groups",
+      });
+
+      let userOwnedGroupPendingMemberArray = [];
+      for (const group of allGroups.items) {
+        if (group.data.owner.key === formData.userKey) {
+          const groupPendingMember = await getDoc({
+            collection: "groupPendingMembers",
+            key: group.key,
+          });
+          const updatedUserOwnedGroupInfo = {
+            groupInfo: group.data,
+            groupPendingMember: groupPendingMember,
+          };
+          userOwnedGroupPendingMemberArray.push(updatedUserOwnedGroupInfo);
+        }
+      }
+
+      set(() => ({
+        groupData: userOwnedGroupPendingMemberArray,
+        groupMessage: "All user owned group fetched successfully!",
+        groupLoading: false,
+      }));
+      return true;
+    } catch (error) {
+      console.error("Error fetching all user owned group:", error);
+      set(() => ({
+        groupData: null,
+        groupMessage:
+          error.message ||
+          "An error occurred while fetching all user owned group",
+        groupLoading: false,
+      }));
+      return false;
+    }
+  },
+
+  groupPendingMembers: async (formData) => {
+    set(() => ({
+      groupData: null,
+      groupMessage: "Loading...",
+      groupLoading: true,
+    }));
+
+    try {
+      const groupPendingMember = await getDoc({
+        collection: "groupPendingMembers",
+        key: formData.groupKey,
+      });
+
+      set(() => ({
+        groupData: groupPendingMember.data.pendingMembers,
+        groupMessage: "Group Pending Members fetched successfully!",
+        groupLoading: false,
+      }));
+      return true;
+    } catch (error) {
+      console.error("Error fetching group pending members:", error);
+      set(() => ({
+        groupData: null,
+        groupMessage:
+          error.message ||
+          "An error occurred while fetching group pending members",
+        groupLoading: false,
+      }));
+      return false;
+    }
+  },
+
+  approvePendingMember: async (formData) => {
+    set(() => ({
+      groupData: null,
+      groupMessage: "Loading...",
+      groupLoading: true,
+    }));
+
+    try {
+      const groupPendingMember = await getDoc({
+        collection: "groupPendingMembers",
+        key: formData.groupPendingKey,
+      });
+
+      let updatedPendingMemberArray = [];
+      for (const pendingMember of groupPendingMember.data.pendingMembers) {
+        if (pendingMember.userKey != formData.groupPendingMember.userKey) {
+          updatedPendingMemberArray.push(pendingMember);
+        }
+      }
+
+      groupPendingMember.data.pendingMembers = updatedPendingMemberArray;
+
+      await setDoc({
+        collection: "groupPendingMembers",
+        doc: {
+          key: groupPendingMember.key,
+          data: groupPendingMember.data,
+          version: groupPendingMember.version,
+        },
+      });
+
+      set(() => ({
+        groupData: null,
+        groupMessage: "User Approved Successfully",
+        groupLoading: false,
+      }));
+      return true;
+    } catch (error) {}
   },
 }));
