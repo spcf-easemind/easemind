@@ -84,8 +84,6 @@ export const useGroupAPIStore = create((set, get) => ({
             member.key === loggedInUserId && member.groupRole === "Group Member"
         )
       );
-
-      console.log(filteredJoinedGroups);
       set(() => ({
         joinedGroups: filteredJoinedGroups,
       }));

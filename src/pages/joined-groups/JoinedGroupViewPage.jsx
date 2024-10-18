@@ -8,7 +8,6 @@ import { useEffect } from "react";
 export default function JoinedGroupViewPage() {
   const { joinedGroupRef } = useParams();
   // const navigate = useNavigate();
-  console.log(joinedGroupRef);
 
   const { fetchJoinedGroupFn, joinedGroup } = useGroupAPIStore(
     useShallow((state) => ({
@@ -21,8 +20,6 @@ export default function JoinedGroupViewPage() {
     console.log(joinedGroupRef);
     fetchJoinedGroupFn(joinedGroupRef);
   }, []);
-
-  console.log(joinedGroup);
 
   function handleButtonClick() {
     console.log("View Chat");

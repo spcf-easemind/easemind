@@ -141,6 +141,7 @@ export default function DisplayCard({
                 name={member.fullName}
                 role={member.groupRole}
                 bg="gray.0"
+                key={member.key}
               >
                 {type === "owned" && (
                   <Button
