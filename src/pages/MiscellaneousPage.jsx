@@ -477,7 +477,7 @@ export default function MiscellaneousPage() {
   };
   const handleGetUserGroup = async () => {
     const formData = {
-      userKey: "v1DNhZd_vhjIEMLEcFM4z",
+      userKey: "Kc-vC3qsRa5uHYnuDErS9",
     };
     try {
       const getSuccess = await getUserGroupFn(formData);

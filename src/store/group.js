@@ -314,7 +314,9 @@ export const useGroupStore = create((set) => ({
           key: groupOfUser.key,
         });
 
-        userGroupArray.push(group);
+        if (userGroup.key != group.data.owner.key) {
+          userGroupArray.push(group);
+        }
       }
 
       set(() => ({
