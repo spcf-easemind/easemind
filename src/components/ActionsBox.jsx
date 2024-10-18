@@ -10,7 +10,7 @@ import {
 } from "@mantine/core";
 
 import classes from "./ActionsBox.module.css";
-export default function ActionsBox({ options, children }) {
+export default function ActionsBox({ options, children, onClick }) {
   const postOptions = (
     <Paper p={0}>
       <Stack gap={0}>
@@ -25,6 +25,7 @@ export default function ActionsBox({ options, children }) {
                 w={150}
                 key={item.value}
                 className={classes.styledButton}
+                onClick={() => onClick(item.value)}
               >
                 <Group gap={10}>
                   <Image src={item.icon} w={15} h={15} fit="contain"></Image>

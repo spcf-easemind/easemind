@@ -38,7 +38,7 @@ const popoverOptions = [
   },
 ];
 
-export default function PostCard() {
+export default function PostCard({ onPopoverSelect }) {
   const pillInstances = sample_pills.map((pill, index) => (
     <Pill name={pill} size="md" key={`pill-${index}`} />
   ));
@@ -55,8 +55,11 @@ export default function PostCard() {
               EaseCompanion
             </Text>
           </Box>
-          <ActionsBox options={popoverOptions}>
-            <ActionIcon variant="subtle" color="black">
+          <ActionsBox
+            onClick={(option) => onPopoverSelect(option, "1")}
+            options={popoverOptions}
+          >
+            <ActionIcon radius="xl" variant="subtle" color="black">
               <IconDotsVertical size={30} stroke={1.5} />
             </ActionIcon>
           </ActionsBox>

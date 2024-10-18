@@ -254,9 +254,12 @@ export default function DisplayCard({
       },
     ];
     return type === "posts" ? (
-      <ActionsBox options={popoverOptions}>
+      <ActionsBox
+        onClick={(option) => onButtonClick(option, "1")}
+        options={popoverOptions}
+      >
         <ActionIcon radius="xl" variant="subtle" color="black">
-          <IconDotsVertical size={20} stroke={1.5} />
+          <IconDotsVertical size={30} stroke={1.5} />
         </ActionIcon>
       </ActionsBox>
     ) : (

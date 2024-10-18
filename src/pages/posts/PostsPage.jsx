@@ -93,6 +93,19 @@ export default function PostsPage() {
     navigate("/posts/create");
   }
 
+  function handlePopoverUserSelect(option, userRef) {
+    if (option === "edit") {
+      navigate(`/profile`);
+    }
+  }
+
+  function handlePopoverSelect(option, postRef) {
+    if (option === "edit") {
+      navigate(`/post/edit/${postRef}`);
+    } else if (option === "delete") {
+      console.log("Delete post"); // Action
+    }
+  }
   return (
     <Paper>
       <HeadingCard title={header.title} description={header.description} />
@@ -104,11 +117,16 @@ export default function PostsPage() {
       </Box>
 
       <Box mt={18}>
-        <DisplayCard instance={userData} type="posts" variant="view" />
+        <DisplayCard
+          onButtonClick={handlePopoverUserSelect}
+          instance={userData}
+          type="posts"
+          variant="view"
+        />
       </Box>
 
       <Stack mt={18}>
-        <PostCard />
+        <PostCard onPopoverSelect={handlePopoverSelect} />
       </Stack>
     </Paper>
   );
