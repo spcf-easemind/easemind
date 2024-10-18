@@ -94,14 +94,13 @@ function App() {
   ) : (
     <HomeNavigation />
   );
-  
+
   // Adjusted logic for aside
-   const whichAside = location.pathname.startsWith("/chat") ? (
+  const whichAside = location.pathname.startsWith("/chat") ? (
     <ChatAside />
   ) : (
     <HomeAside />
-  ); 
-
+  );
 
   const withContainer = includeNavigation ? (
     <Outlet />
@@ -111,7 +110,14 @@ function App() {
     </Container>
   );
 
-  const mainPadding = includeNavigation ? 18 : undefined;
+  const mainPadding = useMemo(() => {
+    const pathsWithoutPadding = ["/chat", "/chat/:chatRef"];
+    return pathsWithoutPadding.some(
+      (path) => routeMatcher(path, location.pathname) === path
+    )
+      ? undefined
+      : 18;
+  }, [location]);
 
   const withBackground = useMemo(() => {
     let paths = ["/internet-identity"];
