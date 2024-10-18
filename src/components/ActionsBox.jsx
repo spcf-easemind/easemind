@@ -10,7 +10,7 @@ import {
 } from "@mantine/core";
 
 import classes from "./ActionsBox.module.css";
-export default function ActionModal({ options, children }) {
+export default function ActionsBox({ options, children }) {
   const postOptions = (
     <Paper>
       {options.map((item, index) => {
