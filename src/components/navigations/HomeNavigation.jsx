@@ -17,13 +17,15 @@ import OwnedGroupsIcon from "../../assets/icons/navigation/OwnedGroups.svg";
 import JoinedGroupsIcons from "../../assets/icons/navigation/JoinedGroups.svg";
 import PendingApprovalIcon from "../../assets/icons/navigation/PendingApproval.svg";
 import SavedIcon from "../../assets/icons/navigation/Saved.svg";
+import PostsIcon from "../../assets/icons/navigation/Posts.svg";
 
 import HomeNavLink from "../links/HomeNavLinks";
 import UserProfileIndicator from "../UserProfileIndicator";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { set } from "date-fns";
+import { useAuthenticationStore } from "../../store/authentication";
+import { useShallow } from "zustand/shallow";
 
 const sample_user = {
   name: "John Doe",
@@ -33,39 +35,52 @@ const sample_user = {
 
 const navLinksAttributes = [
   {
+    label: "Posts",
+    icon: PostsIcon,
+    route: "/posts",
+    roles: ["EaseCompanion", "super-admin"],
+  },
+  {
     label: "Endless Thoughts Diary",
     icon: EndlessThoughtsDiaryIcon,
     route: "/endless-thoughts-diary",
+    roles: ["user", "EaseCompanion", "super-admin"],
   },
   {
-    label: "Ease Companions",
+    label: "EaseCompanions",
     icon: EaseCompanionIcon,
     route: "/ease-companions",
+    roles: ["user", "EaseCompanion", "super-admin"],
   },
   {
     label: "Community Groups",
     icon: CommunityGroupIcon,
     route: "/community-groups",
+    roles: ["user", "EaseCompanion", "super-admin"],
   },
   {
     label: "Owned Groups",
     icon: OwnedGroupsIcon,
     route: "/owned-groups",
+    roles: ["user", "EaseCompanion", "super-admin"],
   },
   {
     label: "Joined Groups",
     icon: JoinedGroupsIcons,
     route: "/joined-groups",
+    roles: ["user", "EaseCompanion", "super-admin"],
   },
   {
     label: "Pending Approval",
     icon: PendingApprovalIcon,
     route: "/pending-approval",
+    roles: ["user", "EaseCompanion", "super-admin"],
   },
   {
     label: "Saved",
     icon: SavedIcon,
     route: "/saved",
+    roles: ["user", "EaseCompanion", "super-admin"],
   },
 ];
 
@@ -78,6 +93,12 @@ const profileIndicatorStyling = {
 export default function HomeNavigation() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { role, loggedInUser } = useAuthenticationStore(
+    useShallow((state) => ({
+      role: state.user.data?.role,
+      loggedInUser: state.user.data,
+    }))
+  );
 
   const [active, setActive] = useState();
 
@@ -101,24 +122,26 @@ export default function HomeNavigation() {
     setActive(link.label);
   }
 
-  const navLinks = navLinksAttributes.map((navLink) => {
-    return (
-      <HomeNavLink
-        active={active}
-        onSelect={() => handleActive(navLink)}
-        key={navLink.label}
-        {...navLink}
-      />
-    );
-  });
+  const navLinks = navLinksAttributes
+    .filter(({ roles }) => roles.includes(role))
+    .map((navLink) => {
+      return (
+        <HomeNavLink
+          active={active}
+          onSelect={() => handleActive(navLink)}
+          key={navLink.label}
+          {...navLink}
+        />
+      );
+    });
 
   return (
     <>
       <Stack gap={0}>
         <UserProfileIndicator
-          profile={sample_user.image}
-          name={sample_user.name}
-          role={sample_user.role}
+          profile={loggedInUser?.image}
+          name={loggedInUser?.fullName}
+          role={role}
           {...profileIndicatorStyling}
         />
         <Stack gap={0}>{navLinks}</Stack>

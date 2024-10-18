@@ -51,10 +51,10 @@ export default function SurveyModal({ form, opened, onClose, onSubmit }) {
   });
 
   const headerProps =
-    form.getValues().role === "user"
-      ? STEPPER_DATA.user[stepper]
-      : form.getValues().role === "volunteer"
-      ? STEPPER_DATA.volunteer[stepper]
+    form.getValues().role === "EaseBuddy"
+      ? STEPPER_DATA.EaseBuddy[stepper]
+      : form.getValues().role === "EaseCompanion"
+      ? STEPPER_DATA.EaseCompanion[stepper]
       : STEPPER_DATA[stepper];
 
   const stepperKeys = form.getValues().role

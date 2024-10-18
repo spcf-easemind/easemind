@@ -19,7 +19,7 @@ export default function RolePicker({ onClick }) {
           <CardButton
             image={IconManyPeople}
             alt="Interface Icon of 3 People"
-            value="user"
+            value="EaseBuddy"
             onClick={handleOnClick}
           />
           <Box ta="center" c="white">
@@ -34,7 +34,7 @@ export default function RolePicker({ onClick }) {
           <CardButton
             image={IconVolunteer}
             alt="Interface Icon of Volunteer Jacket"
-            value="volunteer"
+            value="EaseCompanion"
             onClick={handleOnClick}
           />
           <Box ta="center" c="white">

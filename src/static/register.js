@@ -1,6 +1,6 @@
 export const STEPPER_LABELS = {
-  user: ["Express", "Assistance", "Resilience", "Challenges", "Individual"],
-  volunteer: ["Expertise", "Experience", "Availability", "Approach", "Role"],
+  EaseBuddy: ["Express", "Assistance", "Resilience", "Challenges", "Individual"],
+  EaseCompanion: ["Expertise", "Experience", "Availability", "Approach", "Role"],
 };
 
 export const STEPPER_DATA = {
@@ -8,7 +8,7 @@ export const STEPPER_DATA = {
     title: "Choose your Role",
     text: "How would you like to be a part of Easemind?",
   },
-  user: {
+  EaseBuddy: {
     2: {
       title: "Tell us how you feel:",
       text: "How would you describe your self-esteem?",
@@ -30,7 +30,7 @@ export const STEPPER_DATA = {
       text: "What triggers your feelings of stress or anxiety?",
     },
   },
-  volunteer: {
+  EaseCompanion: {
     2: {
       title: "Area of Expertise:",
       text: "What field do you specialize in?",
@@ -56,7 +56,7 @@ export const STEPPER_DATA = {
 
 export const QUESTION_DATA = {
   // USER
-  user: {
+  EaseBuddy: {
     2: [
       // Question 1
       {
@@ -175,7 +175,7 @@ export const QUESTION_DATA = {
   },
 
   // VOLUNTEER
-  volunteer: {
+  EaseCompanion: {
     2: [
       // Question 1
       {
