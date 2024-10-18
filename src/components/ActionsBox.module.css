@@ -1,8 +1,5 @@
-.borderStyling {
-    position: absolute;
-    bottom: 0;
-    right: -17px;
-    width: 159px;
-    height: 1.5px;
+.styledButton {
+  @mixin hover {
     background-color: var(--mantine-color-gray-2);
+  }
 }
