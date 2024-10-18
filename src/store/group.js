@@ -626,6 +626,8 @@ export const useGroupStore = create((set) => ({
           const updatedUserOwnedGroupInfo = {
             groupInfo: group.data,
             groupPendingMember: groupPendingMember,
+            groupPendingMemberCount:
+              groupPendingMember.data.pendingMembers.length,
           };
           userOwnedGroupPendingMemberArray.push(updatedUserOwnedGroupInfo);
         }
