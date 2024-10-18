@@ -6,9 +6,10 @@ import "./index.css";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import "@mantine/dropzone/styles.css";
+import "@mantine/notifications/styles.css";
 import { MantineProvider } from "@mantine/core";
-import { ModalsProvider } from "@mantine/modals";
 import { theme, resolver } from "./plugins/mantine.js";
+import { Notifications } from "@mantine/notifications";
 
 // React Router
 import AppRouter from "./router/AppRouter.jsx";
@@ -21,9 +22,8 @@ import "lightgallery/css/lg-video.css";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <MantineProvider theme={theme} cssVariablesResolver={resolver}>
-      <ModalsProvider>
-        <AppRouter />
-      </ModalsProvider>
+      <AppRouter />
+      <Notifications />
     </MantineProvider>
   </StrictMode>
 );

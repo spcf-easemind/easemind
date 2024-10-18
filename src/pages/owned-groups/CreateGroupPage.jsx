@@ -7,7 +7,8 @@ import { useShallow } from "zustand/shallow";
 import { useEffect, useMemo } from "react";
 import { useAuthenticationStore } from "../../store/authentication";
 import { useFormStore } from "../../store/form";
-import { useGroupStore } from "../../store/group";
+import { notificationsFn } from "../../utils/notifications.jsx";
+import { useGroupAPIStore } from "../../store/group-api";
 
 const header = {
   title: "Create Group",
@@ -25,7 +26,7 @@ export default function CreateGroupPage() {
     (state) => state.user.data?.key
   );
 
-  const createGroupFn = useGroupStore((state) => state.createGroup);
+  const createGroupFn = useGroupAPIStore((state) => state.createGroup);
 
   const { savedForm, setSavedForm } = useFormStore(
     useShallow((state) => ({
@@ -119,7 +120,9 @@ export default function CreateGroupPage() {
         groupRole: "Group Member",
       }));
 
-    const mappedCategories = formData.initialCategories.map(({ key }) => ({ key }));
+    const mappedCategories = formData.initialCategories.map(({ key }) => ({
+      key,
+    }));
 
     // Reassign
     formData.members = [
@@ -139,8 +142,14 @@ export default function CreateGroupPage() {
     delete formData.initialMembers;
     delete formData.initialCategories;
 
-    console.log(formData);
-    await createGroupFn(formData);
+    const id = notificationsFn.load();
+    const response = await createGroupFn(formData);
+    if (response) {
+      notificationsFn.success(id, response);
+      navigate(`/owned-groups/${response.key}`);
+    } else {
+      notificationsFn.error(id, "Failed to create group");
+    }
   }
 
   function iterateSavedData() {
@@ -156,14 +165,16 @@ export default function CreateGroupPage() {
   }, [savedForm]);
 
   return (
-    <Paper>
-      <GroupControlCard
-        header={header}
-        button={button}
-        enums={{ users: usersEnum }}
-        form={{ form, onSubmit: formSubmit }}
-        onPhotoControlClick={handleAddPhotoClick}
-      />
-    </Paper>
+    <>
+      <Paper>
+        <GroupControlCard
+          header={header}
+          button={button}
+          enums={{ users: usersEnum }}
+          form={{ form, onSubmit: formSubmit }}
+          onPhotoControlClick={handleAddPhotoClick}
+        />
+      </Paper>
+    </>
   );
 }
