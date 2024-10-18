@@ -19,6 +19,8 @@ import PendingApprovalIcon from "../../assets/icons/navigation/PendingApproval.s
 import SavedIcon from "../../assets/icons/navigation/Saved.svg";
 
 import HomeNavLink from "../links/HomeNavLinks";
+import UserProfileIndicator from "../UserProfileIndicator";
+
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { set } from "date-fns";
@@ -67,6 +69,12 @@ const navLinksAttributes = [
   },
 ];
 
+const profileIndicatorStyling = {
+  padding: "lg",
+  width: 65,
+  height: 65,
+};
+
 export default function HomeNavigation() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -107,15 +115,12 @@ export default function HomeNavigation() {
   return (
     <>
       <Stack gap={0}>
-        <Group p="lg">
-          <Avatar src={sample_user.image} w={65} h={65} radius={10} />
-          <Box>
-            <Title order={4}>{sample_user.name}</Title>
-            <Text c="gray" size="sm">
-              {sample_user.role}
-            </Text>
-          </Box>
-        </Group>
+        <UserProfileIndicator
+          profile={sample_user.image}
+          name={sample_user.name}
+          role={sample_user.role}
+          {...profileIndicatorStyling}
+        />
         <Stack gap={0}>{navLinks}</Stack>
       </Stack>
     </>

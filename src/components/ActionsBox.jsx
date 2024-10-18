@@ -1,5 +1,4 @@
 import {
-  Box,
   Image,
   UnstyledButton,
   Group,
