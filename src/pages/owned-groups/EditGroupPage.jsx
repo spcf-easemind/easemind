@@ -74,12 +74,6 @@ export default function EditGroupPage() {
     }))
   );
 
-  useEffect(() => {
-    if (savedForm) {
-      iterateSavedData();
-    }
-  }, [savedForm]);
-
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {

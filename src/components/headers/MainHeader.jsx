@@ -20,7 +20,7 @@ const menuLinks = [
     route: "/home",
     icon: IconHome,
     iconFilled: IconHomeFilled,
-    roles: ["user", "super-admin", "volunteer"],
+    roles: ["user", "super-admin", "EaseCompanion"],
   },
   {
     name: "chat",
@@ -28,7 +28,7 @@ const menuLinks = [
     route: "/chat",
     icon: IconChat,
     iconFilled: IconChatFilled,
-    roles: ["user", "super-admin", "volunteer"],
+    roles: ["user", "super-admin", "EaseCompanion"],
   },
   {
     name: "profile",
@@ -36,7 +36,7 @@ const menuLinks = [
     route: "/profile",
     icon: IconAccount,
     iconFilled: IconAccountFilled,
-    roles: ["user", "super-admin", "volunteer"],
+    roles: ["user", "super-admin", "EaseCompanion"],
   },
   {
     name: "miscellaneous",
@@ -44,7 +44,7 @@ const menuLinks = [
     route: "/miscellaneous",
     icon: IconAccount,
     iconFilled: IconAccountFilled,
-    roles: ["super-admin", "volunteer"],
+    roles: ["super-admin"],
   },
 ];
 

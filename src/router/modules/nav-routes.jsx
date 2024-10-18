@@ -1,6 +1,11 @@
 // DIary
 import EndlessThoughtsDiaryPage from "../../pages/endless-thoughts-diary/EndlessThoughtsDiaryPage";
 
+// Posts
+import PostsPage from "../../pages/posts/PostsPage";
+import CreatePostPage from "../../pages/posts/CreatePostPage";
+import EditPostPage from "../../pages/posts/EditPostPage";
+
 // Ease Companions
 import EaseCompanionsPage from "../../pages/ease-companions/EaseCompanionsPage";
 import EaseCompanionViewPage from "../../pages/ease-companions/EaseCompanionViewPage";
@@ -30,6 +35,21 @@ import PendingApprovalPageView from "../../pages/pending-approval/PendingApprova
 import SavedPage from "../../pages/saved/SavedPage";
 
 const navRoutes = [
+  // Posts
+  {
+    path: "/posts",
+    element: <PostsPage />,
+  },
+  {
+    path: "/posts/create",
+    element: <CreatePostPage />,
+  },
+  {
+    path: "/post/edit/:postRef",
+    element: <EditPostPage />,
+  },
+
+  // Diary
   {
     path: "/endless-thoughts-diary",
     element: <EndlessThoughtsDiaryPage />,

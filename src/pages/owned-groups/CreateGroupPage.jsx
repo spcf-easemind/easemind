@@ -148,7 +148,7 @@ export default function CreateGroupPage() {
       notificationsFn.success(id, response);
       navigate(`/owned-groups/${response.key}`);
     } else {
-      notificationsFn.error(id, "Failed to create group");
+      notificationsFn.error(id, response);
     }
   }
 

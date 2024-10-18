@@ -1,0 +1,9 @@
+.tabStyling {
+  transition: border-color 200ms ease;
+
+  &[data-active] {
+    border-bottom: rem(3px) solid transparent;
+    border-radius: 2px;
+    border-bottom-color: var(--mantine-primary-color-5);
+  }
+}

@@ -9,11 +9,15 @@ import {
   Grid,
   Avatar,
   SimpleGrid,
+  ActionIcon,
 } from "@mantine/core";
 
 import Pill from "../pills/Pill.jsx";
 import GroupMemberCard from "./GroupMemberCard.jsx";
+import ActionsBox from "../ActionsBox.jsx";
 import { useMemo } from "react";
+import { IconDotsVertical } from "@tabler/icons-react";
+import IconPencil from "../../assets/icons/buttons/IconPencil.svg";
 
 const MAX_PILLS = 3;
 
@@ -159,8 +163,10 @@ export default function DisplayCard({
       </Grid.Col>
     ) : undefined;
 
+  const sharedTypesOfCompanions = ["companion", "posts"];
+
   const availabilityInstance =
-    type === "companion" && variant === "view" ? (
+    sharedTypesOfCompanions.includes(type) && variant === "view" ? (
       <Grid.Col order={4}>
         <Box>
           <Title order={title.order} fw={title.fw} mb={8}>
@@ -210,14 +216,17 @@ export default function DisplayCard({
       </Grid.Col>
     ) : undefined;
 
-  const whichDescriptionTitle =
-    type === "companion" ? "Your Mental Health Ease Companion" : "Description";
+  const whichDescriptionTitle = sharedTypesOfCompanions.includes(type)
+    ? "Your Mental Health Ease Companion"
+    : "Description";
   const isTruncated = (text) =>
     variant === "view" ? text : truncateToWords(text);
   const whichSubtitle = (instance) =>
-    type === "companion" ? instance.role : `${instance.membersCount} members`;
+    sharedTypesOfCompanions.includes(type)
+      ? instance.role
+      : `${instance.membersCount} members`;
   const withPronouns = (instance) =>
-    type === "companion" && (
+    sharedTypesOfCompanions.includes(type) && (
       <Text size="xs" c="dimmed">
         {instance.pronouns}
       </Text>
@@ -234,6 +243,34 @@ export default function DisplayCard({
         Leave Group
       </Button>
     ) : undefined;
+
+  const whichMainButton = useMemo(() => {
+    const popoverOptions = [
+      {
+        value: "edit",
+        icon: IconPencil,
+        label: "Edit",
+        textColor: "dark.5",
+      },
+    ];
+    return type === "posts" ? (
+      <ActionsBox options={popoverOptions}>
+        <ActionIcon radius="xl" variant="subtle" color="black">
+          <IconDotsVertical size={20} stroke={1.5} />
+        </ActionIcon>
+      </ActionsBox>
+    ) : (
+      <Button
+        px={header.button.px}
+        size={header.button.size}
+        color="sky-blue.5"
+        onClick={onButtonClick}
+        style={{ zIndex: 1 }}
+      >
+        {buttonLabel}
+      </Button>
+    );
+  }, [type]);
 
   return (
     <Card
@@ -283,15 +320,8 @@ export default function DisplayCard({
 
             <Group>
               {includesLeaveButton}
-              <Button
-                px={header.button.px}
-                size={header.button.size}
-                color="sky-blue.5"
-                onClick={onButtonClick}
-                style={{ zIndex: 1 }}
-              >
-                {buttonLabel}
-              </Button>
+
+              {whichMainButton}
             </Group>
           </Group>
         </Grid.Col>

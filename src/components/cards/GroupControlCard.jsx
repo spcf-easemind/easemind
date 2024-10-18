@@ -63,7 +63,7 @@ export default function GroupControlCard({
 
   useEffect(() => {
     fetchInterestsEnumFn();
-  }, [fetchInterestsEnumFn]);
+  }, []);
 
   const enumArrays = useMemo(() => {
     const attributes = tabsAttributes.map((tab) => ({
