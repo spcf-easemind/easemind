@@ -394,25 +394,26 @@ export default function MiscellaneousPage() {
         {
           fullName: 'Super Admin',
           key: '3JkiWUaMis6ziIHwRrKsK',
-          lastUpdated: "2024-10-17T10:55:39.518Z",
-          role: "super-admin",
+          lastUpdated: '2024-10-17T10:55:39.518Z',
+          role: 'super-admin',
           status: 'online',
           groupRole: 'Group Admin',
         },
         {
           fullName: 'alex',
-          key: "uOl9RnXouVl9vU1fbUXU1",
-          lastUpdated: "2024-10-16T10:30:00.901Z",
+          key: 'uOl9RnXouVl9vU1fbUXU1',
+          lastUpdated: '2024-10-16T10:30:00.901Z',
           role: 'user',
           status: 'online',
           groupRole: 'member',
         },
         {
-          fullName: "alex1",
-          key: "vJL1OEHA9SzhDt21li-0r",
-          lastUpdated: "2024-10-16T10:33:29.627Z",
+          fullName: 'alex1',
+          key: 'vJL1OEHA9SzhDt21li-0r',
+          lastUpdated: '2024-10-16T10:33:29.627Z',
           role: 'user',
           status: 'online',
+          groupRole: 'member',
         },
       ],
     };
@@ -431,11 +432,13 @@ export default function MiscellaneousPage() {
     }
   };
   const handleGetGroup = async () => {
+    const formData = {
+      groupKey: 'KuldakKe0997u0w2f2z3W',
+    };
     try {
-      const getSuccess = await getGroupFn();
+      const getSuccess = await getGroupFn(formData);
       if (getSuccess) {
-        console.log('All Groups Fetched Successfully!');
-        await getGroupFn();
+        console.log('Group Fetched Successfully!', groupData);
       } else {
         console.error('Failed to fetch groups');
       }
