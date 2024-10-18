@@ -308,7 +308,12 @@ export const useGroupStore = create((set) => ({
       });
 
       const userGroupArray = [];
-      for (const group of userGroup.data.groups) {
+      for (const groupOfUser of userGroup.data.groups) {
+        const group = await getDoc({
+          collection: "groups",
+          key: groupOfUser.key,
+        });
+
         userGroupArray.push(group);
       }
 
