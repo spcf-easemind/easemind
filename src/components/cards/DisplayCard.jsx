@@ -139,6 +139,7 @@ export default function DisplayCard({
                 image={member.profilePath}
                 name={member.fullName}
                 role={member.groupRole}
+                bg="gray.0"
               >
                 <Button
                   variant="subtle"
@@ -210,7 +211,7 @@ export default function DisplayCard({
           </Group>
         </Grid.Col>
 
-        <Grid.Col span={12} >
+        <Grid.Col span={12}>
           <Box>
             <Title order={title.order} fw={title.fw} mb={8}>
               Description

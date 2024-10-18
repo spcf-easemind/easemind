@@ -23,6 +23,7 @@ import PhotoControlPage from "../../pages/PhotoControlPage";
 
 // Pending Approval
 import PendingApprovalPage from "../../pages/pending-approval/PendingApprovalPage";
+import PendingApprovalPageView from "../../pages/pending-approval/PendingApprovalViewPage";
 
 // Saved
 import SavedPage from "../../pages/saved/SavedPage";
@@ -81,6 +82,10 @@ const navRoutes = [
   {
     path: "/pending-approval",
     element: <PendingApprovalPage />,
+  },
+  {
+    path: "/pending-approval/:pendingApprovalRef",
+    element: <PendingApprovalPageView />,
   },
   {
     path: "/saved",
