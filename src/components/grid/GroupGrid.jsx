@@ -14,19 +14,21 @@ export default function GroupGrid({
       return "Edit";
     } else if (type === "joined") {
       return "View Chat";
+    } else if (type === "companion") {
+      return "Connect";
     }
   };
 
   const ColInstances = groupData.map((group) => {
     return (
-        <DisplayCard
-          key={group.key}
-          instance={group}
-          type={type}
-          onButtonClick={onButtonClick}
-          onSelect={onSelect}
-          buttonLabel={btnLabel()}
-        />
+      <DisplayCard
+        key={group.key}
+        instance={group}
+        type={type}
+        onButtonClick={onButtonClick}
+        onSelect={onSelect}
+        buttonLabel={btnLabel()}
+      />
     );
   });
   return <SimpleGrid cols={2}>{ColInstances}</SimpleGrid>;

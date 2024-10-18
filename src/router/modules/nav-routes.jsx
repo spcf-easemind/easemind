@@ -3,6 +3,7 @@ import EndlessThoughtsDiaryPage from "../../pages/endless-thoughts-diary/Endless
 
 // Ease Companions
 import EaseCompanionsPage from "../../pages/ease-companions/EaseCompanionsPage";
+import EaseCompanionViewPage from "../../pages/ease-companions/EaseCompanionViewPage";
 
 // Community Groups
 import CommunityGroupsPage from "../../pages/community-groups/CommunityGroupsPage";
@@ -16,7 +17,7 @@ import EditGroupPage from "../../pages/owned-groups/EditGroupPage";
 
 // Joined Groups
 import JoinedGroupsPage from "../../pages/joined-groups/JoinedGroupsPage";
-import JoinedGroupView from "../../pages/joined-groups/JoinedGroupsPage";
+import JoinedGroupViewPage from "../../pages/joined-groups/JoinedGroupViewPage";
 
 // Photo Control for Groups
 import PhotoControlPage from "../../pages/PhotoControlPage";
@@ -33,9 +34,15 @@ const navRoutes = [
     path: "/endless-thoughts-diary",
     element: <EndlessThoughtsDiaryPage />,
   },
+
+  // Ease Companions
   {
     path: "/ease-companions",
     element: <EaseCompanionsPage />,
+  },
+  {
+    path: "/ease-companion/:companionRef",
+    element: <EaseCompanionViewPage />,
   },
 
   // Community Groups
@@ -77,8 +84,10 @@ const navRoutes = [
   },
   {
     path: "/joined-group/:joinedGroupRef",
-    element: <JoinedGroupView />,
+    element: <JoinedGroupViewPage />,
   },
+
+  // Pending
   {
     path: "/pending-approval",
     element: <PendingApprovalPage />,
@@ -87,6 +96,8 @@ const navRoutes = [
     path: "/pending-approval/:pendingApprovalRef",
     element: <PendingApprovalPageView />,
   },
+
+  // Saved
   {
     path: "/saved",
     element: <SavedPage />,

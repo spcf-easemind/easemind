@@ -9,6 +9,7 @@ export const useGroupAPIStore = create((set, get) => ({
   communityGroups: [],
 
   joinedGroups: [],
+  joinedGroup: null,
 
   fetchOwnedGroups: async (loggedInUserId) => {
     const fetchAllGroupsFn = useGroupStore.getState().getAllGroups;
@@ -83,8 +84,25 @@ export const useGroupAPIStore = create((set, get) => ({
             member.key === loggedInUserId && member.groupRole === "Group Member"
         )
       );
+
+      console.log(filteredJoinedGroups);
       set(() => ({
         joinedGroups: filteredJoinedGroups,
+      }));
+    }
+  },
+  fetchJoinedGroup: async (joinedGroupRef) => {
+    const fetchAllGroupsFn = useGroupStore.getState().getAllGroups;
+    const response = await fetchAllGroupsFn();
+
+    if (response) {
+      const groupData = useGroupStore.getState().groupData;
+      const joinedGroup = groupData.find(({ key }) => key === joinedGroupRef);
+
+      console.log(joinedGroup)
+
+      set(() => ({
+        joinedGroup: joinedGroup,
       }));
     }
   },

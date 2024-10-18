@@ -1,0 +1,44 @@
+import { Paper } from "@mantine/core";
+import { useParams, useNavigate } from "react-router-dom";
+import DisplayCard from "../../components/cards/DisplayCard";
+import { useGroupAPIStore } from "../../store/group-api";
+import { useShallow } from "zustand/shallow";
+import { useEffect } from "react";
+
+export default function JoinedGroupViewPage() {
+  const { joinedGroupRef } = useParams();
+  // const navigate = useNavigate();
+  console.log(joinedGroupRef);
+
+  const { fetchJoinedGroupFn, joinedGroup } = useGroupAPIStore(
+    useShallow((state) => ({
+      fetchJoinedGroupFn: state.fetchJoinedGroup,
+      joinedGroup: state.joinedGroup,
+    }))
+  );
+
+  useEffect(() => {
+    console.log(joinedGroupRef);
+    fetchJoinedGroupFn(joinedGroupRef);
+  }, []);
+
+  console.log(joinedGroup);
+
+  function handleButtonClick() {
+    console.log("View Chat");
+  }
+
+  return (
+    joinedGroup && (
+      <Paper>
+        <DisplayCard
+          instance={joinedGroup}
+          variant="view"
+          type="joined"
+          buttonLabel="View Chat"
+          onButtonClick={handleButtonClick}
+        />
+      </Paper>
+    )
+  );
+}

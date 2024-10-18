@@ -1,18 +1,18 @@
 import {
   Card,
   Group,
-  Image,
   Text,
   Box,
   Button,
   Stack,
   Title,
   Grid,
+  Avatar,
+  SimpleGrid,
 } from "@mantine/core";
 
 import Pill from "../pills/Pill.jsx";
 import GroupMemberCard from "./GroupMemberCard.jsx";
-import HappyImage from "../../assets/HappyImage.jpg";
 import { useMemo } from "react";
 
 const MAX_PILLS = 3;
@@ -124,8 +124,9 @@ export default function DisplayCard({
     ));
   }, [instance.categories, pills.size, variant]);
 
+  const memberListTypes = ["owned", "joined"];
   const memberListInstance =
-    type === "owned" && variant === "view" ? (
+    memberListTypes.includes(type) && variant === "view" ? (
       <Grid.Col order={4}>
         <Box>
           <Title order={title.order} fw={title.fw} mb={8}>
@@ -141,13 +142,15 @@ export default function DisplayCard({
                 role={member.groupRole}
                 bg="gray.0"
               >
-                <Button
-                  variant="subtle"
-                  color="red.5"
-                  onClick={() => onModalSelect(member)}
-                >
-                  Remove
-                </Button>
+                {type === "owned" && (
+                  <Button
+                    variant="subtle"
+                    color="red.5"
+                    onClick={() => onModalSelect(member)}
+                  >
+                    Remove
+                  </Button>
+                )}
               </GroupMemberCard>
             ))}
           </Stack>
@@ -155,8 +158,81 @@ export default function DisplayCard({
       </Grid.Col>
     ) : undefined;
 
+  const availabilityInstance =
+    type === "companion" && variant === "view" ? (
+      <Grid.Col order={4}>
+        <Box>
+          <Title order={title.order} fw={title.fw} mb={8}>
+            Availability
+          </Title>
+
+          <Card bg="sky-blue.0">
+            <SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 7 }}>
+              {instance.availability.map(({ day, time }) => (
+                <Box ta="center">
+                  <Title order={6} fw={500}>
+                    {day}
+                  </Title>
+                  <Text size="xs">{time}</Text>
+                </Box>
+              ))}
+            </SimpleGrid>
+          </Card>
+        </Box>
+      </Grid.Col>
+    ) : undefined;
+
+  const joinedGroupsInstance =
+    type === "companion" && variant === "view" ? (
+      <Grid.Col order={5}>
+        <Box>
+          <Title order={title.order} fw={title.fw} mb={8}>
+            Joined Groups
+          </Title>
+
+          {/* Data */}
+          <SimpleGrid cols={2}>
+            {instance.joinedGroups.map(({ key, data }) => {
+              const memberCount = `${data.membersCount} members`;
+              return (
+                <GroupMemberCard
+                  image={data.groupImageUrl}
+                  name={data.name}
+                  role={memberCount}
+                  bg="sky-blue.0"
+                  radius="md"
+                />
+              );
+            })}
+          </SimpleGrid>
+        </Box>
+      </Grid.Col>
+    ) : undefined;
+
+  const whichDescriptionTitle =
+    type === "companion" ? "Your Mental Health Ease Companion" : "Description";
   const isTruncated = (text) =>
     variant === "view" ? text : truncateToWords(text);
+  const whichSubtitle = (instance) =>
+    type === "companion" ? instance.role : `${instance.membersCount} members`;
+  const withPronouns = (instance) =>
+    type === "companion" && (
+      <Text size="xs" c="dimmed">
+        {instance.pronouns}
+      </Text>
+    );
+  const includesLeaveButton =
+    type === "joined" && variant === "view" ? (
+      <Button
+        variant="light"
+        color="red"
+        px={header.button.px}
+        size={header.button.size}
+        style={{ zIndex: 1 }}
+      >
+        Leave Group
+      </Button>
+    ) : undefined;
 
   return (
     <Card
@@ -185,36 +261,44 @@ export default function DisplayCard({
       <Grid>
         <Grid.Col span={12}>
           <Group align="center">
-            <Image
-              src={HappyImage}
+            <Avatar
+              src={instance.groupImageUrl}
               w={header.image.width}
               h={header.image.height}
               radius="sm"
             />
-            <Box flex={1}>
-              <Title order={title.order} fw={title.fw}>
-                {instance.name}
-              </Title>
+            <Stack flex={1} gap={0}>
+              <Group gap={4}>
+                <Title order={title.order} fw={title.fw}>
+                  {instance.name}
+                </Title>
+                {withPronouns(instance)}
+              </Group>
+
               <Text size={header.text.size} c="dimmed">
-                {instance.membersCount} members
+                {whichSubtitle(instance)}
               </Text>
-            </Box>
-            <Button
-              px={header.button.px}
-              size={header.button.size}
-              color="sky-blue.5"
-              onClick={onButtonClick}
-              style={{ zIndex: 1 }}
-            >
-              {buttonLabel}
-            </Button>
+            </Stack>
+
+            <Group>
+              {includesLeaveButton}
+              <Button
+                px={header.button.px}
+                size={header.button.size}
+                color="sky-blue.5"
+                onClick={onButtonClick}
+                style={{ zIndex: 1 }}
+              >
+                {buttonLabel}
+              </Button>
+            </Group>
           </Group>
         </Grid.Col>
 
         <Grid.Col span={12}>
           <Box>
             <Title order={title.order} fw={title.fw} mb={8}>
-              Description
+              {whichDescriptionTitle}
             </Title>
             <Text size={description.size} lh={1.4}>
               {isTruncated(instance.description)}
@@ -253,6 +337,10 @@ export default function DisplayCard({
         )} */}
 
         {memberListInstance}
+
+        {availabilityInstance}
+
+        {joinedGroupsInstance}
       </Grid>
     </Card>
   );
