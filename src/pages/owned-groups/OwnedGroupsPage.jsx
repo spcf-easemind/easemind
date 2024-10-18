@@ -1,6 +1,6 @@
 import { Box, Paper } from "@mantine/core";
 import HeadingCard from "../../components/headings/HeadingCard.jsx";
-import CreateGroupButton from "../../components/buttons/CreateGroupButton.jsx";
+import CreateButtonCard from "../../components/buttons/CreateButtonCard.jsx";
 import GroupGrid from "../../components/grid/GroupGrid.jsx";
 import { useNavigate } from "react-router-dom";
 import { useGroupAPIStore } from "../../store/group-api.js";
@@ -41,7 +41,9 @@ export default function OwnedGroupsPage() {
       <HeadingCard title="Owned Groups" description={null} />
 
       <Box mt={18}>
-        <CreateGroupButton onClick={handleCreateGroup} />
+        <CreateButtonCard onClick={handleCreateGroup}>
+          Create Group
+        </CreateButtonCard>
       </Box>
 
       <Box mt={18}>

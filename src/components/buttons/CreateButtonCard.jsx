@@ -1,6 +1,6 @@
 import { Card, Group, Image, Text } from "@mantine/core";
 import IconPlusBox from "../../assets/icons/buttons/IconPlusBox.svg";
-export default function CreateGroupButton({ onClick }) {
+export default function CreateButtonCard({ onClick, children }) {
   return (
     <Card
       padding={16}
@@ -15,7 +15,7 @@ export default function CreateGroupButton({ onClick }) {
     >
       <Group>
         <Image src={IconPlusBox} alt="Create a group" w={25} h={25} />
-        <Text>Create Group</Text>
+        <Text>{children}</Text>
       </Group>
     </Card>
   );
