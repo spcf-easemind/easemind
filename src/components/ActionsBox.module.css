@@ -1,5 +1,5 @@
 .styledButton {
   @mixin hover {
-    background-color: var(--mantine-color-gray-2);
+    background-color: var(--mantine-color-gray-1);
   }
 }
