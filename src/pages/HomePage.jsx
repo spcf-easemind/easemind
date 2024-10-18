@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Title,
   Box,
@@ -6,16 +6,55 @@ import {
   Button,
   LoadingOverlay,
   Image,
+  Modal,
+  Card,
 } from "@mantine/core";
 import { useUsersStore } from "../store/users";
 import { useShallow } from "zustand/shallow";
 import { useForm } from "@mantine/form";
+import { useDisclosure } from "@mantine/hooks";
 
 import { POSTS } from "../static/home";
+import SampleUserImage1 from "../assets/images/SampleUserImage1.webp";
 
-import PostSection from "../components/PostSection";
+import PostSection from "../components/posts/PostSection";
+import HeadingCard from "../components/headings/HeadingCard";
+import PostModal from "../components/modals/PostModal";
 
+import IconSave from "../assets/icons/buttons/IconSave.svg";
+import IconReport from "../assets/icons/header/IconInfo.svg";
 
+// Static data
+const sample_post = {
+  id: 1,
+  userProfileImage: SampleUserImage1,
+  userName: "Chubby Bunny",
+  userRole: "Ease Companion",
+  postTitle: "Understanding the Importance of Mental Health in Modern Society",
+  postContent:
+    "Remember, your well-being matters. Take time to meditate, love yourself, and prioritize your mental health.",
+  tags: ["Anxiety", "Depression", "Sadness"],
+  hashtags: ["keepItPositive", "anxiety"],
+};
+
+const postOptionsAttributes = [
+  {
+    icon: IconSave,
+    label: "Save",
+    value: "save",
+  },
+  {
+    icon: IconReport,
+    label: "Report",
+    value: "report",
+  },
+];
+
+const profileIndicatorStyling = {
+  padding: "",
+  width: 55,
+  height: 55,
+};
 
 export default function HomePage() {
   const {
@@ -39,6 +78,8 @@ export default function HomePage() {
   );
 
   const [isUploading, setIsUploading] = useState(false);
+  const [opened, { open, close }] = useDisclosure(false);
+  const [selectedPostID, setSelectedPostID] = useState("");
 
   useEffect(() => {
     // getUserInfoFn();
@@ -85,9 +126,25 @@ export default function HomePage() {
   };
 
   const postsContent = POSTS.map((post) => {
-    return <PostSection {...post} key={post.id}/>
+    return (
+      <Card withBorder radius={10} my={20} p={25} key={post.id}>
+        <PostSection
+          {...post}
+          key={post.id}
+          onOpen={open}
+          options={postOptionsAttributes}
+          profileIndicatorStyling={profileIndicatorStyling}
+        />
+      </Card>
+    );
   });
 
+  const filterHeader = (
+    <HeadingCard
+      title="Anxiety"
+      description="Explore and dive into the following filtered insights on Anxiety—scroll through to find what resonates with you!"
+    />
+  );
   return (
     <Box p={5}>
       {/* <Box position="relative">
@@ -108,14 +165,14 @@ export default function HomePage() {
                 fit="contain"
                 withPlaceholder
               /> */}
-              {/* <img
+      {/* <img
       src={data.user.profileImageUrl}
       alt="Profile"
       width={200}
       height={200}
       style={{ objectFit: 'contain' }}
     /> */}
-            {/* </Box>
+      {/* </Box>
           )}
 
         <form onSubmit={form.onSubmit(handleSubmitFile)}>
@@ -130,7 +187,16 @@ export default function HomePage() {
         </form>
         {message && <p>{message}</p>}
       </Box> */}
+      {filterHeader}
       {postsContent}
+      <PostModal
+        openModal={opened}
+        closeModal={close}
+        sample={sample_post}
+        options={postOptionsAttributes}
+        profileIndicatorStyling={profileIndicatorStyling}
+        {...sample_post}
+      />
     </Box>
   );
 }
