@@ -12,7 +12,7 @@ import { IconX } from "@tabler/icons-react";
 export default function GroupModal({
   modal: { opened, onClose },
   form: { onClick, loading },
-  name,
+  target,
 }) {
   return (
     <Modal
@@ -44,7 +44,7 @@ export default function GroupModal({
 
         <Card.Section p={20}>
           <Text mb={16}>
-            Are you sure you want to remove <strong>“{name}”</strong> from the
+            Are you sure you want to remove <strong>“{target}”</strong> from the
             group? Once removed, all associated data will no longer be
             accessible unless they rejoin.
           </Text>

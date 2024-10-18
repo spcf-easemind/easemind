@@ -233,7 +233,7 @@ export default function DisplayCard({
           </Box>
         </Grid.Col>
 
-        {variant === "view" && (
+        {/* {variant === "view" && (
           <Grid.Col>
             <Box>
               <Title order={title.order} fw={title.fw} mb={8}>
@@ -249,7 +249,7 @@ export default function DisplayCard({
               </Text>
             </Box>
           </Grid.Col>
-        )}
+        )} */}
 
         {memberListInstance}
       </Grid>

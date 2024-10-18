@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 import {
   setDoc,
   getDoc,
@@ -8,9 +8,9 @@ import {
   listAssets,
   deleteAsset,
   getManyDocs,
-} from '@junobuild/core';
-import { nanoid } from 'nanoid';
-import { IconUser } from '@tabler/icons-react';
+} from "@junobuild/core";
+import { nanoid } from "nanoid";
+import { IconUser } from "@tabler/icons-react";
 
 export const useGroupStore = create((set) => ({
   groupData: null,
@@ -20,7 +20,7 @@ export const useGroupStore = create((set) => ({
   publicGroupProfile: async (file) => {
     set(() => ({
       groupData: null,
-      groupMessage: 'Loading...',
+      groupMessage: "Loading...",
       groupLoading: true,
     }));
     try {
@@ -30,14 +30,14 @@ export const useGroupStore = create((set) => ({
         const key = nanoid();
         const filename = `${key}-profile`;
         const { downloadUrl } = await uploadFile({
-          collection: 'groupProfileCollections',
+          collection: "groupProfileCollections",
           data: file,
           filename,
         });
         groupProfileImageUrl = downloadUrl;
 
         await setDoc({
-          collection: 'groupProfileCollections',
+          collection: "groupProfileCollections",
           doc: {
             key,
             data: {
@@ -50,17 +50,17 @@ export const useGroupStore = create((set) => ({
 
       set(() => ({
         groupData: null,
-        groupMessage: 'Group Profile Image uploaded successfully!',
+        groupMessage: "Group Profile Image uploaded successfully!",
         groupLoading: false,
       }));
       return true;
     } catch (error) {
-      console.error('Error uploading group profile image:', error);
+      console.error("Error uploading group profile image:", error);
       set(() => ({
         groupData: null,
         groupMessage:
           error.message ||
-          'An error occurred while uploading group profile image',
+          "An error occurred while uploading group profile image",
         groupLoading: false,
       }));
       return false;
@@ -70,13 +70,13 @@ export const useGroupStore = create((set) => ({
   getAllPublicGroupProfiles: async () => {
     set(() => ({
       groupData: null,
-      groupMessage: 'Loading...',
+      groupMessage: "Loading...",
       groupLoading: true,
     }));
 
     try {
       const allGroupProfiles = await listDocs({
-        collection: 'groupProfileCollections',
+        collection: "groupProfileCollections",
       });
 
       const groupImagePathArray = [];
@@ -86,17 +86,17 @@ export const useGroupStore = create((set) => ({
 
       set(() => ({
         groupData: groupImagePathArray,
-        groupMessage: 'Group public profile fetched successfully!',
+        groupMessage: "Group public profile fetched successfully!",
         groupLoading: false,
       }));
       return true;
     } catch (error) {
-      console.error('Error fetching all public group profiles:', error);
+      console.error("Error fetching all public group profiles:", error);
       set(() => ({
         groupData: null,
         groupMessage:
           error.message ||
-          'An error occurred while fetching all group profiles data',
+          "An error occurred while fetching all group profiles data",
         groupLoading: false,
       }));
       return false;
@@ -106,7 +106,7 @@ export const useGroupStore = create((set) => ({
   createGroup: async (formData) => {
     set(() => ({
       groupData: null,
-      groupMessage: 'Loading...',
+      groupMessage: "Loading...",
       groupLoading: true,
     }));
 
@@ -125,7 +125,7 @@ export const useGroupStore = create((set) => ({
         let groupImageUrl = formData.groupProfilePath;
 
         const user = await getDoc({
-          collection: 'users',
+          collection: "users",
           key: formData.ownerKey,
         });
 
@@ -133,7 +133,7 @@ export const useGroupStore = create((set) => ({
 
         for (const category of formData.categories) {
           const query = {
-            collection: 'categories',
+            collection: "categories",
             key: category.key,
           };
           getCategoriesArray.push(query);
@@ -158,7 +158,7 @@ export const useGroupStore = create((set) => ({
         };
 
         await setDoc({
-          collection: 'groups',
+          collection: "groups",
           doc: {
             key,
             data: createData,
@@ -167,7 +167,7 @@ export const useGroupStore = create((set) => ({
 
         for (const member of formData.members) {
           const userGroup = await getDoc({
-            collection: 'userGroups',
+            collection: "userGroups",
             key: member.key,
           });
 
@@ -180,13 +180,13 @@ export const useGroupStore = create((set) => ({
             userGroup.data.groups.push(data);
 
             await setDoc({
-              collection: 'userGroups',
+              collection: "userGroups",
               data: userGroup.data,
               version: userGroup.version,
             });
           } else {
             await setDoc({
-              collection: 'userGroups',
+              collection: "userGroups",
               doc: {
                 key: member.key,
                 data: {
@@ -205,15 +205,15 @@ export const useGroupStore = create((set) => ({
 
       set(() => ({
         groupData: null,
-        groupMEssage: 'Group created successfully!',
+        groupMessage: "Group created successfully!",
         groupLoading: true,
       }));
       return true;
     } catch (error) {
-      console.error('Error creating group:', error);
+      console.error("Error creating group:", error);
       set(() => ({
         groupData: null,
-        groupMessage: error.message || 'An error occurred while creating group',
+        groupMessage: error.message || "An error occurred while creating group",
         groupLoading: false,
       }));
       return false;
@@ -223,28 +223,28 @@ export const useGroupStore = create((set) => ({
   getGroup: async (formData) => {
     set(() => ({
       groupData: null,
-      groupMessage: 'Loading...',
+      groupMessage: "Loading...",
       groupLoading: true,
     }));
     console.log(formData.groupKey);
     try {
       const group = await getDoc({
-        collection: 'groups',
+        collection: "groups",
         key: formData.groupKey,
       });
 
       set(() => ({
         groupData: group.data,
-        groupMessage: 'Group Info',
+        groupMessage: "Group Info",
         groupLoading: false,
       }));
       return true;
     } catch (error) {
-      console.error('Error updating user info:', error);
+      console.error("Error updating user info:", error);
       set(() => ({
         groupData: null,
         groupMessage:
-          error.message || 'An error occurred while updating user data',
+          error.message || "An error occurred while updating user data",
         groupLoading: false,
       }));
       return false;
@@ -254,7 +254,7 @@ export const useGroupStore = create((set) => ({
   getAllGroups: async () => {
     set(() => ({
       groupData: null,
-      groupMessage: 'Loading...',
+      groupMessage: "Loading...",
       groupLoading: true,
     }));
 
@@ -262,7 +262,7 @@ export const useGroupStore = create((set) => ({
       const allGroupsArray = [];
 
       const allGroups = await listDocs({
-        collection: 'groups',
+        collection: "groups",
       });
 
       for (const group of allGroups.items) {
@@ -271,16 +271,16 @@ export const useGroupStore = create((set) => ({
 
       set(() => ({
         groupData: allGroupsArray,
-        groupMessage: 'All Group fetched successfully!',
+        groupMessage: "All Group fetched successfully!",
         groupLoading: false,
       }));
       return true;
     } catch (error) {
-      console.error('Error updating user info:', error);
+      console.error("Error updating user info:", error);
       set(() => ({
         groupData: null,
         groupMessage:
-          error.message || 'An error occurred while updating user data',
+          error.message || "An error occurred while updating user data",
         groupLoading: false,
       }));
       return false;
@@ -290,16 +290,16 @@ export const useGroupStore = create((set) => ({
   getUserGroup: async (formData) => {
     set(() => ({
       groupData: null,
-      groupMessage: 'Loading...',
+      groupMessage: "Loading...",
       groupLoading: true,
     }));
 
     try {
       const userGroups = await listDocs({
-        collection: 'userGroups',
+        collection: "userGroups",
       });
 
-      let userGroupKey = '';
+      let userGroupKey = "";
 
       for (const userGroup of userGroups.items) {
         if (userGroup.key === formData.userKey) {
@@ -308,7 +308,7 @@ export const useGroupStore = create((set) => ({
       }
 
       const userGroup = await getDoc({
-        collection: 'userGroups',
+        collection: "userGroups",
         key: userGroupKey,
       });
 
@@ -319,16 +319,16 @@ export const useGroupStore = create((set) => ({
 
       set(() => ({
         groupData: userGroupArray,
-        groupMessage: 'User Group List',
+        groupMessage: "User Group List",
         groupLoading: false,
       }));
       return true;
     } catch (error) {
-      console.error('Error updating user info:', error);
+      console.error("Error updating user info:", error);
       set(() => ({
         groupData: null,
         groupMessage:
-          error.message || 'An error occurred while updating user data',
+          error.message || "An error occurred while updating user data",
         groupLoading: false,
       }));
       return false;
@@ -338,18 +338,18 @@ export const useGroupStore = create((set) => ({
   removeMember: async (formData) => {
     set(() => ({
       groupData: null,
-      groupMessage: 'Loading...',
+      groupMessage: "Loading...",
       groupLoading: true,
     }));
 
     try {
       const group = await getDoc({
-        collection: 'groups',
+        collection: "groups",
         key: formData.groupKey,
       });
 
       const userGroups = await getDoc({
-        collection: 'userGroups',
+        collection: "userGroups",
         key: formData.userKey,
       });
 
@@ -363,7 +363,7 @@ export const useGroupStore = create((set) => ({
       group.data.members = updatedMembersArray;
 
       await setDoc({
-        collection: 'groups',
+        collection: "groups",
         doc: {
           key: formData.groupKey,
           data: group.data,
@@ -380,7 +380,7 @@ export const useGroupStore = create((set) => ({
       userGroups.data.groups = updatedUserGroupArray;
 
       await setDoc({
-        collection: 'userGroups',
+        collection: "userGroups",
         doc: {
           key: userGroups.key,
           data: userGroups.data,
@@ -390,17 +390,17 @@ export const useGroupStore = create((set) => ({
 
       set(() => ({
         groupData: null,
-        groupMessage: 'User has been removed successfully!',
+        groupMessage: "User has been removed successfully!",
         groupLoading: false,
       }));
 
       return true;
     } catch (error) {
-      console.error('Error updating user info:', error);
+      console.error("Error updating user info:", error);
       set(() => ({
         groupData: null,
         groupMessage:
-          error.message || 'An error occurred while updating user data',
+          error.message || "An error occurred while updating user data",
         groupLoading: false,
       }));
       return false;
@@ -409,24 +409,24 @@ export const useGroupStore = create((set) => ({
   deleteUserGroup: async (groupKey) => {
     set(() => ({
       groupData: null,
-      groupMessage: 'Loading...',
+      groupMessage: "Loading...",
       groupLoading: true,
     }));
 
     const allUserGroup = await listDocs({
-      collection: 'userGroups',
+      collection: "userGroups",
     });
 
     for (const userGroup of allUserGroup.items) {
       await deleteDoc({
-        collection: 'userGroups',
+        collection: "userGroups",
         doc: userGroup,
       });
     }
 
     set(() => ({
       groupData: null,
-      groupMessage: 'All group users deleted successfully!',
+      groupMessage: "All group users deleted successfully!",
       groupLoading: false,
     }));
     return true;
@@ -501,17 +501,17 @@ export const useGroupStore = create((set) => ({
   joinUserGroup: async (formData) => {
     set(() => ({
       groupLoading: null,
-      groupMessage: 'Loading...',
+      groupMessage: "Loading...",
       groupLoading: true,
     }));
     try {
       const userGroup = await getDoc({
-        collection: 'userGroups',
+        collection: "userGroups",
         key: formData.userKey,
       });
 
       const group = await getDoc({
-        collection: 'groups',
+        collection: "groups",
         key: formData.groupKey,
       });
 
@@ -524,13 +524,13 @@ export const useGroupStore = create((set) => ({
         userGroup.data.groups.push(data);
 
         await setDoc({
-          collection: 'userGroups',
+          collection: "userGroups",
           data: userGroup.data,
           version: userGroup.version,
         });
       } else {
         await setDoc({
-          collection: 'userGroups',
+          collection: "userGroups",
           doc: {
             key: formData.userKey,
             data: {
@@ -546,17 +546,17 @@ export const useGroupStore = create((set) => ({
       }
       set(() => ({
         groupData: null,
-        groupMessage: 'User joined the group successfully!',
+        groupMessage: "User joined the group successfully!",
         groupLoading: false,
       }));
       return true;
     } catch (error) {
-      console.error('Error joining user into the selected group:', error);
+      console.error("Error joining user into the selected group:", error);
       set(() => ({
         groupData: null,
         groupMessage:
           error.message ||
-          'An error occurred while attempting to join user into the group',
+          "An error occurred while attempting to join user into the group",
         groupLoading: false,
       }));
       return false;

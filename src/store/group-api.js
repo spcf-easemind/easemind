@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { useGroupStore } from "./group";
-export const useGroupAPIStore = create((set) => ({
+export const useGroupAPIStore = create((set, get) => ({
+  loading: false,
+
   ownedGroups: [],
   ownedGroup: null,
 
@@ -35,6 +37,25 @@ export const useGroupAPIStore = create((set) => ({
       }));
     }
   },
+  removeGroupMember: async (ownedGroupRef, loggedInUserId) => {
+    set(() => ({
+      loading: true,
+    }));
+    const formData = { groupKey: ownedGroupRef, userKey: loggedInUserId };
+
+    console.log(formData);
+    const removeMemberFn = useGroupStore.getState().removeMember;
+    const response = await removeMemberFn(formData);
+
+    if (response) {
+      const fetchOwnedGroupFn = get().fetchOwnedGroup;
+      await fetchOwnedGroupFn(ownedGroupRef);
+    }
+
+    set(() => ({
+      loading: false,
+    }));
+  },
   fetchCommunityGroups: async (loggedInUserId) => {
     const fetchAllGroupsFn = useGroupStore.getState().getAllGroups;
     const response = await fetchAllGroupsFn();
@@ -66,5 +87,15 @@ export const useGroupAPIStore = create((set) => ({
         joinedGroups: filteredJoinedGroups,
       }));
     }
+  },
+  createGroup: async (formData) => {
+    const createGroupFn = useGroupStore.getState().createGroup;
+
+    // Create group
+    await createGroupFn(formData);
+
+    // Notifications
+    const fetchGroupMessage = useGroupStore.getState().groupMessage;
+    return fetchGroupMessage;
   },
 }));

@@ -14,12 +14,15 @@ export default function OwnedGroupsViewPage() {
   const [modalTarget, setModalTarget] = useState(null);
 
   // Zustand
-  const { fetchOwnedGroupFn, ownedGroup } = useGroupAPIStore(
-    useShallow((state) => ({
-      ownedGroup: state.ownedGroup,
-      fetchOwnedGroupFn: state.fetchOwnedGroup,
-    }))
-  );
+  const { fetchOwnedGroupFn, ownedGroup, removeGroupMemberFn, groupLoading } =
+    useGroupAPIStore(
+      useShallow((state) => ({
+        ownedGroup: state.ownedGroup,
+        fetchOwnedGroupFn: state.fetchOwnedGroup,
+        removeGroupMemberFn: state.removeGroupMember,
+        groupLoading: state.loading,
+      }))
+    );
 
   useEffect(() => {
     fetchOwnedGroupFn(ownedGroupRef);
@@ -28,13 +31,12 @@ export default function OwnedGroupsViewPage() {
   const [opened, { toggle }] = useDisclosure();
 
   function handleModalSelect(member) {
-    console.log(member);
-    setModalTarget(member.fullName);
+    setModalTarget(member);
     toggle();
   }
 
-  function handleModalClick() {
-    // Trigger the Confirmation Delete Fn
+  async function handleModalClick() {
+    await removeGroupMemberFn(ownedGroupRef, modalTarget.key);
     toggle();
   }
 
@@ -42,7 +44,7 @@ export default function OwnedGroupsViewPage() {
     navigate(`/owned-group/edit/${ownedGroupRef}`);
   }
 
-  const loading = false;
+  const modalTargetName = modalTarget ? modalTarget.fullName : "";
 
   return (
     ownedGroup && (
@@ -56,9 +58,9 @@ export default function OwnedGroupsViewPage() {
           onButtonClick={handleEditGroup}
         />
         <GroupModal
-          name={modalTarget}
+          target={modalTargetName}
           modal={{ opened: opened, onClose: toggle }}
-          form={{ onClick: handleModalClick, loading: loading }}
+          form={{ onClick: handleModalClick, loading: groupLoading }}
         />
       </Paper>
     )
