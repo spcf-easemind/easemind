@@ -5,10 +5,24 @@ import {
   TextInput,
   Select,
   PasswordInput,
+  Checkbox,
+  Text,
+  Anchor,
 } from "@mantine/core";
 import AuthCard from "../cards/AuthCard";
 import { DATE_SELECTS } from "../../static/date";
 import { useUsersStore } from "../../store/users";
+
+const header = {
+  title: "Sign Up",
+  description:
+    "Take the first step toward better mental health and well-being today, and unlock the support you deserve.",
+};
+
+const footer = {
+  ftrMessage: "Already have an account? ",
+  ftrButton: "Sign In",
+};
 
 export default function SignUpModal({
   form,
@@ -18,9 +32,23 @@ export default function SignUpModal({
   onDialog,
 }) {
   const loading = useUsersStore((state) => state.loading);
+
+  const termsAndConditions = (
+    <Text size="sm">
+      I have read and agree to the{" "}
+      <Anchor underline="always" fw={500}>
+        Terms & Condition
+      </Anchor>{" "}
+      and{" "}
+      <Anchor underline="always" fw={500}>
+        Privacy Policy
+      </Anchor>{" "}
+      of Easemind
+    </Text>
+  );
   return (
     <Modal
-      opened={opened}
+      opened={true}
       onClose={onClose}
       size={500}
       padding={0}
@@ -36,18 +64,11 @@ export default function SignUpModal({
         form={form}
         onSubmit={onSubmit}
         onDialogOpen={onDialog}
-        heading={{
-          title: "Sign Up",
-          description:
-            "Take the first step toward better mental health and well-being today, and unlock the support you deserve.",
-        }}
+        heading={header}
         button={{ btnLabel: "Sign up", btnLoading: loading }}
-        footer={{
-          ftrMessage: "Already have an account? ",
-          ftrButton: "Sign In",
-        }}
+        footer={footer}
       >
-        <Stack mb={32}>
+        <Stack mb={20}>
           <TextInput
             label="Full name"
             size="md"
@@ -136,6 +157,17 @@ export default function SignUpModal({
                 borderColor: "var(--mantine-color-gray-6)",
               },
             }}
+          />
+
+          <Checkbox
+            styles={{
+              body: {
+                alignItems: "center",
+              },
+            }}
+            label={termsAndConditions}
+            key={form.key('termsOfService')}
+            {...form.getInputProps('termsOfService', { type: 'checkbox' })}
           />
         </Stack>
       </AuthCard>

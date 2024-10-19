@@ -4,7 +4,7 @@ import classes from "./LoginPage.module.css";
 
 // Hooks
 import { useDisclosure } from "@mantine/hooks";
-import { useForm } from "@mantine/form";
+import { useForm, isNotEmpty, hasLength, isEmail } from "@mantine/form";
 import { useDialogStore } from "../store/dialog.js";
 import { useShallow } from "zustand/shallow";
 import { useNavigate } from "react-router-dom";
@@ -19,7 +19,6 @@ import { LOGIN_INPUTS } from "../static/authentication.js";
 
 import { parse, format } from "date-fns";
 import { useAuthenticationStore } from "../store/authentication.js";
-import { startOfMinuteWithOptions } from "date-fns/fp";
 
 const title =
   "In a world filled with hardships, why don't we prioritize our happiness and mental well-being instead?";
@@ -67,10 +66,10 @@ export default function LoginPage() {
     //   userKey: "uOl9RnXouVl9vU1fbUXU1",
     // };
     // getUserGroupFn(formData);
-    getUserInfoFn();
+    // getUserInfoFn();
     // getAllUsersFn();
     // deleteUserInfoFn();
-    console.log(data);
+    // console.log(data);
   }, []);
 
   const loginForm = useForm({
@@ -108,21 +107,23 @@ export default function LoginPage() {
         4: "",
         5: "",
       },
+      termsOfService: false,
     },
     validate: {
-      fullName: (value) => (!value ? "Full name is required" : null),
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
-      mobileNumber: (value) =>
-        value.length === 10
-          ? null
-          : "Mobile number should be exactly 10 characters long",
-      password: (value) =>
-        value.length < 6
-          ? "Password should be at least 6 characters long"
-          : null,
-      "date.day": (value) => (!value ? "Day is required" : null),
-      "date.month": (value) => (!value ? "Month is required" : null),
-      "date.year": (value) => (!value ? "Year is required" : null),
+      fullName: isNotEmpty("Full name is required"),
+      email: isEmail("A valid email is required"),
+      mobileNumber: hasLength(
+        { min: 10, max: 10 },
+        "Mobile number should be exactly 10 characters long"
+      ),
+      password: hasLength(
+        { min: 6 },
+        "Password should be at least 6 characters long"
+      ),
+      "date.day": isNotEmpty("Day is required"),
+      "date.month": isNotEmpty("Month is required"),
+      "date.year": isNotEmpty("Year is required"),
+      termsOfService: (value) => value || "You must agree to the terms",
     },
   });
 
@@ -155,8 +156,11 @@ export default function LoginPage() {
         "yyyy-MM-dd"
       );
 
+      // Reassign and Delete Necessary Fields
       formData["dateOfBirth"] = date;
       delete formData.date;
+      delete formData.termsOfService;
+
       await userSignUpFn(formData);
       handleSignupClose();
     } catch (error) {

@@ -31,7 +31,7 @@ export default function AuthCard({
 
   const marginBottom = useMatches({
     base: 16,
-    md: 32,
+    md: 20,
   });
 
   const cardPadding = useMatches({
