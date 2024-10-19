@@ -149,6 +149,7 @@ export default function PostsPage() {
           loading: false,
           message,
           title: "Remove Post?",
+          btnType: "Remove",
         }}
         modal={{ opened: opened, onClose: toggle }}
       />

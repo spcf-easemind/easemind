@@ -1,10 +1,13 @@
-import { Paper, ScrollArea, SimpleGrid } from "@mantine/core";
+import { Paper, SimpleGrid } from "@mantine/core";
+import { useEffect, useState } from "react";
+import { useDisclosure } from "@mantine/hooks";
+import DiaryLogModal from "../../components/modals/diary/DiaryLogModal";
+import ComparisonModal from "../../components/modals/diary/ComparisonModal";
 import ToggleButton from "../../components/buttons/ToggleButton";
 import DiarySection from "../../components/diary/DiarySection";
 import RecommendedSection from "../../components/diary/RecommendedSection";
-import { useState } from "react";
-import ComparisonModal from "../../components/modals/ComparisonModal";
-import { useDisclosure } from "@mantine/hooks";
+import WarningModal from "../../components/modals/WarningModal";
+import EmotionModal from "../../components/modals/diary/EmotionModal";
 
 const buttonOptions = [
   { value: "diary", label: "Diary" },
@@ -41,13 +44,50 @@ const diaryData = {
   },
 };
 
+const warningDialogData = {
+  title: "Delete Diary Log?",
+  message: "Are you sure you want to delete this diary log?",
+  btnType: "Delete",
+};
+
 export default function EndlessThoughtsDiaryPage() {
   const [active, setActive] = useState("diary");
+  const [buttonTitle, setButtonTitle] = useState("");
 
   const [opened, { toggle }] = useDisclosure();
+  const [openedLog, { toggle: toggleLog }] = useDisclosure();
+  const [openedWarning, { toggle: toggleWarning }] = useDisclosure();
+  const [openedEmotion, { toggle: toggleEmotion }] = useDisclosure();
+
+  useEffect(() => {
+    if (openedEmotion === false) {
+      toggleEmotion();
+    }
+  }, []);
+
+  function onDeleteConfirm() {
+    console.log("Delete confirmed");
+  }
 
   function handleButtonToggle(value) {
     setActive(value);
+  }
+
+  function handleDiaryLogToggle(choice) {
+    if (choice === "create") {
+      setButtonTitle("create");
+      toggleLog();
+    } else if (choice === "edit") {
+      setButtonTitle("edit");
+      toggleLog();
+    } else {
+      toggleWarning();
+    }
+  }
+
+  function handleSelectEmotion(value) {
+    console.log("Emotion selected", value);
+    toggleEmotion();
   }
 
   const buttonInstances = buttonOptions.map((button) => (
@@ -65,7 +105,10 @@ export default function EndlessThoughtsDiaryPage() {
     active === "diary" ? (
       <DiarySection
         diaryData={diaryData}
-        modal={{ onComparisonClick: toggle }}
+        modal={{
+          onComparisonClick: toggle,
+          onDiaryLogClick: handleDiaryLogToggle,
+        }}
       />
     ) : (
       <RecommendedSection />
@@ -80,6 +123,25 @@ export default function EndlessThoughtsDiaryPage() {
       <ComparisonModal
         comparisonData={diaryData.comparisonData}
         modal={{ opened, onClose: toggle }}
+      />
+
+      <DiaryLogModal
+        modal={{ opened: openedLog, onClose: toggleLog }}
+        button={{ btnLabel: buttonTitle }}
+      />
+
+      <WarningModal
+        modal={{ opened: openedWarning, onClose: toggleWarning }}
+        form={{
+          onClick: onDeleteConfirm,
+          loading: false,
+          ...warningDialogData,
+        }}
+      />
+
+      <EmotionModal
+        modal={{ opened: openedEmotion, onClose: toggleEmotion }}
+        onClick={handleSelectEmotion}
       />
     </Paper>
   );

@@ -31,3 +31,31 @@ export const MOOD_ATTRIBUTES = [
     percentage: 0,
   },
 ];
+
+export const EMOTION_ATTRIBUTES = [
+  {
+    value: "happy",
+    icon: IconEmojiHappy,
+    label: "Happy",
+  },
+  {
+    value: "smiling",
+    icon: IconEmojiSmiling,
+    label: "Smiling",
+  },
+  {
+    value: "neutral",
+    icon: IconEmojiNeutral,
+    label: "Neutral",
+  },
+  {
+    value: "sad",
+    icon: IconEmojiSad,
+    label: "Sad",
+  },
+  {
+    value: "crying",
+    icon: IconEmojiCrying,
+    label: "Crying",
+  },
+];

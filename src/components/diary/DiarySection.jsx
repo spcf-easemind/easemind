@@ -12,7 +12,7 @@ const popoverOptions = HISTORY_OPTION;
 export default function DiarySection({
   diaryData,
   onPopoverClick,
-  modal: { onComparisonClick },
+  modal: { onComparisonClick, onDiaryLogClick },
 }) {
   const header = (
     <Box pos="relative" ta="center">
@@ -65,7 +65,13 @@ export default function DiarySection({
           Thoughts to Treasure
         </Title>
 
-        <CreateButtonCard py={32} px={16} size="xl" imageSize={30}>
+        <CreateButtonCard
+          onClick={() => onDiaryLogClick("create")}
+          py={32}
+          px={16}
+          size="xl"
+          imageSize={30}
+        >
           New Thoughts
         </CreateButtonCard>
       </Box>
@@ -76,7 +82,7 @@ export default function DiarySection({
         </Title>
 
         <Stack>
-          <DiaryCard />
+          <DiaryCard onClick={onDiaryLogClick} />
         </Stack>
       </Box>
     </>

@@ -11,7 +11,7 @@ import { IconX } from "@tabler/icons-react";
 
 export default function WarningModal({
   modal: { opened, onClose },
-  form: { onClick, loading, message, title },
+  form: { onClick, loading, message, title, btnType },
 }) {
   return (
     <Modal
@@ -49,7 +49,7 @@ export default function WarningModal({
               Cancel
             </Button>
             <Button onClick={onClick} loading={loading}>
-              Leave
+              {btnType}
             </Button>
           </Group>
         </Card.Section>

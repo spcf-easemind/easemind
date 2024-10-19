@@ -12,8 +12,8 @@ import { useUsersStore } from "../store/users.js";
 import { useGroupStore } from "../store/group.js";
 import { useCallback, useEffect } from "react";
 
-import SurveyModal from "../components/modals/SurveyModal.jsx";
-import SignUpModal from "../components/modals/SignUpModal.jsx";
+import SurveyModal from "../components/modals/authentication/SurveyModal.jsx";
+import SignUpModal from "../components/modals/authentication/SignUpModal.jsx";
 import AuthCard from "../components/cards/AuthCard.jsx";
 import { LOGIN_INPUTS } from "../static/authentication.js";
 
@@ -69,7 +69,7 @@ export default function LoginPage() {
     // getUserInfoFn();
     // getAllUsersFn();
     // deleteUserInfoFn();
-    console.log(data);
+    // console.log(data);
   }, []);
 
   const loginForm = useForm({

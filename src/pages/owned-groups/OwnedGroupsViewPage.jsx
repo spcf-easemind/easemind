@@ -85,6 +85,7 @@ export default function OwnedGroupsViewPage() {
             loading: groupLoading,
             message,
             title,
+            btnType: "Remove",
           }}
         />
       </Paper>

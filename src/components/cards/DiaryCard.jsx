@@ -3,7 +3,7 @@ import ActionsBox from "../ActionsBox";
 import { IconDotsVertical } from "@tabler/icons-react";
 import { EDIT_DELETE } from "../../static/popover";
 
-export default function DiaryCard() {
+export default function DiaryCard({ onClick }) {
   const popoverOptions = EDIT_DELETE;
 
   return (
@@ -30,7 +30,7 @@ export default function DiaryCard() {
           </Stack>
         </Group>
         <Box pos="absolute" top={0} right={0}>
-          <ActionsBox options={popoverOptions}>
+          <ActionsBox onClick={onClick} options={popoverOptions}>
             <IconDotsVertical size={30} stroke={1.5} />
           </ActionsBox>
         </Box>
