@@ -236,7 +236,7 @@ export const useGroupStore = create((set) => ({
       groupMessage: "Loading...",
       groupLoading: true,
     }));
-    console.log(formData.groupKey);
+
     try {
       const group = await getDoc({
         collection: "groups",
