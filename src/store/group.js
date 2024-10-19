@@ -584,6 +584,42 @@ export const useGroupStore = create((set) => ({
     }
   },
 
+  getAvailableGroup: async (formData) => {
+    set(() => ({
+      groupData: null,
+      groupMessage: "Loading...",
+      groupLoading: true,
+    }));
+
+    try{
+      const group = await getDoc({
+        collection: "groups",
+        key: formData.groupKey,
+      });
+
+      const groupInfo = {
+        ...group.data,
+        userJoinStatus: formData.userJoinStatus
+      }
+      set(() => ({
+        groupData: groupInfo,
+        groupMessage: "Group Info",
+        groupLoading: false,
+      }));
+      return true
+    } catch (error) {
+      console.error("Error fetching available group for user:", error);
+      set(() => ({
+        groupData: null,
+        groupMessage:
+          error.message ||
+          "An error occurred while fetching all available group for user",
+        groupLoading: false,
+      }));
+      return false;
+    }
+  }
+
   getAllAvailableGroups: async (formData) => {
     set(() => ({
       groupData: null,
