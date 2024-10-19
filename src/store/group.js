@@ -115,6 +115,7 @@ export const useGroupStore = create((set) => ({
     try {
       const key = nanoid();
 
+      let createdGroupKey = "";
       if (formData && formData.groupProfilePath) {
         let groupImageUrl = formData.groupProfilePath;
 
@@ -151,13 +152,15 @@ export const useGroupStore = create((set) => ({
           membersCount: formData.members.length,
         };
 
-        await setDoc({
+        const groupInfo = await setDoc({
           collection: "groups",
           doc: {
             key,
             data: createData,
           },
         });
+
+        createdGroupKey = groupInfo.key;
 
         await setDoc({
           collection: "groupPendingMembers",
@@ -211,7 +214,7 @@ export const useGroupStore = create((set) => ({
       }
 
       set(() => ({
-        groupData: null,
+        groupData: createdGroupKey,
         groupMEssage: "Group created successfully!",
         groupLoading: true,
       }));
@@ -331,6 +334,88 @@ export const useGroupStore = create((set) => ({
         groupData: null,
         groupMessage:
           error.message || "An error occurred while updating user data",
+        groupLoading: false,
+      }));
+      return false;
+    }
+  },
+
+  editGroupInfo: async (formData) => {
+    set(() => ({
+      groupData: null,
+      groupMessage: "Loading...",
+      groupLoading: true,
+    }));
+
+    try {
+      const group = await getDoc({
+        collection: "groups",
+        key: formData.groupKey,
+      });
+
+      if (group) {
+        const user = await getDoc({
+          collection: "users",
+          key: formData.updatedGroupInfo.ownerKey,
+        });
+
+        group.data.key = formData.groupKey;
+        group.data.owner = user.data;
+        group.data.groupImageUrl = formData.updatedGroupInfo.groupPathProfile;
+        group.data.name = formData.updatedGroupInfo.name;
+        group.data.description = formData.updatedGroupInfo.description;
+        group.data.categories = formData.updatedGroupInfo.categories;
+
+        for (const newMember of formData.updatedGroupInfo.newAddedMembers) {
+          const userGroup = await getDoc({
+            collection: "userGroups",
+            key: newMember.key,
+          });
+
+          if (userGroup) {
+            const newData = {
+              key: group.key,
+              groupName: group.data.name,
+            };
+
+            userGroup.data.groups.push(newData);
+
+            await setDoc({
+              collection: "userGroups",
+              doc: {
+                key: userGroup.key,
+                data: userGroup.data,
+                version: userGroup.version,
+              },
+            });
+
+            group.data.members.push(newMember);
+          }
+        }
+        group.data.membersCount = group.data.members.length;
+
+        await setDoc({
+          collection: "groups",
+          doc: {
+            key: group.key,
+            data: group.data,
+            version: group.version,
+          },
+        });
+      }
+
+      set(() => ({
+        groupData: null,
+        groupMessage: "Group modified successfully!",
+        groupLoading: false,
+      }));
+      return true;
+    } catch (error) {
+      console.error("Error modifying group info:", error);
+      set(() => ({
+        groupData: null,
+        groupMessage:
+          error.message || "An error occurred while modifying group info",
         groupLoading: false,
       }));
       return false;

@@ -82,6 +82,7 @@ export default function MiscellaneousPage() {
     getGroupFn,
     getAllGroupsFn,
     getUserGroupFn,
+    editGroupInfoFn,
     removeMemberFn,
     deleteGroupFn,
     getAllAvailableGroupsFn,
@@ -101,6 +102,7 @@ export default function MiscellaneousPage() {
       getGroupFn: state.getGroup,
       getAllGroupsFn: state.getAllGroups,
       getUserGroupFn: state.getUserGroup,
+      editGroupInfoFn: state.editGroupInfo,
       removeMemberFn: state.removeMember,
       deleteGroupFn: state.deleteGroup,
       getAllAvailableGroupsFn: state.getAllAvailableGroups,
@@ -391,10 +393,10 @@ export default function MiscellaneousPage() {
   };
   const handleCreateGroup = async () => {
     const formData = {
-      ownerKey: "Kc-vC3qsRa5uHYnuDErS9",
+      ownerKey: "3JkiWUaMis6ziIHwRrKsK",
       groupProfilePath:
-        "http://jx5yt-yyaaa-aaaal-abzbq-cai.localhost:5987/groupProfileCollections/PJpvlRItZVpx8XESSTr58-profile",
-      name: "Mga Kupal lang pwede VERSION 3",
+        "http://jx5yt-yyaaa-aaaal-abzbq-cai.localhost:5987/groupProfileCollections/78NrInBvKoD2RcGJDMkik-profile",
+      name: "Mga Kupal lang pwede VERSION 4",
       description:
         "I believe in creating a safe, non-judgmental space where you can freely express your thoughts and emotions without fear of being misunderstood. Everyone deserves a place where they feel heard, supported, and validated. My goal is to be that person who listens with compassion and helps you navigate the challenges you're facing. Together, we can work on finding practical solutions, building coping strategies, and restoring a sense of balance and peace in your life. Your mental well-being matters, and I’m here to support you every step of the way, helping you feel more grounded, empowered, and at ease.",
       categories: [
@@ -405,23 +407,23 @@ export default function MiscellaneousPage() {
       members: [
         {
           fullName: "Super Admin",
-          key: "Kc-vC3qsRa5uHYnuDErS9",
+          key: "3JkiWUaMis6ziIHwRrKsK",
           lastUpdated: "2024-10-18T13:49:08.847Z",
           role: "super-admin",
           status: "online",
           groupRole: "Group Admin",
         },
-        {
-          fullName: "alex",
-          key: "Ko9Lx1cg3v4vxU8Ljji5m",
-          lastUpdated: "2024-10-18T13:51:22.079Z",
-          role: "EaseBuddy",
-          status: "online",
-          groupRole: "member",
-        },
+        // {
+        //   fullName: "alex",
+        //   key: "TslCus6H3Dzc1w6kD9GEr",
+        //   lastUpdated: "2024-10-18T13:51:22.079Z",
+        //   role: "EaseBuddy",
+        //   status: "online",
+        //   groupRole: "member",
+        // },
         // {
         //   fullName: "alex1",
-        //   key: "v1DNhZd_vhjIEMLEcFM4z",
+        //   key: "KV_NQMbT7TDrCru7ZpUlH",
         //   lastUpdated: "2024-10-18T13:55:51.094Z",
         //   role: "EaseBuddy",
         //   status: "offline",
@@ -494,6 +496,57 @@ export default function MiscellaneousPage() {
       setIsUploading(false);
     }
   };
+
+  const handleEditGroupInfo = async () => {
+    const formData = {
+      groupKey: "O7MsnLtswxeu6YltUr_fA",
+      updatedGroupInfo: {
+        ownerKey: "3JkiWUaMis6ziIHwRrKsK",
+        groupPathProfile:
+          "http://jx5yt-yyaaa-aaaal-abzbq-cai.localhost:5987/groupProfileCollections/78NrInBvKoD2RcGJDMkik-profile",
+        name: "Kupal V2",
+        description:
+          "I believe in creating a safe, non-judgmental space where you can freely express your thoughts and emotions without fear of being misunderstood. Everyone deserves a place where they feel heard, supported, and validated. My goal is to be that person who listens with compassion and helps you navigate the challenges you're facing. Together, we can work on finding practical solutions, building coping strategies, and restoring a sense of balance and peace in your life. Your mental well-being matters, and I’m here to support you every step of the way, helping you feel more grounded, empowered, and at ease.",
+        categories: [
+          { key: "-T36JdCXUPGa6Y3SWnNa7" },
+          { key: "1ybG2xJ7KlrrJvqMMegWd" },
+          { key: "BkzJ9rX2qi5gyXJYE5WOF" },
+        ],
+        newAddedMembers: [
+          {
+            fullName: "alex1",
+            key: "KV_NQMbT7TDrCru7ZpUlH",
+            lastUpdated: "2024-10-18T13:51:22.079Z",
+            role: "EaseBuddy",
+            status: "online",
+            groupRole: "member",
+          },
+          // {
+          //   fullName: "alex1",
+          //   key: "v1DNhZd_vhjIEMLEcFM4z",
+          //   lastUpdated: "2024-10-18T13:55:51.094Z",
+          //   role: "EaseBuddy",
+          //   status: "offline",
+          //   groupRole: "member",
+          // },
+        ],
+      },
+    };
+
+    try {
+      const editSuccess = await editGroupInfoFn(formData);
+      if (editSuccess) {
+        console.log("User has been removed on the group successfully!");
+      } else {
+        console.error("Failed to remove user from the group");
+      }
+    } catch (error) {
+      console.error("Error removing user from the group:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   const handleRemoveMember = async () => {
     const formData = {
       groupKey: "jkBOyprLvU1RA9wZz0tgU",
@@ -515,7 +568,7 @@ export default function MiscellaneousPage() {
   };
   const handleDeleteGroup = async () => {
     const formData = {
-      groupKey: "ckvU0mpdGqIp0bkZDQf8n",
+      groupKey: "e163XMKdWgtwKMPAlesle",
     };
 
     try {
@@ -552,8 +605,8 @@ export default function MiscellaneousPage() {
 
   const handleJoinUserGroup = async () => {
     const formData = {
-      groupKey: "jkBOyprLvU1RA9wZz0tgU",
-      userKey: "v1DNhZd_vhjIEMLEcFM4z",
+      groupKey: "e163XMKdWgtwKMPAlesle",
+      userKey: "KV_NQMbT7TDrCru7ZpUlH",
     };
     try {
       const joinSuccess = await joinUserGroupFn(formData);
@@ -574,7 +627,7 @@ export default function MiscellaneousPage() {
 
   const handleUserGroupPendingApproval = async () => {
     const formData = {
-      userKey: "Kc-vC3qsRa5uHYnuDErS9",
+      userKey: "3JkiWUaMis6ziIHwRrKsK",
     };
     try {
       const getSuccess = await userGroupPendingApprovalFn(formData);
@@ -610,11 +663,11 @@ export default function MiscellaneousPage() {
 
   const handleApprovePendingMember = async () => {
     const formData = {
-      groupPendingKey: "jkBOyprLvU1RA9wZz0tgU",
+      groupPendingKey: "e163XMKdWgtwKMPAlesle",
       groupPendingMember: {
         groupRole: "member",
-        name: "alex1",
-        userKey: "v1DNhZd_vhjIEMLEcFM4z",
+        name: "alex",
+        userKey: "TslCus6H3Dzc1w6kD9GEr",
       },
     };
 
@@ -933,6 +986,9 @@ export default function MiscellaneousPage() {
         </Button>
         <Button onClick={handleGetUserGroup} loading={groupLoading}>
           Get User Group
+        </Button>
+        <Button onClick={handleEditGroupInfo} loading={groupLoading}>
+          Edit Group Info
         </Button>
         <Button onClick={handleRemoveMember} loading={groupLoading}>
           Remove Member
