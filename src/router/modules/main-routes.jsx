@@ -22,10 +22,6 @@ const mainRoutes = [
     ],
   },
   {
-    path: "/profile",
-    element: "",
-  },
-  {
     path: "/miscellaneous",
     element: <MiscellaneousPage />,
   },

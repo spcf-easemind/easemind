@@ -3,7 +3,6 @@ import { useMemo } from "react";
 
 // Mantine Components
 import { AppShell, Container } from "@mantine/core";
-import { useMatches } from "@mantine/core";
 
 // Components
 import Header from "./components/headers/Header.jsx";
@@ -20,6 +19,8 @@ import { useDialogStore } from "./store/dialog.js";
 import { Outlet, useLocation, matchPath } from "react-router-dom";
 import mainRoutes from "./router/modules/main-routes.jsx";
 import navRoutes from "./router/modules/nav-routes.jsx";
+import profileRoutes from "./router/modules/profile-routes.jsx";
+import ProfileNavigation from "./components/navigations/ProfileNavigation.jsx";
 
 const containerBreakpoint = 1280;
 
@@ -44,23 +45,34 @@ function App() {
 
   // Filter Routes that include Navigation
   const includeNavigation = useMemo(() => {
-    let paths = [];
-    const notIncludedInMainRoutes = ["/profile", "/miscellaneous"];
+    let navPaths = [];
+    let asidePaths = [];
+    const notIncludedInMainRoutes = ["/miscellaneous"];
     const mapMainRoutes = mainRoutes
       .filter(({ path }) => !notIncludedInMainRoutes.includes(path))
       .map(({ path }) => path);
     const mapNavRoutes = navRoutes.map(({ path }) => path);
+    const mapProfileRoutes = profileRoutes.map(({ path }) => path);
 
     // Final Data
-    paths = [...mapMainRoutes, ...mapNavRoutes];
+    navPaths = [...mapMainRoutes, ...mapNavRoutes, ...mapProfileRoutes];
+    asidePaths = [...mapMainRoutes, ...mapNavRoutes];
 
-    return paths.some((path) => routeMatcher(path, location.pathname) === path);
+    const navigation = navPaths.some(
+      (path) => routeMatcher(path, location.pathname) === path
+    );
+    const aside = asidePaths.some(
+      (path) => routeMatcher(path, location.pathname) === path
+    );
+
+    return { navigation, aside };
   }, [location]);
 
   const navWithoutPadding = useMemo(() => {
     let paths = ["/home"];
     const mapNavRoutes = navRoutes.map(({ path }) => path);
-    paths = [...paths, ...mapNavRoutes];
+    const mapProfileRoutes = profileRoutes.map(({ path }) => path);
+    paths = [...paths, ...mapNavRoutes, ...mapProfileRoutes];
 
     return paths.some((path) => routeMatcher(path, location.pathname) === path)
       ? undefined
@@ -72,8 +84,9 @@ function App() {
     let paths = [];
     const mapMainRoutes = mainRoutes.map(({ path }) => path);
     const mapNavRoutes = navRoutes.map(({ path }) => path);
+    const mapProfileRoutes = profileRoutes.map(({ path }) => path);
 
-    paths = [...mapMainRoutes, ...mapNavRoutes];
+    paths = [...mapMainRoutes, ...mapNavRoutes, ...mapProfileRoutes];
     return paths.some(
       (path) => routeMatcher(path, location.pathname) === path
     ) ? (
@@ -84,11 +97,27 @@ function App() {
   }, [location]);
 
   // Adjusted logic to include /chat and /home for navigation
-  const whichNavigation = location.pathname.startsWith("/chat") ? (
-    <ChatNavigation />
-  ) : (
-    <HomeNavigation />
-  );
+  const whichNavigation = useMemo(() => {
+    const mainRoutes = ["/home"];
+    const mapNavRoutes = navRoutes.map(({ path }) => path);
+    const mapProfileRoutes = profileRoutes.map(({ path }) => path);
+
+    const mainPaths = [...mainRoutes, ...mapNavRoutes];
+    const computedMainPaths = mainPaths.some(
+      (path) => routeMatcher(path, location.pathname) === path
+    );
+    const computedProfilePaths = mapProfileRoutes.some(
+      (path) => routeMatcher(path, location.pathname) === path
+    );
+
+    if (location.pathname.startsWith("/chat")) {
+      return <ChatNavigation />;
+    } else if (computedMainPaths) {
+      return <HomeNavigation />;
+    } else if (computedProfilePaths) {
+      return <ProfileNavigation />;
+    }
+  }, [location.pathname]);
 
   // Adjusted logic for aside
   const whichAside = location.pathname.startsWith("/chat") ? (
@@ -97,7 +126,7 @@ function App() {
     <HomeAside />
   );
 
-  const withContainer = includeNavigation ? (
+  const withContainer = includeNavigation.navigation ? (
     <Outlet />
   ) : (
     <Container size={containerBreakpoint} h="100%">
@@ -123,9 +152,10 @@ function App() {
     let paths = ["/internet-identity"];
     const mapMainRoutes = mainRoutes.map(({ path }) => path);
     const mapNavRoutes = navRoutes.map(({ path }) => path);
+    const mapProfileRoutes = profileRoutes.map(({ path }) => path);
 
     // Final Paths
-    paths = [...paths, ...mapMainRoutes, ...mapNavRoutes];
+    paths = [...paths, ...mapMainRoutes, ...mapNavRoutes, ...mapProfileRoutes];
 
     if (!paths.some((path) => routeMatcher(path, location.pathname) === path)) {
       return classes.bgImage;
@@ -134,13 +164,15 @@ function App() {
   }, [location]);
 
   // Collapse Drawer and Aside
-  const { handleDrawerMobile, handleDrawerDesktop } = includeNavigation
-    ? {
-        handleDrawerMobile: !drawerMobileOpened,
-        handleDrawerDesktop: !drawerDesktopOpened,
-      }
-    : { handleDrawerMobile: true, handleDrawerDesktop: true };
-  const { handleAsideMobile, handleAsideDesktop } = includeNavigation
+  const { handleDrawerMobile, handleDrawerDesktop } =
+    includeNavigation.navigation
+      ? {
+          handleDrawerMobile: !drawerMobileOpened,
+          handleDrawerDesktop: !drawerDesktopOpened,
+        }
+      : { handleDrawerMobile: true, handleDrawerDesktop: true };
+
+  const { handleAsideMobile, handleAsideDesktop } = includeNavigation.aside
     ? { handleAsideMobile: !mobileOpened, handleAsideDesktop: !desktopOpened }
     : { handleAsideMobile: true, handleAsideDesktop: true };
 

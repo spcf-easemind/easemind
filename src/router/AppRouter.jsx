@@ -7,6 +7,7 @@ import LoginPage from "../pages/LoginPage";
 import InternetIdentityPage from "../pages/InternetIdentityPage";
 import mainRoutes from "./modules/main-routes.jsx";
 import navRoutes from "./modules/nav-routes.jsx";
+import profileRoutes from "./modules/profile-routes.jsx";
 
 import { useAuthenticationStore } from "../store/authentication.js";
 import { useEffect } from "react";
@@ -49,6 +50,7 @@ export default function AppRouter() {
             },
             ...mainRoutes,
             ...navRoutes,
+            ...profileRoutes,
           ],
         },
       ],

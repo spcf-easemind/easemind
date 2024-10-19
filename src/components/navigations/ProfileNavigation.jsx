@@ -4,49 +4,48 @@ import IconOverview from "../../assets/icons/profile/IconOverview.svg";
 import IconAnonymous from "../../assets/icons/profile/IconAnonymous.svg";
 import IconTerms from "../../assets/icons/profile/IconTerms.svg";
 import IconPrivacy from "../../assets/icons/profile/IconPrivacy.svg";
-import IconPrivacy from "../../assets/icons/profile/IconPrivacy.svg";
 import { Stack } from "@mantine/core";
 
 const profileLinksAttributes = [
   {
     label: "Edit Profile",
-    icon: "",
+    icon: IconEditProfile,
     route: "/edit-profile",
     roles: ["EaseCompanion", "EaseBuddy", "super-admin"],
   },
   {
     label: "Change Password",
-    icon: "",
+    icon: IconChangePassword,
     route: "/change-password",
     roles: ["EaseBuddy", "EaseCompanion", "super-admin"],
   },
   {
     label: "Ease Companion Overview",
-    icon: "",
+    icon: IconOverview,
     route: "/ease-companion-overview",
     roles: ["EaseBuddy", "EaseCompanion", "super-admin"],
   },
   {
     label: "Anonymous & Notifications",
-    icon: "",
+    icon: IconAnonymous,
     route: "/anonymous-notifications",
     roles: ["EaseBuddy", "EaseCompanion", "super-admin"],
   },
   {
     label: "Terms And Conditions",
-    icon: "",
+    icon: IconTerms,
     route: "/terms-and-conditions",
     roles: ["EaseBuddy", "EaseCompanion", "super-admin"],
   },
   {
     label: "Privacy Policy",
-    icon: "",
+    icon: IconPrivacy,
     route: "/privacy-policy",
     roles: ["EaseBuddy", "EaseCompanion", "super-admin"],
   },
   {
     label: "About Us",
-    icon: "",
+    icon: IconPrivacy,
     route: "/about-us",
     roles: ["EaseBuddy", "EaseCompanion", "super-admin"],
   },
@@ -59,7 +58,5 @@ const profileLinksAttributes = [
 ];
 
 export default function ProfileNavigation() {
-  return <Stack>
-    
-  </Stack>
+  return <Stack></Stack>;
 }

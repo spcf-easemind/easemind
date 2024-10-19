@@ -33,7 +33,7 @@ const menuLinks = [
   {
     name: "profile",
     label: "Profile",
-    route: "/profile",
+    route: "/edit-profile",
     icon: IconAccount,
     iconFilled: IconAccountFilled,
     roles: ["EaseBuddy", "super-admin", "EaseCompanion"],
