@@ -120,7 +120,7 @@ export const useUsersStore = create((set) => ({
         },
       });
 
-      const anonymousName = formData.name
+      const anonymousName = formData.fullName
         .split(" ")
         .map((word) => {
           if (word.length > 1) {
@@ -209,11 +209,23 @@ export const useUsersStore = create((set) => ({
           key: items.items[0].key,
         });
 
+        const userDiary = await getDoc({
+          collection: "userDiaries",
+          key: items.items[0].key,
+        });
+
+        const anonymousUser = await getDoc({
+          collection: "anonymousUsers",
+          key: items.items[0].key,
+        });
+
         const userData = {
           userCredentials: items.items[0],
           userSurveys: itemSurveys.items[0],
           user: user.data,
+          anonymousUser: anonymousUser.data,
           userGroup: userGroup.data,
+          userDiary: userDiary.data,
         };
         set(() => ({
           data: userData,
