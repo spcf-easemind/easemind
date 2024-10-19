@@ -264,7 +264,7 @@ export default function DisplayCard({
         px={header.button.px}
         size={header.button.size}
         color="sky-blue.5"
-        onClick={onButtonClick}
+        onClick={() => onButtonClick(instance.key)}
         style={{ zIndex: 1 }}
       >
         {buttonLabel}

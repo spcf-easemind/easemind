@@ -1,9 +1,17 @@
 import { Card, Group, Image, Text } from "@mantine/core";
 import IconPlusBox from "../../assets/icons/buttons/IconPlusBox.svg";
-export default function CreateButtonCard({ onClick, children }) {
+export default function CreateButtonCard({
+  onClick,
+  children,
+  px = 16,
+  py = 16,
+  size = "md",
+  imageSize = 25,
+}) {
   return (
     <Card
-      padding={16}
+      px={px}
+      py={py}
       withBorder
       c="dark.5"
       bg="gray.0"
@@ -14,8 +22,8 @@ export default function CreateButtonCard({ onClick, children }) {
       onClick={onClick}
     >
       <Group>
-        <Image src={IconPlusBox} alt="Create a group" w={25} h={25} />
-        <Text>{children}</Text>
+        <Image src={IconPlusBox} alt="Create a group" w={imageSize} h={imageSize} />
+        <Text size={size}>{children}</Text>
       </Group>
     </Card>
   );
