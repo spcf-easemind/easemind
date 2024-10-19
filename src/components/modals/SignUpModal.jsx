@@ -8,10 +8,12 @@ import {
   Checkbox,
   Text,
   Anchor,
+  Card,
 } from "@mantine/core";
 import AuthCard from "../cards/AuthCard";
 import { DATE_SELECTS } from "../../static/date";
 import { useUsersStore } from "../../store/users";
+import TermsAndConditionsModal from "./TermsAndConditionsModal";
 
 const header = {
   title: "Sign Up",
@@ -48,7 +50,7 @@ export default function SignUpModal({
   );
   return (
     <Modal
-      opened={true}
+      opened={opened}
       onClose={onClose}
       size={500}
       padding={0}
@@ -166,11 +168,12 @@ export default function SignUpModal({
               },
             }}
             label={termsAndConditions}
-            key={form.key('termsOfService')}
-            {...form.getInputProps('termsOfService', { type: 'checkbox' })}
+            key={form.key("termsOfService")}
+            {...form.getInputProps("termsOfService", { type: "checkbox" })}
           />
         </Stack>
       </AuthCard>
+      {/* <TermsAndConditionsModal /> */}
     </Modal>
   );
 }
