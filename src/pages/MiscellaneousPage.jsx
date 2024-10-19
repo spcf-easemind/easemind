@@ -38,6 +38,7 @@ export default function MiscellaneousPage() {
     deleteAllUsersFn,
     uploadPlaceHolderImageFn,
     getPlaceHolderProfileImagesFn,
+    getAllUserActiveCompanionsFn,
   } = useUsersStore(
     useShallow((state) => ({
       data: state.data,
@@ -50,6 +51,7 @@ export default function MiscellaneousPage() {
       deleteAllUsersFn: state.deleteAllUsers,
       uploadPlaceHolderImageFn: state.uploadPlaceHolderImage,
       getPlaceHolderProfileImagesFn: state.getPlaceHolderProfileImages,
+      getAllUserActiveCompanionsFn: state.getAllUserActiveCompanions,
     }))
   );
 
@@ -317,6 +319,19 @@ export default function MiscellaneousPage() {
   const handleGetPlaceHolderProfileImages = async () => {
     try {
       const getSuccess = await getPlaceHolderProfileImagesFn();
+      if (getSuccess) {
+        console.log("All User Info fetched successfully!", data);
+      } else {
+        console.error("Failed to fetched user info");
+      }
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+    }
+  };
+
+  const handleGetAllUserActiveCompanions = async () => {
+    try {
+      const getSuccess = await getAllUserActiveCompanionsFn();
       if (getSuccess) {
         console.log("All User Info fetched successfully!", data);
       } else {
@@ -1029,6 +1044,9 @@ export default function MiscellaneousPage() {
         </Button>
         <Button onClick={handleGetPlaceHolderProfileImages} loading={loading}>
           Get Placeholder Profiles
+        </Button>
+        <Button onClick={handleGetAllUserActiveCompanions} loading={loading}>
+          Get All Active Companions
         </Button>
       </Group>
 

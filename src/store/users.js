@@ -9,6 +9,7 @@ import {
   deleteAsset,
 } from "@junobuild/core";
 import { nanoid } from "nanoid";
+import { kebabCase } from "lodash";
 
 export const useUsersStore = create((set) => ({
   data: null,
@@ -459,76 +460,51 @@ export const useUsersStore = create((set) => ({
   //     }
   // },
 
-  updateUserInfo: async (fetchedData, file) => {
-    set(() => ({ loading: true }));
+  updateUserInfo: async (formData, file) => {
+    set(() => ({
+      data: null,
+      message: "Loading...",
+      loading: true,
+    }));
 
     try {
-      if (!fetchedData || !fetchedData.userCredentials) {
-        throw new Error("User data not available");
-      }
-
-      const userData = fetchedData.userCredentials.data;
-      const userKey = fetchedData.userCredentials.key;
-      const userVersion = fetchedData.userCredentials.version;
-
-      let profileImageUrl = userData.profileImageUrl;
-
-      if (file) {
-        const filename = `${userKey}-profile`;
-        const { downloadUrl } = await uploadFile({
-          collection: "userProfilePicture",
-          data: file,
-          filename,
-        });
-        profileImageUrl = downloadUrl;
-      }
-
-      const updatedData = {
-        ...userData,
-        profileImageUrl,
-      };
-
-      await setDoc({
+      const userCredential = await getDoc({
         collection: "userCredentials",
-        doc: {
-          key: userKey,
-          data: updatedData,
-          version: userVersion,
-        },
+        key: formData.userKey,
       });
 
       const user = await getDoc({
         collection: "users",
-        key: userKey,
+        key: formData.userKey,
       });
 
-      const updatedUserData = {
-        ...user.data,
-        profileImageUrl,
-      };
+      if (userCredential && user) {
+        let profileImageUrl = user.profileImageUrl;
 
-      const updatedUser = await setDoc({
-        collection: "users",
-        doc: {
-          key: user.key,
-          data: updatedUserData,
-          version: user.version,
-        },
-      });
+        if (file) {
+          const filename = `${userKey}-profile`;
+          const { downloadUrl } = await uploadFile({
+            collection: "userProfilePicture",
+            data: file,
+            filename,
+          });
+          profileImageUrl = downloadUrl;
+        }
+
+        await setDoc({
+          collection: "userCredentials",
+          doc: {
+            // asdasdasd
+          },
+        });
+      }
 
       set(() => ({
-        data: {
-          ...fetchedData,
-          userCredentials: {
-            ...fetchedData.userCredentials,
-            data: updatedData,
-          },
-        },
-        message: "User Updated Successfully!",
+        data: null,
+        message: "User data updated successfully!",
         loading: false,
       }));
-
-      return true; // Indicate successful update
+      return true;
     } catch (error) {
       console.error("Error updating user info:", error);
       set(() => ({
@@ -584,6 +560,44 @@ export const useUsersStore = create((set) => ({
         message:
           error.message ||
           "An error occurred while uploading placeholder image",
+        loading: false,
+      }));
+      return false;
+    }
+  },
+
+  getAllUserActiveCompanions: async () => {
+    set(() => ({
+      data: null,
+      message: "Loading...",
+      loading: true,
+    }));
+    try {
+      const users = await listDocs({
+        collection: "users",
+      });
+
+      let activeCompanions = [];
+      for (const user of users.items) {
+        if (user.data.role === "EaseCompanion") {
+          if (user.data.status === "online") {
+            activeCompanions.push(user.data);
+          }
+        }
+      }
+
+      set(() => ({
+        data: activeCompanions,
+        message: "All active companions fetched successfully!",
+        loading: false,
+      }));
+      return true;
+    } catch (error) {
+      console.error("Error fetching active companions:", error);
+      set(() => ({
+        data: null,
+        message:
+          error.message || "An error occurred while fetching active companions",
         loading: false,
       }));
       return false;
