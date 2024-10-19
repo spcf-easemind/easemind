@@ -1,10 +1,10 @@
 import IconPencil from "../assets/icons/buttons/IconPencil.svg";
 import IconTrashcan from "../assets/icons/buttons/IconTrashcan.svg";
-import IconSave from "../../assets/icons/buttons/IconSave.svg";
-import IconReport from "../../assets/icons/buttons/IconReport.svg";
-import IconXCircle from "../../assets/icons/buttons/IconXCircle.svg";
-import IconCheckCircle from "../../assets/icons/buttons/IconCheckCircle.svg";
-import IconHistory from "../../assets/icons/buttons/IconHistory.svg";
+import IconSave from "../assets/icons/buttons/IconSave.svg";
+import IconReport from "../assets/icons/buttons/IconReport.svg";
+import IconXCircle from "../assets/icons/buttons/IconXCircle.svg";
+import IconCheckCircle from "../assets/icons/buttons/IconCheckCircle.svg";
+import IconHistory from "../assets/icons/buttons/IconHistory.svg";
 
 export const EDIT_DELETE = [
   {
