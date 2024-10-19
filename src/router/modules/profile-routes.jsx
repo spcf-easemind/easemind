@@ -28,7 +28,7 @@ const profileRoutes = [
     element: <TermsConditions />,
   },
   {
-    path: "/terms-conditions",
+    path: "/terms-and-conditions",
     element: <TermsConditions />,
   },
   {

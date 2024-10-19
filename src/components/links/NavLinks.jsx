@@ -1,20 +1,32 @@
 import { Image, UnstyledButton, Text, Group, Box } from "@mantine/core";
-import classes from "./HomeNavLinks.module.css";
-export default function HomeNavLinks({ active, icon, label, onSelect }) {
+import classes from "./NavLinks.module.css";
+import { hi } from "date-fns/locale";
+
+export default function NavLinks({
+  active,
+  icon,
+  label,
+  onSelect,
+  type = null,
+  ...props
+}) {
+  const { w, h } = type === "profile" ? { w: 27, h: 27 } : { w: 35, h: 30 };
+  const {boxW, boxH} = type === "profile" ? {boxW: 35, boxH: 25} : {boxW: 40, boxH: undefined};
   return (
     <UnstyledButton
       className={classes.linkStyling}
       data-active={active === label || undefined}
       p={16}
       onClick={() => onSelect()}
+      {...props}
     >
       <Group gap={10} align="center">
-        <Box w={40}>
+        <Box w={boxW} h={boxH}>
           <Image
             display="inline-block"
             src={icon}
-            w={35}
-            h={30}
+            w={w}
+            h={h}
             style={{ objectFit: "contain" }}
           />
         </Box>

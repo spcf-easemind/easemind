@@ -4,7 +4,12 @@ import IconOverview from "../../assets/icons/profile/IconOverview.svg";
 import IconAnonymous from "../../assets/icons/profile/IconAnonymous.svg";
 import IconTerms from "../../assets/icons/profile/IconTerms.svg";
 import IconPrivacy from "../../assets/icons/profile/IconPrivacy.svg";
-import { Stack } from "@mantine/core";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useAuthenticationStore } from "../../store/authentication";
+import NavLinks from "../links/NavLinks";
+import { useShallow } from "zustand/shallow";
+import { useEffect, useState } from "react";
+import { Avatar, Box, Stack, Title, Text } from "@mantine/core";
 
 const profileLinksAttributes = [
   {
@@ -58,5 +63,72 @@ const profileLinksAttributes = [
 ];
 
 export default function ProfileNavigation() {
-  return <Stack></Stack>;
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const { role, loggedInUser } = useAuthenticationStore(
+    useShallow((state) => ({
+      role: state.user.data?.role,
+      loggedInUser: state.user.data,
+    }))
+  );
+
+  const [active, setActive] = useState();
+
+  const currentLocation = () => {
+    const navLinks = profileLinksAttributes.filter((item) =>
+      location.pathname.startsWith(item.route)
+    );
+
+    const response = navLinks.length > 0 ? navLinks[0].label : null;
+    setActive(response);
+  };
+
+  useEffect(() => {
+    if (location) {
+      currentLocation();
+    }
+  }, [location.pathname]);
+
+  function handleActive(link) {
+    navigate(link.route);
+    setActive(link.label);
+  }
+
+  const navLinks = profileLinksAttributes
+    .filter(({ roles }) => roles.includes(role))
+    .map((navLink) => {
+      return (
+        <NavLinks
+          active={active}
+          onSelect={() => handleActive(navLink)}
+          label={navLink.label}
+          key={navLink.label}
+          icon={navLink.icon}
+          type="profile"
+          py={16}
+          px={32}
+        />
+      );
+    });
+  return (
+    <Stack gap={0}>
+      <Box ta="center" py={24}>
+        <Avatar
+          display="inline-block"
+          src={loggedInUser.profileImageUrl}
+          radius="sm"
+          w={100}
+          h={100}
+        />
+        <Title order={4} ta="center">
+          {loggedInUser.fullName}
+        </Title>
+        <Text size="sm" c="dimmed">
+          {role}
+        </Text>
+      </Box>
+      <Stack gap={0}>{navLinks}</Stack>
+    </Stack>
+  );
 }

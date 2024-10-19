@@ -9,7 +9,7 @@ import PendingApprovalIcon from "../../assets/icons/navigation/PendingApproval.s
 import SavedIcon from "../../assets/icons/navigation/Saved.svg";
 import PostsIcon from "../../assets/icons/navigation/Posts.svg";
 
-import HomeNavLink from "../links/HomeNavLinks";
+import NavLinks from "../links/NavLinks";
 import UserProfileIndicator from "../UserProfileIndicator";
 
 import { useEffect, useState } from "react";
@@ -110,11 +110,13 @@ export default function HomeNavigation() {
     .filter(({ roles }) => roles.includes(role))
     .map((navLink) => {
       return (
-        <HomeNavLink
+        <NavLinks
           active={active}
           onSelect={() => handleActive(navLink)}
           key={navLink.label}
-          {...navLink}
+          label={navLink.label}
+          icon={navLink.icon}
+          p={16}
         />
       );
     });
