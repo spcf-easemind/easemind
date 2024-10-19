@@ -692,7 +692,7 @@ export default function MiscellaneousPage() {
 
   const handleJoinUserGroup = async () => {
     const formData = {
-      groupKey: "jkBOyprLvU1RA9wZz0tgU",
+      groupKey: "CyUfJ48snB17Wb5fm9FdE",
       userKey: "v1DNhZd_vhjIEMLEcFM4z",
     };
     try {
@@ -732,7 +732,7 @@ export default function MiscellaneousPage() {
 
   const handleGroupPendingMembers = async () => {
     const formData = {
-      groupKey: "jkBOyprLvU1RA9wZz0tgU",
+      groupKey: "CyUfJ48snB17Wb5fm9FdE",
     };
     try {
       const getSuccess = await groupPendingMembersFn(formData);
@@ -750,11 +750,11 @@ export default function MiscellaneousPage() {
 
   const handleApprovePendingMember = async () => {
     const formData = {
-      groupPendingKey: "e163XMKdWgtwKMPAlesle",
+      groupPendingKey: "CyUfJ48snB17Wb5fm9FdE",
       groupPendingMember: {
-        groupRole: "member",
-        name: "alex",
-        userKey: "TslCus6H3Dzc1w6kD9GEr",
+        groupRole: "Group Member",
+        name: "alex1",
+        userKey: "v1DNhZd_vhjIEMLEcFM4z",
       },
     };
 
@@ -763,7 +763,7 @@ export default function MiscellaneousPage() {
       if (approveSuccess) {
         console.log("User Approved successfully!", groupData);
       } else {
-        console.error("Failed to approve user from group");
+        console.error("Failed to approve user from group", groupMessage);
       }
     } catch (error) {
       console.error("Error approving user from group:", error);

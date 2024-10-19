@@ -862,23 +862,32 @@ export const useGroupStore = create((set) => ({
         key: formData.groupPendingKey,
       });
 
-      let updatedPendingMemberArray = [];
-      for (const pendingMember of groupPendingMember.data.pendingMembers) {
-        if (pendingMember.userKey != formData.groupPendingMember.userKey) {
-          updatedPendingMemberArray.push(pendingMember);
+      if (groupPendingMember) {
+        let updatedPendingMemberArray = [];
+        for (const pendingMember of groupPendingMember.data.pendingMembers) {
+          if (pendingMember.userKey != formData.groupPendingMember.userKey) {
+            updatedPendingMemberArray.push(pendingMember);
+          }
         }
+
+        groupPendingMember.data.pendingMembers = updatedPendingMemberArray;
+
+        await setDoc({
+          collection: "groupPendingMembers",
+          doc: {
+            key: groupPendingMember.key,
+            data: groupPendingMember.data,
+            version: groupPendingMember.version,
+          },
+        });
+      } else {
+        set(() => ({
+          groupData: null,
+          groupMessage: "Group Pending Member not found!",
+          groupLoading: false,
+        }));
+        return false;
       }
-
-      groupPendingMember.data.pendingMembers = updatedPendingMemberArray;
-
-      await setDoc({
-        collection: "groupPendingMembers",
-        doc: {
-          key: groupPendingMember.key,
-          data: groupPendingMember.data,
-          version: groupPendingMember.version,
-        },
-      });
 
       const group = await getDoc({
         collection: "groups",
@@ -909,24 +918,45 @@ export const useGroupStore = create((set) => ({
             key: user.key,
           });
 
-          const addUserGroup = {
-            key: group.key,
-            groupName: group.data.name,
-          };
+          if (userGroup) {
+            const addUserGroup = {
+              key: group.key,
+              groupName: group.data.name,
+            };
 
-          userGroup.data.groups.push(addUserGroup);
+            userGroup.data.groups.push(addUserGroup);
 
-          await setDoc({
-            collection: "userGroups",
-            doc: {
-              key: userGroup.key,
-              data: userGroup.data,
-              version: userGroup.version,
-            },
-          });
-
-          console.log("user successfully added to the group!");
+            await setDoc({
+              collection: "userGroups",
+              doc: {
+                key: userGroup.key,
+                data: userGroup.data,
+                version: userGroup.version,
+              },
+            });
+          } else {
+            set(() => ({
+              groupData: null,
+              groupMessage: "userGroup not found!",
+              groupLoading: false,
+            }));
+          }
+        } else {
+          set(() => ({
+            groupData: null,
+            groupMessage: "User not found!",
+            groupLoading: false,
+          }));
+          return false;
         }
+        console.log("user successfully added to the group!");
+      } else {
+        set(() => ({
+          groupData: null,
+          groupMessage: "Group not found!",
+          groupLoading: false,
+        }));
+        return false;
       }
 
       set(() => ({
