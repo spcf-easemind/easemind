@@ -364,7 +364,17 @@ export const useGroupStore = create((set) => ({
         group.data.groupImageUrl = formData.updatedGroupInfo.groupProfilePath;
         group.data.name = formData.updatedGroupInfo.name;
         group.data.description = formData.updatedGroupInfo.description;
-        group.data.categories = formData.updatedGroupInfo.categories;
+
+        let newCategories = [];
+        for (const groupCategory of formData.updatedGroupInfo.categories) {
+          const category = await getDoc({
+            collection: "categories",
+            key: groupCategory.key,
+          });
+
+          newCategories.push(category.data);
+        }
+        group.data.categories = newCategories;
 
         for (const newMember of formData.updatedGroupInfo.newAddedMembers) {
           const userGroup = await getDoc({
