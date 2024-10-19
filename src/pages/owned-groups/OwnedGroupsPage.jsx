@@ -32,8 +32,8 @@ export default function OwnedGroupsPage() {
     navigate("/owned-group/create");
   }
 
-  function handleEditGroup() {
-    navigate(`/owned-group/edit/1`);
+  function handleEditGroup(ref) {
+    navigate(`/owned-group/edit/${ref}`);
   }
 
   return (
