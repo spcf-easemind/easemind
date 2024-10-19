@@ -591,7 +591,7 @@ export const useGroupStore = create((set) => ({
       groupLoading: true,
     }));
 
-    try{
+    try {
       const group = await getDoc({
         collection: "groups",
         key: formData.groupKey,
@@ -599,14 +599,14 @@ export const useGroupStore = create((set) => ({
 
       const groupInfo = {
         ...group.data,
-        userJoinStatus: formData.userJoinStatus
-      }
+        userJoinStatus: formData.userJoinStatus,
+      };
       set(() => ({
         groupData: groupInfo,
         groupMessage: "Group Info",
         groupLoading: false,
       }));
-      return true
+      return true;
     } catch (error) {
       console.error("Error fetching available group for user:", error);
       set(() => ({
@@ -618,7 +618,7 @@ export const useGroupStore = create((set) => ({
       }));
       return false;
     }
-  }
+  },
 
   getAllAvailableGroups: async (formData) => {
     set(() => ({
