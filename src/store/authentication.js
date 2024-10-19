@@ -1,6 +1,6 @@
-import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
-import { authSubscribe, initSatellite } from '@junobuild/core';
+import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
+import { authSubscribe, initSatellite } from "@junobuild/core";
 import {
   signIn,
   signOut,
@@ -8,7 +8,7 @@ import {
   setDoc,
   getDoc,
   deleteDoc,
-} from '@junobuild/core';
+} from "@junobuild/core";
 
 export const useAuthenticationStore = create(
   persist(
@@ -38,7 +38,7 @@ export const useAuthenticationStore = create(
 
         const handleSignIn = async () => {
           await signIn(signInOptions).catch((error) => {
-            console.error('Sign-in failed:', error);
+            console.error("Sign-in failed:", error);
           });
         };
 
@@ -76,12 +76,12 @@ export const useAuthenticationStore = create(
         }));
 
         const userCredential = await getDoc({
-          collection: 'userCredentials',
+          collection: "userCredentials",
           key: userKey,
         });
 
         const user = await getDoc({
-          collection: 'users',
+          collection: "users",
           key: userKey,
         });
 
@@ -94,13 +94,13 @@ export const useAuthenticationStore = create(
           const updatedUserData = {
             key: userKey,
             fullName: userData.fullName,
-            status: 'offline',
+            status: "offline",
             lastUpdated: userWithConvertedDates,
             role: userData.role,
           };
 
           await setDoc({
-            collection: 'users',
+            collection: "users",
             doc: {
               key: userKey,
               data: updatedUserData,
@@ -118,7 +118,7 @@ export const useAuthenticationStore = create(
               identity_provider: null,
               data: null,
             },
-            message: 'No Identity found on this account!',
+            message: "No Identity found on this account!",
             loading: false,
           }));
           return false;
@@ -130,7 +130,11 @@ export const useAuthenticationStore = create(
         set(() => ({ loading: true }));
 
         const items = await listDocs({
-          collection: 'userCredentials',
+          collection: "userCredentials",
+        });
+
+        const placeholderProfileImage = await listDocs({
+          collection: "userPlaceholderImages",
         });
 
         if (items.items && items.items.length > 0 && items.items[0].data) {
@@ -140,7 +144,7 @@ export const useAuthenticationStore = create(
             items.items[0].data.password === password
           ) {
             const user = await getDoc({
-              collection: 'users',
+              collection: "users",
               key: items.items[0].key,
             });
 
@@ -149,18 +153,21 @@ export const useAuthenticationStore = create(
             const userKey = user.key;
             const userVersion = user.version;
             const userItems = items.items[0].data;
+            const profileImageUrl =
+              placeholderProfileImage.items[0].data.placeholderProfileImagePath;
 
             // use the formData when you needed to update the userCredentials.
             const updatedData = {
               key: userData.key,
               fullName: userData.fullName,
-              status: 'online',
+              status: "online",
               role: userData.role,
               lastUpdated: userWithConvertedDates,
+              profileImageUrl: profileImageUrl,
             };
 
             await setDoc({
-              collection: 'users',
+              collection: "users",
               doc: {
                 key: userKey,
                 data: updatedData,
@@ -176,9 +183,10 @@ export const useAuthenticationStore = create(
                   email: userItems.email,
                   key: userKey,
                   role: userItems.role,
+                  profileImageUrl: profileImageUrl,
                 },
               },
-              message: 'Login Successfully!',
+              message: "Login Successfully!",
             }));
 
             // Set Loading False
@@ -189,7 +197,7 @@ export const useAuthenticationStore = create(
                 ...state.user,
                 data: null,
               },
-              message: 'Incorrect email or password',
+              message: "Incorrect email or password",
             }));
 
             // Set Loading False
@@ -201,7 +209,7 @@ export const useAuthenticationStore = create(
               ...state.user,
               data: null,
             },
-            message: 'No account found on this identity. Please sign up first',
+            message: "No account found on this identity. Please sign up first",
           }));
 
           // Set Loading False
@@ -210,7 +218,7 @@ export const useAuthenticationStore = create(
       },
     }),
     {
-      name: 'authentication',
+      name: "authentication",
       storage: createJSONStorage(() => sessionStorage),
       partialize: (state) => ({ user: state.user }),
     }
