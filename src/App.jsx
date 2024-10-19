@@ -42,11 +42,6 @@ function App() {
   const { mobile: drawerMobileOpened, desktop: drawerDesktopOpened } =
     useDialogStore((state) => state.drawer);
 
-  const mainHeight = useMatches({
-    base: "100%",
-    sm: "90dvh",
-  });
-
   // Filter Routes that include Navigation
   const includeNavigation = useMemo(() => {
     let paths = [];
@@ -110,13 +105,13 @@ function App() {
     </Container>
   );
 
-  const mainPadding = useMemo(() => {
+  const chatValues = useMemo(() => {
     const pathsWithoutPadding = ["/chat", "/chat/:chatRef"];
     return pathsWithoutPadding.some(
       (path) => routeMatcher(path, location.pathname) === path
     )
-      ? undefined
-      : 18;
+      ? { padding: undefined, height: "calc(100vh - 60px" }
+      : { padding: 18, height: "100%" };
   }, [location]);
 
   const withBackground = useMemo(() => {
@@ -146,7 +141,7 @@ function App() {
 
   return (
     <AppShell
-      padding={mainPadding}
+      padding={chatValues.padding}
       header={{ height: { base: 60, sm: 70 } }}
       navbar={{
         width: { base: 300, lg: 325, xl: 350 },
@@ -160,7 +155,7 @@ function App() {
       }}
       styles={{
         main: {
-          height: mainHeight,
+          height: chatValues.height,
         },
       }}
     >
