@@ -99,7 +99,7 @@ export default function CreateGroupPage() {
       },
       initialMembers: hasLength(
         {
-          min: 2,
+          min: 1,
         },
         "Please select at least 2 members"
       ),
@@ -144,11 +144,12 @@ export default function CreateGroupPage() {
 
     const id = notificationsFn.load();
     const response = await createGroupFn(formData);
-    if (response) {
-      notificationsFn.success(id, response);
-      navigate(`/owned-groups/${response.key}`);
+
+    if (response.type === "success") {
+      notificationsFn.success(id, response.message);
+      navigate(`/owned-group/${response.key}`);
     } else {
-      notificationsFn.error(id, response);
+      notificationsFn.error(id, response.message);
     }
   }
 

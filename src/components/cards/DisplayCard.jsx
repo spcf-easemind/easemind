@@ -146,7 +146,7 @@ export default function DisplayCard({
                 bg="gray.0"
                 key={member.key}
               >
-                {type === "owned" && (
+                {type === "owned" && member.groupRole !== "Group Admin" && (
                   <Button
                     variant="subtle"
                     color="red.5"

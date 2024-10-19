@@ -12,80 +12,85 @@ export const useGroupAPIStore = create((set, get) => ({
   joinedGroup: null,
 
   fetchOwnedGroups: async (loggedInUserId) => {
-    const fetchAllGroupsFn = useGroupStore.getState().getAllGroups;
-    const response = await fetchAllGroupsFn();
+    const formData = { userKey: loggedInUserId };
+    const fetchOwnedGroupsFn =
+      useGroupStore.getState().userGroupPendingApproval;
+    const response = await fetchOwnedGroupsFn(formData);
 
     if (response) {
       const groupData = useGroupStore.getState().groupData;
-      const filteredOwnedGroups = groupData.filter(
-        ({ owner }) => owner.key === loggedInUserId
-      );
+      const mappedOwnedGroup = groupData.map(({ groupInfo }) => groupInfo);
       set(() => ({
-        ownedGroups: filteredOwnedGroups,
+        ownedGroups: mappedOwnedGroup,
       }));
     }
   },
-  fetchOwnedGroup: async (ownedGroupRef) => {
-    const fetchAllGroupsFn = useGroupStore.getState().getAllGroups;
-    const response = await fetchAllGroupsFn();
+  fetchOwnedGroup: async (loggedInUserId, ownedGroupRef) => {
+    const formData = { userKey: loggedInUserId };
+    const fetchOwnedGroupsFn =
+      useGroupStore.getState().userGroupPendingApproval;
+    const response = await fetchOwnedGroupsFn(formData);
 
     if (response) {
       const groupData = useGroupStore.getState().groupData;
-      const ownedGroup = groupData.find(({ key }) => key === ownedGroupRef);
+      const ownedGroup = groupData.find(
+        ({ groupInfo }) => groupInfo.key === ownedGroupRef
+      );
 
       set(() => ({
         ownedGroup: ownedGroup,
       }));
     }
   },
-  removeGroupMember: async (ownedGroupRef, loggedInUserId) => {
+  removeGroupMember: async (loggedInUserId, ownedGroupRef, userKey) => {
     set(() => ({
       loading: true,
     }));
-    const formData = { groupKey: ownedGroupRef, userKey: loggedInUserId };
-
-    console.log(formData);
+    const formData = { groupKey: ownedGroupRef, userKey: userKey };
     const removeMemberFn = useGroupStore.getState().removeMember;
-    const response = await removeMemberFn(formData);
 
-    if (response) {
-      const fetchOwnedGroupFn = get().fetchOwnedGroup;
-      await fetchOwnedGroupFn(ownedGroupRef);
+    try {
+      await removeMemberFn(formData);
+      await get().fetchOwnedGroup(loggedInUserId, ownedGroupRef);
+
+      set(() => ({
+        loading: false,
+      }));
+      const fetchGroupMessage = useGroupStore.getState().groupMessage;
+
+      return { type: "success", message: fetchGroupMessage };
+    } catch (error) {
+      const fetchGroupMessage = useGroupStore.getState().groupMessage;
+      return { type: "error", message: fetchGroupMessage };
     }
-
-    set(() => ({
-      loading: false,
-    }));
   },
+
+  // Community Groups
   fetchCommunityGroups: async (loggedInUserId) => {
-    const fetchAllGroupsFn = useGroupStore.getState().getAllGroups;
-    const response = await fetchAllGroupsFn();
+    const formData = { userKey: loggedInUserId };
+    const fetchCommunityGroupsFn =
+      useGroupStore.getState().getAllAvailableGroups;
+    const response = await fetchCommunityGroupsFn(formData);
 
     if (response) {
       const groupData = useGroupStore.getState().groupData;
-      const filteredCommunityGroups = groupData.filter(
-        ({ members }) =>
-          !members.some((member) => member.key === loggedInUserId)
-      );
       set(() => ({
-        communityGroups: filteredCommunityGroups,
+        communityGroups: groupData,
       }));
     }
   },
+
+  // Joined Groups
   fetchJoinedGroups: async (loggedInUserId) => {
-    const fetchAllGroupsFn = useGroupStore.getState().getAllGroups;
-    const response = await fetchAllGroupsFn();
+    const formData = { userKey: loggedInUserId };
+    const fetchJoinedGroupsFn = useGroupStore.getState().getUserGroup;
+    const response = await fetchJoinedGroupsFn(formData);
 
     if (response) {
       const groupData = useGroupStore.getState().groupData;
-      const filteredJoinedGroups = groupData.filter(({ members }) =>
-        members.some(
-          (member) =>
-            member.key === loggedInUserId && member.groupRole === "Group Member"
-        )
-      );
+      const mappedJoinedGroups = groupData.map(({ data }) => data);
       set(() => ({
-        joinedGroups: filteredJoinedGroups,
+        joinedGroups: mappedJoinedGroups,
       }));
     }
   },
@@ -96,9 +101,6 @@ export const useGroupAPIStore = create((set, get) => ({
     if (response) {
       const groupData = useGroupStore.getState().groupData;
       const joinedGroup = groupData.find(({ key }) => key === joinedGroupRef);
-
-      console.log(joinedGroup)
-
       set(() => ({
         joinedGroup: joinedGroup,
       }));
@@ -107,11 +109,31 @@ export const useGroupAPIStore = create((set, get) => ({
   createGroup: async (formData) => {
     const createGroupFn = useGroupStore.getState().createGroup;
 
-    // Create group
-    await createGroupFn(formData);
+    try {
+      // Create group
+      await createGroupFn(formData);
+      // Set Notifications
+      const groupKey = useGroupStore.getState().groupData;
+      const fetchGroupMessage = useGroupStore.getState().groupMessage;
+      return { type: "success", message: fetchGroupMessage, key: groupKey };
+    } catch (error) {
+      // Notifications
+      const fetchGroupMessage = useGroupStore.getState().groupMessage;
+      return { type: "error", message: fetchGroupMessage };
+    }
+  },
+  updateGroup: async (formData) => {
+    const updateGroupFn = useGroupStore.getState().editGroupInfo;
 
-    // Notifications
-    const fetchGroupMessage = useGroupStore.getState().groupMessage;
-    return fetchGroupMessage;
+    try {
+      // Update Group
+      await updateGroupFn(formData);
+
+      const fetchGroupMessage = useGroupStore.getState().groupMessage;
+      return { type: "success", message: fetchGroupMessage };
+    } catch (error) {
+      const fetchGroupMessage = useGroupStore.getState().groupMessage;
+      return { type: "error", message: fetchGroupMessage };
+    }
   },
 }));

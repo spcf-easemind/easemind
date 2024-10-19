@@ -13,6 +13,7 @@ import {
 } from "@mantine/core";
 import { IconChevronLeft, IconSearch } from "@tabler/icons-react";
 import classes from "./GroupControlCard.module.css";
+import _ from "lodash";
 // Components
 import PhotoControlButton from "../buttons/PhotoControlButton";
 import MultiInputsCard from "./MultiInputsCard";
@@ -83,11 +84,16 @@ export default function GroupControlCard({
   const [active, setActive] = useState("thoughts");
   const [selectedPills, setSelectedPills] = useState([]);
 
-  function handleSelectPill(choice) {
-    const isSelected = selectedPills.includes(choice);
+  useEffect(() => {
+    if (form.getValues().initialCategories) {
+      setSelectedPills([...form.getValues().initialCategories]);
+    }
+  }, [form]);
 
+  function handleSelectPill(choice) {
+    const isSelected = selectedPills.some((pill) => _.isEqual(pill, choice));
     const updatedPills = isSelected
-      ? selectedPills.filter((pill) => pill !== choice)
+      ? selectedPills.filter((pill) => !_.isEqual(pill, choice))
       : [...selectedPills, choice];
 
     form.setFieldValue("initialCategories", updatedPills);
@@ -147,7 +153,9 @@ export default function GroupControlCard({
         <Tabs.Panel value={tab.value} key={tab.value} mt={16}>
           <Group gap={8}>
             {tab.choices.map((choice) => {
-              const isActive = selectedPills.includes(choice);
+              const isActive = selectedPills.some((pill) =>
+                _.isEqual(pill, choice)
+              );
               return (
                 <PillButton
                   key={choice.key}

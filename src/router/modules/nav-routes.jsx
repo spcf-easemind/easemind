@@ -81,7 +81,7 @@ const navRoutes = [
     element: <OwnedGroupsPage />,
   },
   {
-    path: "/owned-groups/:ownedGroupRef",
+    path: "/owned-group/:ownedGroupRef",
     element: <OwnedGroupsViewPage />,
   },
   {

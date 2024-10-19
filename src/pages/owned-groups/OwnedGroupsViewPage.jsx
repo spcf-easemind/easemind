@@ -7,6 +7,8 @@ import { useParams } from "react-router-dom";
 import { useGroupAPIStore } from "../../store/group-api";
 import { useShallow } from "zustand/shallow";
 import { useEffect, useState } from "react";
+import { useAuthenticationStore } from "../../store/authentication";
+import { notificationsFn } from "../../utils/notifications";
 
 export default function OwnedGroupsViewPage() {
   const navigate = useNavigate();
@@ -14,6 +16,9 @@ export default function OwnedGroupsViewPage() {
   const [modalTarget, setModalTarget] = useState(null);
 
   // Zustand
+  const loggedInUserKey = useAuthenticationStore(
+    (state) => state.user.data?.key
+  );
   const { fetchOwnedGroupFn, ownedGroup, removeGroupMemberFn, groupLoading } =
     useGroupAPIStore(
       useShallow((state) => ({
@@ -25,7 +30,7 @@ export default function OwnedGroupsViewPage() {
     );
 
   useEffect(() => {
-    fetchOwnedGroupFn(ownedGroupRef);
+    fetchOwnedGroupFn(loggedInUserKey, ownedGroupRef);
   }, []);
 
   const [opened, { toggle }] = useDisclosure();
@@ -36,8 +41,22 @@ export default function OwnedGroupsViewPage() {
   }
 
   async function handleModalClick() {
-    await removeGroupMemberFn(ownedGroupRef, modalTarget.key);
+    console.log("modalTarget", modalTarget);
+
+    const response = await removeGroupMemberFn(
+      loggedInUserKey,
+      ownedGroupRef,
+      modalTarget.key
+    );
+
     toggle();
+
+    const id = notificationsFn.load();
+    if (response.type === "success") {
+      notificationsFn.success(id, response.message);
+    } else {
+      notificationsFn.error(id, response.message);
+    }
   }
 
   function handleEditGroup() {
@@ -47,13 +66,13 @@ export default function OwnedGroupsViewPage() {
   const modalTargetName = modalTarget ? modalTarget.fullName : "";
 
   const title = `Remove from group?`;
-  const message = `Are you sure you want to remove ${modalTarget} from the group? Once removed, all associated data will no longer be accessible unless they rejoin.`;
+  const message = `Are you sure you want to remove ${modalTargetName} from the group? Once removed, all associated data will no longer be accessible unless they rejoin.`;
 
   return (
     ownedGroup && (
       <Paper>
         <DisplayCard
-          instance={ownedGroup}
+          instance={ownedGroup.groupInfo}
           buttonLabel="Edit"
           variant="view"
           type="owned"

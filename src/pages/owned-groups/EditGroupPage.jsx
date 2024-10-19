@@ -1,6 +1,6 @@
 import { Paper } from "@mantine/core";
 import GroupControlCard from "../../components/cards/GroupControlCard";
-import { useForm, isNotEmpty, hasLength } from "@mantine/form";
+import { useForm, isNotEmpty } from "@mantine/form";
 import { useEnumsStore } from "../../store/enums";
 import { useAuthenticationStore } from "../../store/authentication";
 import { useFormStore } from "../../store/form";
@@ -8,7 +8,8 @@ import { useShallow } from "zustand/shallow";
 import { useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useGroupAPIStore } from "../../store/group-api";
-import { set } from "date-fns";
+import { notificationsFn } from "../../utils/notifications";
+import { useNavigate } from "react-router-dom";
 
 const header = {
   title: "Edit Group",
@@ -21,6 +22,7 @@ const button = {
 };
 
 export default function EditGroupPage() {
+  const navigate = useNavigate();
   const { ownedGroupRef } = useParams();
 
   // Zustand
@@ -28,10 +30,11 @@ export default function EditGroupPage() {
     (state) => state.user.data?.key
   );
 
-  const { ownedGroup, fetchOwnedGroupFn } = useGroupAPIStore(
+  const { ownedGroup, fetchOwnedGroupFn, updateGroupFn } = useGroupAPIStore(
     useShallow((state) => ({
       ownedGroup: state.ownedGroup,
       fetchOwnedGroupFn: state.fetchOwnedGroup,
+      updateGroupFn: state.updateGroup,
     }))
   );
 
@@ -45,16 +48,21 @@ export default function EditGroupPage() {
   useEffect(() => {
     async function fetch() {
       await fetchUsersFn();
-      await fetchOwnedGroupFn(ownedGroupRef);
-
-      // Proceed to Initialization
-      formInitialize();
+      await fetchOwnedGroupFn(loggedInUserKey, ownedGroupRef);
     }
     fetch();
   }, []);
 
+  useEffect(() => {
+    if (ownedGroup) {
+      formInitialize();
+    }
+  }, [ownedGroup]);
+
   const usersEnum = useMemo(() => {
-    const groupMembers = ownedGroup?.members.map(({ key }) => key) || [];
+    const groupMembers = ownedGroup
+      ? ownedGroup.groupInfo?.members.map(({ key }) => key)
+      : [];
     if (users.length > 0) {
       return users
         .filter(({ key }) => !groupMembers.includes(key))
@@ -99,25 +107,21 @@ export default function EditGroupPage() {
         );
         return filled ? null : "At least one category should be filled.";
       },
-      initialMembers: hasLength(
-        {
-          min: 2,
-        },
-        "Please select at least 2 members"
-      ),
     },
   });
 
   function formInitialize() {
-    const { owner, groupImageUrl, name, description, categories } = ownedGroup;
+    const { owner, groupImageUrl, name, description, categories } =
+      ownedGroup.groupInfo;
 
     const mappedCategories = categories.map(({ key, data }) => ({
-      key,
       tab: data.category,
+      key,
       value: data.name,
     }));
 
     const initValues = {
+      groupKey: "",
       ownerKey: owner.key,
       groupProfilePath: groupImageUrl,
       name,
@@ -130,12 +134,23 @@ export default function EditGroupPage() {
       initialCategories: mappedCategories,
     };
 
-    console.log("initialize", initValues);
     form.initialize(initValues);
   }
 
   async function formSubmit(value) {
     let formData = { ...value };
+
+    let updatedFormData = {
+      groupKey: ownedGroupRef,
+      updatedGroupInfo: {
+        ownerKey: formData.ownerKey,
+        groupProfilePath: formData.groupProfilePath,
+        name: formData.name,
+        description: formData.description,
+        categories: [],
+        newAddedMembers: [],
+      },
+    };
 
     const mappedMembers = users
       .filter(({ key }) => formData.initialMembers.includes(key))
@@ -153,25 +168,18 @@ export default function EditGroupPage() {
     }));
 
     // Reassign
-    formData.members = [
-      {
-        fullName: currentUserValue.data.fullName,
-        key: currentUserValue.key,
-        lastUpdated: currentUserValue.data.lastUpdated,
-        role: currentUserValue.data.role,
-        status: currentUserValue.data.status,
-        groupRole: "Group Admin",
-      },
-      ...mappedMembers,
-    ];
-    formData.categories = mappedCategories;
+    updatedFormData.updatedGroupInfo.newAddedMembers = [...mappedMembers];
+    updatedFormData.updatedGroupInfo.categories = mappedCategories;
 
-    // Remove initial values
-    delete formData.initialMembers;
-    delete formData.initialCategories;
+    const id = notificationsFn.load();
+    const response = await updateGroupFn(updatedFormData);
 
-    console.log(formData);
-    await createGroupFn(formData);
+    if (response.type === "success") {
+      notificationsFn.success(id, response.message);
+      navigate(`/owned-group/${ownedGroupRef}`);
+    } else {
+      notificationsFn.error(id, response.message);
+    }
   }
 
   function iterateSavedData() {
@@ -191,8 +199,6 @@ export default function EditGroupPage() {
     setSavedForm(form.getValues());
     navigate("/owned-group/change-photo");
   }
-
-  console.log(form.getValues());
 
   return (
     <Paper>
