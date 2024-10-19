@@ -30,7 +30,7 @@ export default function CommunityGroupsPage() {
 
   useEffect(() => {
     fetchCommunityGroupsFn(loggedInUserKey);
-  });
+  }, []);
 
   function handleSelect(ref) {
     navigate(`/community-groups/${ref}`);
