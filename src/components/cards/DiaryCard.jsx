@@ -1,24 +1,10 @@
 import { Card, Group, Stack, Title, Text, Divider, Box } from "@mantine/core";
 import ActionsBox from "../ActionsBox";
 import { IconDotsVertical } from "@tabler/icons-react";
-import IconPencil from "../../assets/icons/buttons/IconPencil.svg";
-import IconTrashcan from "../../assets/icons/buttons/IconTrashcan.svg";
+import { EDIT_DELETE } from "../../static/popover";
 
 export default function DiaryCard() {
-  const popoverOptions = [
-    {
-      value: "edit",
-      icon: IconPencil,
-      label: "Edit",
-      textColor: "dark.5",
-    },
-    {
-      value: "delete",
-      icon: IconTrashcan,
-      label: "Delete",
-      textColor: "dark.5",
-    },
-  ];
+  const popoverOptions = EDIT_DELETE;
 
   return (
     <Card bg="gray.0" radius="lg" withBorder>

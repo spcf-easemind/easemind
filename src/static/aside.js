@@ -3,7 +3,7 @@ import SampleUserImage1 from "../assets/images/SampleUserImage1.webp";
 
 export const SAMPLE_DAILY_QUOTES = {
   quote:
-    "You’re braver than you believe, and stronger than you seem, and smarter than you think.",
+    "You're braver than you believe, and stronger than you seem, and smarter than you think.",
   source: "A.A. Mine",
   bgImage: SampleBackgroundImage,
 };

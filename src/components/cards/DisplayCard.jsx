@@ -16,7 +16,7 @@ import GroupMemberCard from "./GroupMemberCard.jsx";
 import ActionsBox from "../ActionsBox.jsx";
 import { useMemo } from "react";
 import { IconDotsVertical } from "@tabler/icons-react";
-import IconPencil from "../../assets/icons/buttons/IconPencil.svg";
+import { EDIT_OPTION } from "../../static/popover.js";
 
 const MAX_PILLS = 3;
 
@@ -250,14 +250,7 @@ export default function DisplayCard({
   }, [instance.userJoinStatus, type]);
 
   const whichMainButton = useMemo(() => {
-    const popoverOptions = [
-      {
-        value: "edit",
-        icon: IconPencil,
-        label: "Edit",
-        textColor: "dark.5",
-      },
-    ];
+    const popoverOptions = EDIT_OPTION;
     return type === "posts" ? (
       <ActionsBox
         onClick={(option) => onButtonClick(option, "1")}

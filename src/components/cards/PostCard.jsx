@@ -10,11 +10,9 @@ import {
 } from "@mantine/core";
 import ActionsBox from "../ActionsBox";
 import { IconDotsVertical } from "@tabler/icons-react";
-import IconPencil from "../../assets/icons/buttons/IconPencil.svg";
-import IconTrashcan from "../../assets/icons/buttons/IconTrashcan.svg";
-import IconSave from "../../assets/icons/buttons/IconSave.svg";
-import IconReport from "../../assets/icons/buttons/IconReport.svg";
+
 import Pill from "../pills/Pill";
+import { EDIT_DELETE, SAVE_REPORT } from "../../static/popover";
 
 const sample_pills = [
   "Depression",
@@ -26,34 +24,8 @@ const sample_pills = [
 ];
 
 const popoverOptions = {
-  posts: [
-    {
-      value: "edit",
-      icon: IconPencil,
-      label: "Edit",
-      textColor: "dark.5",
-    },
-    {
-      value: "delete",
-      icon: IconTrashcan,
-      label: "Delete",
-      textColor: "dark.5",
-    },
-  ],
-  recommended: [
-    {
-      value: "save",
-      icon: IconSave,
-      label: "Save",
-      textColor: "dark.5",
-    },
-    {
-      value: "report",
-      icon: IconReport,
-      label: "Report",
-      textColor: "dark.5",
-    },
-  ],
+  posts: EDIT_DELETE,
+  recommended: SAVE_REPORT,
 };
 
 export default function PostCard({ onPopoverSelect, type }) {
