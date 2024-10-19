@@ -4,17 +4,25 @@ import DisplayCard from "../../components/cards/DisplayCard";
 import { useGroupAPIStore } from "../../store/group-api";
 import { useShallow } from "zustand/shallow";
 import { useEffect } from "react";
+import { notificationsFn } from "../../utils/notifications";
+import { useAuthenticationStore } from "../../store/authentication";
 
 export default function JoinedGroupViewPage() {
   const { joinedGroupRef } = useParams();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
-  const { fetchJoinedGroupFn, joinedGroup } = useGroupAPIStore(
-    useShallow((state) => ({
-      fetchJoinedGroupFn: state.fetchJoinedGroup,
-      joinedGroup: state.joinedGroup,
-    }))
+  const loggedInUserKey = useAuthenticationStore(
+    (state) => state.user.data?.key
   );
+
+  const { fetchJoinedGroupFn, joinedGroup, removeGroupMemberFn } =
+    useGroupAPIStore(
+      useShallow((state) => ({
+        removeGroupMemberFn: state.removeGroupMember,
+        fetchJoinedGroupFn: state.fetchJoinedGroup,
+        joinedGroup: state.joinedGroup,
+      }))
+    );
 
   useEffect(() => {
     fetchJoinedGroupFn(joinedGroupRef);
@@ -22,6 +30,18 @@ export default function JoinedGroupViewPage() {
 
   function handleButtonClick() {
     console.log("View Chat");
+  }
+
+  async function handleLeaveGroup() {
+    const id = notificationsFn.load();
+    const response = await removeGroupMemberFn(joinedGroupRef, loggedInUserKey);
+
+    if (response.type === "success") {
+      notificationsFn.success(id, response.message);
+      navigate("/joined-groups");
+    } else {
+      notificationsFn.error(id, response.message);
+    }
   }
 
   return (
@@ -33,6 +53,7 @@ export default function JoinedGroupViewPage() {
           type="joined"
           button={{ buttonLabel: "View Chat", loading: false }}
           onButtonClick={handleButtonClick}
+          onLeaveBtnClick={handleLeaveGroup}
         />
       </Paper>
     )

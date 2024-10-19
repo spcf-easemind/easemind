@@ -38,6 +38,7 @@ export default function DisplayCard({
   onSelect,
   onModalSelect,
   onButtonClick,
+  onLeaveBtnClick,
 }) {
   function handleClick(ref) {
     onSelect(ref);
@@ -238,12 +239,15 @@ export default function DisplayCard({
         px={header.button.px}
         size={header.button.size}
         style={{ zIndex: 1 }}
+        onClick={onLeaveBtnClick}
       >
         Leave Group
       </Button>
     ) : undefined;
 
-  const isDisabled = type === "community" ? instance.userJoinStatus : undefined;
+  const isDisabled = useMemo(() => {
+    return type === "community" ? instance.userJoinStatus : undefined;
+  }, [instance.userJoinStatus, type]);
 
   const whichMainButton = useMemo(() => {
     const popoverOptions = [
@@ -274,7 +278,7 @@ export default function DisplayCard({
         {buttonLabel}
       </Button>
     );
-  }, [type]);
+  }, [type, instance.userJoinStatus, instance]);
 
   return (
     <Card

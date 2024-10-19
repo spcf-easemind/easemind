@@ -139,7 +139,7 @@ export default function HomeNavigation() {
     <>
       <Stack gap={0}>
         <UserProfileIndicator
-          profile={loggedInUser?.image}
+          profile={loggedInUser?.profileImageUrl}
           name={loggedInUser?.fullName}
           role={role}
           {...profileIndicatorStyling}

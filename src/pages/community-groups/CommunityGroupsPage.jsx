@@ -46,7 +46,8 @@ export default function CommunityGroupsPage() {
 
     if (response.type === "success") {
       notificationsFn.success(id, response.message);
-      fetchCommunityGroupsFn(loggedInUserKey);
+      await fetchCommunityGroupsFn(loggedInUserKey);
+
     } else {
       notificationsFn.error(id, response.message);
     }

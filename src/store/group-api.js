@@ -109,7 +109,6 @@ export const useGroupAPIStore = create((set, get) => ({
 
     if (response) {
       const groupData = useGroupStore.getState().groupData;
-      console.log("groupData", groupData);
       set(() => ({
         pendingApprovals: groupData,
       }));
@@ -122,7 +121,6 @@ export const useGroupAPIStore = create((set, get) => ({
 
     if (response) {
       const groupData = useGroupStore.getState().groupData;
-      console.log("groupData", groupData);
       set(() => ({
         pendingMembers: groupData,
       }));
@@ -155,7 +153,7 @@ export const useGroupAPIStore = create((set, get) => ({
     }
   },
 
-  removeGroupMember: async (loggedInUserId, ownedGroupRef, userKey) => {
+  removeGroupMember: async (ownedGroupRef, userKey) => {
     set(() => ({
       loading: true,
     }));
@@ -167,7 +165,6 @@ export const useGroupAPIStore = create((set, get) => ({
       set(() => ({
         loading: false,
       }));
-      // await get().fetchOwnedGroup(loggedInUserId, ownedGroupRef);
       const fetchGroupMessage = useGroupStore.getState().groupMessage;
       return { type: "success", message: fetchGroupMessage, key: ownedGroupRef };
     } else {
@@ -202,9 +199,6 @@ export const useGroupAPIStore = create((set, get) => ({
   },
   memberApproval: async (choice, groupKey, payload) => {
     const formData = { groupPendingKey: groupKey, groupPendingMember: payload };
-
-    console.log("formData", formData, groupKey);
-    console.log(choice);
     const approvePendingMemberFn =
       useGroupStore.getState().approvePendingMember;
     const rejectPendingMemberFn = useGroupStore.getState().rejectPendingMember;
