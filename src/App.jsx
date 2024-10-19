@@ -154,7 +154,7 @@ function App() {
         collapsed: { mobile: handleDrawerMobile, desktop: handleDrawerDesktop },
       }}
       aside={{
-        width: { base: 275, lg: 300, xl: 325 },
+        width: { base: 275, lg: 300, xl: 375 },
         breakpoint: "md",
         collapsed: { mobile: handleAsideMobile, desktop: handleAsideDesktop },
       }}

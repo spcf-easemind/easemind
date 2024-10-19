@@ -10,7 +10,7 @@ import {
 } from "@mantine/core";
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import QuoteBox from "./QuoteBox";
 import PillButton from "../buttons/PillButton.jsx";
@@ -21,36 +21,59 @@ import {
   SAMPLE_DAILY_QUOTES,
   SUGGESTED_SECTION_ATTRIBUTES,
 } from "../../static/aside";
+import TaskCard from "../cards/TaskCard.jsx";
+import CreateButtonCard from "../buttons/CreateButtonCard.jsx";
+
+const withDailyTasksRoutes = ["/endless-thoughts-diary"];
 
 export default function HomeAside() {
   const [activeTag, setActiveTag] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
 
   function handleSelectTag(name) {
     activeTag !== name ? setActiveTag(name) : setActiveTag("");
   }
 
-  const pillContent = PILL_ATTRIBUTES.map((attribute) => {
-    const fixedPillWidth = 100;
+  const pillContent = PILL_ATTRIBUTES.filter((item) =>
+    withDailyTasksRoutes.includes(location.pathname)
+      ? item.value !== "trendingTopics"
+      : true
+  ).map((attribute) => {
     return (
       <Box mt={15} key={attribute.value}>
         <Title order={3} mb={15}>
           {attribute.label}
         </Title>
-        <SimpleGrid cols={3} spacing="xs">
+        <SimpleGrid cols={3} spacing="xs" verticalSpacing="xs">
           {attribute.choices.map((choice) => (
             <PillButton
               name={choice}
               key={choice}
               onSelect={handleSelectTag}
-              active={activeTag}
-              pillWidth={fixedPillWidth}
+              data-active={activeTag === choice || undefined}
             />
           ))}
         </SimpleGrid>
       </Box>
     );
   });
+
+  const dailyTasksContent = withDailyTasksRoutes.includes(
+    location.pathname
+  ) && (
+    <Box mt={15}>
+      <Title order={3} mb={15}>
+        Daily Tasks
+      </Title>
+
+      <Stack>
+        <TaskCard />
+
+        <CreateButtonCard>Add Task</CreateButtonCard>
+      </Stack>
+    </Box>
+  );
 
   function handleAnchorClick(route) {
     return navigate(route);
@@ -82,6 +105,7 @@ export default function HomeAside() {
   return (
     <ScrollArea type="scroll" scrollbarSize={6}>
       <QuoteBox {...SAMPLE_DAILY_QUOTES} />
+      {dailyTasksContent}
       {pillContent}
       {suggestedContent}
     </ScrollArea>

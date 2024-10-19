@@ -116,7 +116,7 @@ export default function InterestTabs({ form }) {
           {tab.choices.map((choice) => (
             <PillButton
               key={choice.key}
-              active={selectedPill}
+              data-active={selectedPill === choice.value || undefined}
               name={choice.value}
               onSelect={(name) => handleSelectPill(tab.value, name)}
             />

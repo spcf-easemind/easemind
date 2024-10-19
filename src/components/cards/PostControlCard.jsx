@@ -194,7 +194,7 @@ export default function PostControlCard({
               return (
                 <PillButton
                   key={choice.key}
-                  active={isActive}
+                  data-active={isActive || undefined}
                   name={choice.value}
                   onSelect={() => handleSelectPill(choice)}
                 />

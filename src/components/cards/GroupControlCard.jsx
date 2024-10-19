@@ -159,7 +159,7 @@ export default function GroupControlCard({
               return (
                 <PillButton
                   key={choice.key}
-                  active={isActive}
+                  data-active={isActive || undefined}
                   name={choice.value}
                   onSelect={() => handleSelectPill(choice)}
                 />

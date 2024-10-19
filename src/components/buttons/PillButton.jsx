@@ -1,10 +1,10 @@
 import { UnstyledButton } from "@mantine/core";
 import Pill from "../pills/Pill.jsx";
 
-export default function PillButton({ active, name, onSelect, pillWidth }) {
+export default function PillButton({ name, onSelect, ...props }) {
   return (
     <UnstyledButton onClick={() => onSelect(name)}>
-      <Pill name={name} data-active={active || undefined} pillWidth={pillWidth} />
+      <Pill name={name} {...props} />
     </UnstyledButton>
   );
 }
