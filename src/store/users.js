@@ -259,6 +259,17 @@ export const useUsersStore = create((set) => ({
             loading: false,
           }));
         }
+
+        const userGroup = await getDoc({
+          collecton: "userGroups",
+          key: items.items[0].key,
+        });
+
+        await deleteDoc({
+          collection: "userGroups",
+          doc: userGroup,
+        });
+
         return true;
       } else {
         set(() => ({
@@ -272,6 +283,95 @@ export const useUsersStore = create((set) => ({
       set(() => ({
         data: null,
         message: error.message || "An error occurred while deleting user data",
+        loading: false,
+      }));
+      return false;
+    }
+  },
+
+  deleteAllUsers: async () => {
+    set(() => ({
+      data: null,
+      message: "Loading...",
+      loading: true,
+    }));
+
+    try {
+      const users = await listDocs({
+        collection: "users",
+      });
+
+      const userCredentials = await listDocs({
+        collection: "userCredentials",
+      });
+
+      const userSurveys = await listDocs({
+        collection: "userSurveys",
+      });
+
+      const userGroups = await listDocs({
+        collection: "userGroups",
+      });
+
+      for (const userSurvey of userSurveys.items) {
+        const user = await getDoc({
+          collection: "users",
+          key: userSurvey.key,
+        });
+
+        await deleteDoc({
+          collection: "userSurveys",
+          doc: userSurvey,
+        });
+
+        console.log(`${user.data.name} user surveys deleted successfully!`);
+      }
+
+      for (const userGroup of userGroups.items) {
+        const user = await getDoc({
+          collection: "users",
+          key: userGroup.key,
+        });
+
+        await deleteDoc({
+          collection: "userGroups",
+          doc: userGroup,
+        });
+
+        console.log(`${user.data.name} user group deleted successfully!`);
+      }
+
+      for (const user of users.items) {
+        await deleteDoc({
+          collection: "users",
+          doc: user,
+        });
+
+        console.log(`${user.data.name} user credentials deleted successfully!`);
+      }
+
+      for (const userCredential of userCredentials.items) {
+        await deleteDoc({
+          collection: "userCredentials",
+          doc: userCredential,
+        });
+
+        console.log(
+          `${userCredential.data.name} user credentials deleted successfully!`
+        );
+      }
+
+      set(() => ({
+        groupData: null,
+        groupMessage: "All users has been deleted successfully!",
+        groupLoading: false,
+      }));
+      return true;
+    } catch (error) {
+      console.error("Error deleting all users:", error);
+      set(() => ({
+        data: null,
+        message: error.message || "An error occurred while deleting all users",
         loading: false,
       }));
       return false;
