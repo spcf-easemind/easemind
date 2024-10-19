@@ -502,7 +502,7 @@ export default function MiscellaneousPage() {
       groupKey: "O7MsnLtswxeu6YltUr_fA",
       updatedGroupInfo: {
         ownerKey: "3JkiWUaMis6ziIHwRrKsK",
-        groupPathProfile:
+        groupProfilePath:
           "http://jx5yt-yyaaa-aaaal-abzbq-cai.localhost:5987/groupProfileCollections/78NrInBvKoD2RcGJDMkik-profile",
         name: "Kupal V2",
         description:
