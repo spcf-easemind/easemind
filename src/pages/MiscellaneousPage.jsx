@@ -1025,7 +1025,7 @@ export default function MiscellaneousPage() {
           Log Out
         </Button>
         <Button onClick={handleDeleteAllUsers} loading={loading}>
-          Log Out
+          Delete All Users
         </Button>
         <Button onClick={handleGetPlaceHolderProfileImages} loading={loading}>
           Get Placeholder Profiles
