@@ -46,6 +46,7 @@ export const useUsersStore = create((set) => ({
             dateOfBirth: formData.dateOfBirth,
             email: formData.email,
             fullName: formData.fullName,
+            pronouns: formData.pronouns,
             mobileNumber: formData.mobileNumber,
             password: formData.password,
             role: formData.role,
@@ -71,31 +72,76 @@ export const useUsersStore = create((set) => ({
             fullName: formData.fullName,
             status: "offline",
             role: formData.role,
+            companionOverviewKey: key,
           },
         },
       });
 
-      // const anonymousName = formData.name
-      //   .split(" ")
-      //   .map((word) => {
-      //     if (word.length > 1) {
-      //       return word[0] + "*".repeat(word.length - 1);
-      //     }
-      //     return word;
-      //   })
-      //   .join(" ");
+      await setDoc({
+        collection: "userCompanionOverviews",
+        doc: {
+          key,
+          data: {
+            key,
+            title: "",
+            description: "",
+            categories: [],
+            availability: {
+              monday: {
+                startTime: "",
+                endTime: "",
+              },
+              tuesday: {
+                startTime: "",
+                endTime: "",
+              },
+              wednesday: {
+                startTime: "",
+                endTime: "",
+              },
+              thursday: {
+                startTime: "",
+                endTime: "",
+              },
+              friday: {
+                startTime: "",
+                endTime: "",
+              },
+              saturday: {
+                startTime: "",
+                endTime: "",
+              },
+              sunday: {
+                startTime: "",
+                endTime: "",
+              },
+            },
+          },
+        },
+      });
 
-      // await setDoc({
-      //   collection: "anonymousUsers",
-      //   doc: {
-      //     key,
-      //     data: {
-      //       profileImageUrl: placeholderImageUrl,
-      //       key,
-      //       name: anonymousName,
-      //     },
-      //   },
-      // });
+      const anonymousName = formData.name
+        .split(" ")
+        .map((word) => {
+          if (word.length > 1) {
+            return word[0] + "*".repeat(word.length - 1);
+          }
+          return word;
+        })
+        .join(" ");
+
+      await setDoc({
+        collection: "anonymousUsers",
+        doc: {
+          key,
+          data: {
+            profileImageUrl: placeholderImageUrl,
+            key,
+            name: anonymousName,
+            role: formData.role,
+          },
+        },
+      });
 
       await setDoc({
         collection: "userGroups",
@@ -322,15 +368,15 @@ export const useUsersStore = create((set) => ({
           doc: userDiary,
         });
 
-        // const anonymousUser = await getDoc({
-        //   collection: "anonymousUsers",
-        //   key: items.items[0].key,
-        // });
+        const anonymousUser = await getDoc({
+          collection: "anonymousUsers",
+          key: items.items[0].key,
+        });
 
-        // await deleteDoc({
-        //   collection: "anonymousUsers",
-        //   doc: anonymousUser,
-        // });
+        await deleteDoc({
+          collection: "anonymousUsers",
+          doc: anonymousUser,
+        });
 
         return true;
       } else {
@@ -491,10 +537,30 @@ export const useUsersStore = create((set) => ({
           profileImageUrl = downloadUrl;
         }
 
+        userCredential.data.profileImageUrl = profileImageUrl;
+        userCredential.data.dateOfBirth = formData.dateOfBirth;
+        userCredential.data.email = formData.email;
+        userCredential.data.fullName = formData.fullName;
+        userCredential.data.mobileNumber = formData.mobileNumber;
+
         await setDoc({
           collection: "userCredentials",
           doc: {
-            // asdasdasd
+            key: userCredential.key,
+            data: userCredential.data,
+            version: userCredential.version,
+          },
+        });
+
+        user.data.profileImageUrl = profileImageUrl;
+        user.data.fullName = formData.fullName;
+
+        await setDoc({
+          collection: "users",
+          doc: {
+            key: user.key,
+            data: user.data,
+            version: user.version,
           },
         });
       }
@@ -511,7 +577,242 @@ export const useUsersStore = create((set) => ({
         message: error.message || "An error occurred while updating user data",
         loading: false,
       }));
-      return false; // Indicate failed update
+      return false;
+    }
+  },
+
+  createCompanionOverviewInfo: async (formData) => {
+    set(() => ({
+      data: null,
+      message: "Loading...",
+      loading: true,
+    }));
+
+    try {
+      await setDoc({
+        collection: "userCompanionOverviews",
+        doc: {
+          key: formData.userKey,
+          data: {
+            key: formData.userKey,
+            title: formData.title,
+            description: formData.description,
+            categories: formData.categories,
+            availability: {
+              monday: {
+                startTime: formData.mondayStartTime,
+                endTime: formData.mondayEndTime,
+              },
+              tuesday: {
+                startTime: formData.tuesdayStartTime,
+                endTime: formData.tuesdayEndTime,
+              },
+              wednesday: {
+                startTime: formData.wednesdayStartTime,
+                endTime: formData.wednesdayEndTime,
+              },
+              thursday: {
+                startTime: formData.thursdayStartTime,
+                endTime: formData.thursdayEndTime,
+              },
+              friday: {
+                startTime: formData.fridayStartTime,
+                endTime: formData.fridayEndTime,
+              },
+              saturday: {
+                startTime: formData.saturdayStartTime,
+                endTime: formData.saturdayEndTime,
+              },
+              sunday: {
+                startTime: formData.sundayStartTime,
+                endTime: formData.sundayEndTime,
+              },
+            },
+          },
+        },
+      });
+
+      set(() => ({
+        data: null,
+        message: "Companion data created successfully!",
+        loading: false,
+      }));
+      return true;
+    } catch (error) {
+      console.error("Error creating companion info:", error);
+      set(() => ({
+        message:
+          error.message || "An error occurred while creating companion data",
+        loading: false,
+      }));
+      return false;
+    }
+  },
+
+  updateCompanionOverviewInfo: async (formData) => {
+    set(() => ({
+      data: null,
+      message: "Loading...",
+      loading: true,
+    }));
+
+    try {
+      const userCompanionOverview = await getDoc({
+        collection: "userCompanionOverviews",
+        key: formData.userKey,
+      });
+
+      if (userCompanionOverview) {
+        userCompanionOverview.data.title = formData.title;
+        userCompanionOverview.data.description = formData.description;
+        userCompanionOverview.data.categories = formData.categories;
+        userCompanionOverview.data.availability = {
+          monday: {
+            startTime: formData.mondayStartTime,
+            endTime: formData.mondayEndTime,
+          },
+          tuesday: {
+            startTime: formData.tuesdayStartTime,
+            endTime: formData.tuesdayEndTime,
+          },
+          wednesday: {
+            startTime: formData.wednesdayStartTime,
+            endTime: formData.wednesdayEndTime,
+          },
+          thursday: {
+            startTime: formData.thursdayStartTime,
+            endTime: formData.thursdayEndTime,
+          },
+          friday: {
+            startTime: formData.fridayStartTime,
+            endTime: formData.fridayEndTime,
+          },
+          saturday: {
+            startTime: formData.saturdayStartTime,
+            endTime: formData.saturdayEndTime,
+          },
+          sunday: {
+            startTime: formData.sundayStartTime,
+            endTime: formData.sundayEndTime,
+          },
+        };
+
+        await setDoc({
+          collection: "userCompanionOverviews",
+          doc: {
+            key: userCompanionOverview.key,
+            data: userCompanionOverview.data,
+            version: userCompanionOverview.version,
+          },
+        });
+      }
+
+      set(() => ({
+        data: null,
+        message: "Companion data updated successfully!",
+        loading: false,
+      }));
+      return true;
+    } catch (error) {
+      console.error("Error updating companion info:", error);
+      set(() => ({
+        message:
+          error.message || "An error occurred while updating companion data",
+        loading: false,
+      }));
+      return false;
+    }
+  },
+
+  getCompanionOverviewInfo: async (formData) => {
+    set(() => ({
+      data: null,
+      message: "Loading...",
+      loading: true,
+    }));
+
+    try {
+      const userCompanionOverview = await getDoc({
+        collection: "userCompanionOverviews",
+        key: formData.userKey,
+      });
+
+      set(() => ({
+        data: userCompanionOverview.data,
+        message: "Companion data fetched successfully!",
+        loading: false,
+      }));
+      return true;
+    } catch (error) {
+      console.error("Error fetching companion info:", error);
+      set(() => ({
+        message:
+          error.message || "An error occurred while fetching companion data",
+        loading: false,
+      }));
+      return false;
+    }
+  },
+
+  userChangePassword: async (formData) => {
+    set(() => ({
+      data: null,
+      message: "Loading...",
+      loading: true,
+    }));
+
+    try {
+      const userCredential = await getDoc({
+        collection: "userCredentials",
+        key: formData.userKey,
+      });
+
+      if (userCredential) {
+        if (
+          userCredential.data.password === formData.currentPassword &&
+          formData.newPassword === formData.confirmPassword
+        ) {
+          userCredential.data.password = formData.newPassword;
+
+          await setDoc({
+            collection: "userCredentials",
+            doc: {
+              key: userCredential.key,
+              data: userCredential.data,
+              version: userCredential.version,
+            },
+          });
+        } else {
+          set(() => ({
+            data: null,
+            message: "Password mismatch!",
+            loading: false,
+          }));
+          return false;
+        }
+      } else {
+        set(() => ({
+          data: null,
+          message: "User not found!",
+          loading: false,
+        }));
+        return false;
+      }
+
+      set(() => ({
+        data: null,
+        message: "User password changed successfully!",
+        loading: false,
+      }));
+      return true;
+    } catch (error) {
+      console.error("Error changing password:", error);
+      set(() => ({
+        message:
+          error.message || "An error occurred while changing user password",
+        loading: false,
+      }));
+      return false;
     }
   },
 

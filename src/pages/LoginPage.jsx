@@ -66,10 +66,10 @@ export default function LoginPage() {
     //   userKey: "uOl9RnXouVl9vU1fbUXU1",
     // };
     // getUserGroupFn(formData);
-    // getUserInfoFn();
+    getUserInfoFn();
     // getAllUsersFn();
     // deleteUserInfoFn();
-    // console.log(data);
+    console.log(data);
   }, []);
 
   const loginForm = useForm({

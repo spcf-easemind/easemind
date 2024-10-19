@@ -18,6 +18,7 @@ import { useDiariesStore } from "../store/diary";
 import { useShallow } from "zustand/shallow";
 import { useForm } from "@mantine/form";
 import { useNavigate, useLocation } from "react-router-dom";
+import { set } from "lodash";
 
 export default function MiscellaneousPage() {
   const navigate = useNavigate();
@@ -34,11 +35,15 @@ export default function MiscellaneousPage() {
     getUserInfoFn,
     getAllUsersFn,
     updateUserInfoFn,
+    createCompanionOverviewInfoFn,
+    updateCompanionOverviewInfoFn,
+    userChangePasswordFn,
     deleteUserInfoFn,
     deleteAllUsersFn,
     uploadPlaceHolderImageFn,
     getPlaceHolderProfileImagesFn,
     getAllUserActiveCompanionsFn,
+    userSignUpFn,
   } = useUsersStore(
     useShallow((state) => ({
       data: state.data,
@@ -52,6 +57,10 @@ export default function MiscellaneousPage() {
       uploadPlaceHolderImageFn: state.uploadPlaceHolderImage,
       getPlaceHolderProfileImagesFn: state.getPlaceHolderProfileImages,
       getAllUserActiveCompanionsFn: state.getAllUserActiveCompanions,
+      createCompanionOverviewInfoFn: state.createCompanionOverviewInfo,
+      updateCompanionOverviewInfoFn: state.updateCompanionOverviewInfo,
+      userChangePasswordFn: state.userChangePassword,
+      userSignUpFn: state.userSignUp,
     }))
   );
 
@@ -231,6 +240,150 @@ export default function MiscellaneousPage() {
     }
   };
 
+  const handleCreateCompanionOverviewInfo = async () => {
+    const formData = {
+      userKey: "",
+      title: "",
+      description: "",
+      categories: [],
+      availability: {
+        monday: {
+          startTime: "",
+          endTime: "",
+        },
+        tuesday: {
+          startTime: "",
+          endTime: "",
+        },
+        wednesday: {
+          startTime: "",
+          endTime: "",
+        },
+        thursday: {
+          startTime: "",
+          endTime: "",
+        },
+        friday: {
+          startTime: "",
+          endTime: "",
+        },
+        saturday: {
+          startTime: "",
+          endTime: "",
+        },
+        sunday: {
+          startTime: "",
+          endTime: "",
+        },
+      },
+    };
+
+    try {
+      const createSuccess = await createCompanionOverviewInfoFn(formData);
+      if (createSuccess) {
+        console.log("Companion Overview Info created successfully!", data);
+      } else {
+        console.error("Failed to create companion overview info");
+      }
+    } catch (error) {
+      console.error("Error creating companion overview info:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleUpdateCompanionOverviewInfo = async () => {
+    const formData = {
+      userKey: "",
+      title: "",
+      description: "",
+      categories: [],
+      availability: {
+        monday: {
+          startTime: "",
+          endTime: "",
+        },
+        tuesday: {
+          startTime: "",
+          endTime: "",
+        },
+        wednesday: {
+          startTime: "",
+          endTime: "",
+        },
+        thursday: {
+          startTime: "",
+          endTime: "",
+        },
+        friday: {
+          startTime: "",
+          endTime: "",
+        },
+        saturday: {
+          startTime: "",
+          endTime: "",
+        },
+        sunday: {
+          startTime: "",
+          endTime: "",
+        },
+      },
+    };
+
+    try {
+      const updateSuccess = await updateCompanionOverviewInfoFn(formData);
+      if (updateSuccess) {
+        console.log("Companion Overview Info updated successfully!", data);
+      } else {
+        console.error("Failed to update companion overview info");
+      }
+    } catch (error) {
+      console.error("Error updating companion overview info:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleChangePassword = async () => {
+    const formData = {
+      userKey: "",
+      oldPassword: "",
+      newPassword: "",
+    };
+
+    try {
+      const changeSuccess = await userChangePasswordFn(formData);
+      if (changeSuccess) {
+        console.log("User password changed successfully!");
+      } else {
+        console.error("Failed to change user password");
+      }
+    } catch (error) {
+      console.error("Error changing user password:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleUserSignUp = async () => {
+    const formData = {
+      name: "alex john m. camaddo",
+    };
+
+    try {
+      const signupSuccess = await userSignUpFn(formData);
+      if (signupSuccess) {
+        console.log("User signed up successfully!");
+      } else {
+        console.error("Failed to sign up user");
+      }
+    } catch (error) {
+      console.error("Error signing up user:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   const handleDeleteUserInfo = async () => {
     try {
       const deleteSuccess = await deleteUserInfoFn();
@@ -273,11 +426,6 @@ export default function MiscellaneousPage() {
 
   const handleSubmitFile = async (values) => {
     const { file } = values;
-
-    if (!file) {
-      console.error("No file selected");
-      return;
-    }
 
     setIsUploading(true);
 
@@ -1047,6 +1195,18 @@ export default function MiscellaneousPage() {
         </Button>
         <Button onClick={handleGetAllUserActiveCompanions} loading={loading}>
           Get All Active Companions
+        </Button>
+        <Button onClick={handleCreateCompanionOverviewInfo} loading={loading}>
+          Create Companion Overview Info
+        </Button>
+        <Button onClick={handleUpdateCompanionOverviewInfo} loading={loading}>
+          Update Companion Overview Info
+        </Button>
+        <Button onClick={handleChangePassword} loading={loading}>
+          Change Password
+        </Button>
+        <Button onClick={handleUserSignUp} loading={loading}>
+          Sign Up
         </Button>
       </Group>
 

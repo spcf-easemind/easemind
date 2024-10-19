@@ -159,6 +159,13 @@ export default defineDevConfig(() => ({
           memory: "heap",
           mutablePermissions: true,
         },
+        {
+          collection: "userCompanionOverviews",
+          read: "public",
+          write: "managed",
+          memory: "heap",
+          mutablePermissions: true,
+        },
       ],
       storage: [
         {
