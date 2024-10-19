@@ -132,15 +132,24 @@ export default function PostsPage() {
           instance={userData}
           type="posts"
           variant="view"
+          button={{
+            buttonLabel: null,
+            loading: false,
+          }}
         />
       </Box>
 
       <Stack mt={18}>
-        <PostCard onPopoverSelect={handlePopoverSelect} />
+        <PostCard type="posts" onPopoverSelect={handlePopoverSelect} />
       </Stack>
 
       <WarningModal
-        form={{ onClick: handleModalConfirmation, loading: false, message, title: "Remove Post?" }}
+        form={{
+          onClick: handleModalConfirmation,
+          loading: false,
+          message,
+          title: "Remove Post?",
+        }}
         modal={{ opened: opened, onClose: toggle }}
       />
     </Paper>

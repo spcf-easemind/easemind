@@ -31,5 +31,5 @@ export default function GroupGrid({
       />
     );
   });
-  return <SimpleGrid cols={2}>{ColInstances}</SimpleGrid>;
+  return <SimpleGrid cols={{ xs: 1, xl: 2 }}>{ColInstances}</SimpleGrid>;
 }

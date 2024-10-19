@@ -12,6 +12,8 @@ import ActionsBox from "../ActionsBox";
 import { IconDotsVertical } from "@tabler/icons-react";
 import IconPencil from "../../assets/icons/buttons/IconPencil.svg";
 import IconTrashcan from "../../assets/icons/buttons/IconTrashcan.svg";
+import IconSave from "../../assets/icons/buttons/IconSave.svg";
+import IconReport from "../../assets/icons/buttons/IconReport.svg";
 import Pill from "../pills/Pill";
 
 const sample_pills = [
@@ -23,22 +25,38 @@ const sample_pills = [
   "Anxiety",
 ];
 
-const popoverOptions = [
-  {
-    value: "edit",
-    icon: IconPencil,
-    label: "Edit",
-    textColor: "dark.5",
-  },
-  {
-    value: "delete",
-    icon: IconTrashcan,
-    label: "Delete",
-    textColor: "dark.5",
-  },
-];
+const popoverOptions = {
+  posts: [
+    {
+      value: "edit",
+      icon: IconPencil,
+      label: "Edit",
+      textColor: "dark.5",
+    },
+    {
+      value: "delete",
+      icon: IconTrashcan,
+      label: "Delete",
+      textColor: "dark.5",
+    },
+  ],
+  recommended: [
+    {
+      value: "save",
+      icon: IconSave,
+      label: "Save",
+      textColor: "dark.5",
+    },
+    {
+      value: "report",
+      icon: IconReport,
+      label: "Report",
+      textColor: "dark.5",
+    },
+  ],
+};
 
-export default function PostCard({ onPopoverSelect }) {
+export default function PostCard({ onPopoverSelect, type }) {
   const pillInstances = sample_pills.map((pill, index) => (
     <Pill name={pill} size="md" key={`pill-${index}`} />
   ));
@@ -57,7 +75,7 @@ export default function PostCard({ onPopoverSelect }) {
           </Box>
           <ActionsBox
             onClick={(option) => onPopoverSelect(option, "1")}
-            options={popoverOptions}
+            options={popoverOptions[type]}
           >
             <IconDotsVertical size={30} stroke={1.5} />
           </ActionsBox>

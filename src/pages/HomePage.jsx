@@ -8,6 +8,7 @@ import {
   Image,
   Modal,
   Card,
+  Stack,
 } from "@mantine/core";
 import { useUsersStore } from "../store/users";
 import { useShallow } from "zustand/shallow";
@@ -127,7 +128,7 @@ export default function HomePage() {
 
   const postsContent = POSTS.map((post) => {
     return (
-      <Card withBorder radius={10} my={20} p={25} key={post.id}>
+      <Card withBorder radius="lg" key={post.id}>
         <PostSection
           {...post}
           key={post.id}
@@ -188,7 +189,9 @@ export default function HomePage() {
         {message && <p>{message}</p>}
       </Box> */}
       {filterHeader}
-      {postsContent}
+
+      <Stack mt={18}>{postsContent}</Stack>
+
       <PostModal
         openModal={opened}
         closeModal={close}
