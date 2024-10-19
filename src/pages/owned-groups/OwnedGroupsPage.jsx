@@ -25,7 +25,7 @@ export default function OwnedGroupsPage() {
   }, []);
 
   function handleSelect(ref) {
-    navigate(`/owned-groups/${ref}`);
+    navigate(`/owned-group/${ref}`);
   }
 
   function handleCreateGroup() {

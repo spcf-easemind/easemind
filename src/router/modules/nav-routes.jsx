@@ -71,7 +71,7 @@ const navRoutes = [
     element: <CommunityGroupsPage />,
   },
   {
-    path: "/community-groups/:communityGroupRef",
+    path: "/community-group/:communityGroupRef",
     element: <CommunityGroupViewPage />,
   },
 

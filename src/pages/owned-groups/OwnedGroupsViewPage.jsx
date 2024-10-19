@@ -41,8 +41,6 @@ export default function OwnedGroupsViewPage() {
   }
 
   async function handleModalClick() {
-    console.log("modalTarget", modalTarget);
-
     const response = await removeGroupMemberFn(
       loggedInUserKey,
       ownedGroupRef,
@@ -73,7 +71,7 @@ export default function OwnedGroupsViewPage() {
       <Paper>
         <DisplayCard
           instance={ownedGroup.groupInfo}
-          buttonLabel="Edit"
+          button={{ buttonLabel: "Edit", loading: false }}
           variant="view"
           type="owned"
           onModalSelect={handleModalSelect}

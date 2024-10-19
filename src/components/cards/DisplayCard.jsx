@@ -34,7 +34,7 @@ export default function DisplayCard({
   instance,
   variant = null,
   type,
-  buttonLabel,
+  button: { buttonLabel, loading },
   onSelect,
   onModalSelect,
   onButtonClick,
@@ -266,6 +266,7 @@ export default function DisplayCard({
         color="sky-blue.5"
         onClick={() => onButtonClick(instance.key)}
         style={{ zIndex: 1 }}
+        loading={loading}
       >
         {buttonLabel}
       </Button>

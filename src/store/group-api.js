@@ -7,10 +7,12 @@ export const useGroupAPIStore = create((set, get) => ({
   ownedGroup: null,
 
   communityGroups: [],
+  communityGroup: null,
 
   joinedGroups: [],
   joinedGroup: null,
 
+  // Owned Groups
   fetchOwnedGroups: async (loggedInUserId) => {
     const formData = { userKey: loggedInUserId };
     const fetchOwnedGroupsFn =
@@ -42,28 +44,6 @@ export const useGroupAPIStore = create((set, get) => ({
       }));
     }
   },
-  removeGroupMember: async (loggedInUserId, ownedGroupRef, userKey) => {
-    set(() => ({
-      loading: true,
-    }));
-    const formData = { groupKey: ownedGroupRef, userKey: userKey };
-    const removeMemberFn = useGroupStore.getState().removeMember;
-
-    try {
-      await removeMemberFn(formData);
-      await get().fetchOwnedGroup(loggedInUserId, ownedGroupRef);
-
-      set(() => ({
-        loading: false,
-      }));
-      const fetchGroupMessage = useGroupStore.getState().groupMessage;
-
-      return { type: "success", message: fetchGroupMessage };
-    } catch (error) {
-      const fetchGroupMessage = useGroupStore.getState().groupMessage;
-      return { type: "error", message: fetchGroupMessage };
-    }
-  },
 
   // Community Groups
   fetchCommunityGroups: async (loggedInUserId) => {
@@ -76,6 +56,18 @@ export const useGroupAPIStore = create((set, get) => ({
       const groupData = useGroupStore.getState().groupData;
       set(() => ({
         communityGroups: groupData,
+      }));
+    }
+  },
+  fetchCommunityGroup: async (communityRef) => {
+    const formData = { groupKey: communityRef };
+    const fetchCommunityGroupFn = useGroupStore.getState().getGroup;
+    const response = await fetchCommunityGroupFn(formData);
+
+    if (response) {
+      const groupData = useGroupStore.getState().groupData;
+      set(() => ({
+        communityGroup: groupData,
       }));
     }
   },
@@ -108,32 +100,73 @@ export const useGroupAPIStore = create((set, get) => ({
   },
   createGroup: async (formData) => {
     const createGroupFn = useGroupStore.getState().createGroup;
+    const response = await createGroupFn(formData);
 
-    try {
-      // Create group
-      await createGroupFn(formData);
-      // Set Notifications
+    if (response) {
       const groupKey = useGroupStore.getState().groupData;
       const fetchGroupMessage = useGroupStore.getState().groupMessage;
       return { type: "success", message: fetchGroupMessage, key: groupKey };
-    } catch (error) {
-      // Notifications
+    } else {
       const fetchGroupMessage = useGroupStore.getState().groupMessage;
       return { type: "error", message: fetchGroupMessage };
     }
   },
   updateGroup: async (formData) => {
     const updateGroupFn = useGroupStore.getState().editGroupInfo;
+    const response = await updateGroupFn(formData);
 
-    try {
-      // Update Group
-      await updateGroupFn(formData);
-
+    if (response) {
       const fetchGroupMessage = useGroupStore.getState().groupMessage;
       return { type: "success", message: fetchGroupMessage };
-    } catch (error) {
+    } else {
       const fetchGroupMessage = useGroupStore.getState().groupMessage;
       return { type: "error", message: fetchGroupMessage };
+    }
+  },
+
+  removeGroupMember: async (loggedInUserId, ownedGroupRef, userKey) => {
+    set(() => ({
+      loading: true,
+    }));
+    const formData = { groupKey: ownedGroupRef, userKey: userKey };
+    const removeMemberFn = useGroupStore.getState().removeMember;
+    const response = await removeMemberFn(formData);
+
+    if (response) {
+      set(() => ({
+        loading: false,
+      }));
+      await get().fetchOwnedGroup(loggedInUserId, ownedGroupRef);
+      const fetchGroupMessage = useGroupStore.getState().groupMessage;
+      return { type: "success", message: fetchGroupMessage };
+    } else {
+      set(() => ({
+        loading: false,
+      }));
+      const fetchGroupMessage = useGroupStore.getState().groupMessage;
+      return { type: "error", message: fetchGroupMessage };
+    }
+  },
+  joinGroup: async (loggedInUserId, groupKey) => {
+    set(() => ({
+      loading: true,
+    }));
+    const formData = { userKey: loggedInUserId, groupKey: groupKey };
+    const joinGroupFn = useGroupStore.getState().joinUserGroup;
+    const response = await joinGroupFn(formData);
+
+    if (response) {
+      set(() => ({
+        loading: false,
+      }));
+      const fetchGroupMessage = useGroupStore.getState().groupMessage;
+      return { type: "success", message: fetchGroupMessage, key: groupKey };
+    } else {
+      set(() => ({
+        loading: false,
+      }));
+      const fetchGroupMessage = useGroupStore.getState().groupMessage;
+      return { type: "error", message: fetchGroupMessage, key: groupKey };
     }
   },
 }));

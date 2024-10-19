@@ -32,7 +32,7 @@ export default function JoinedGroupViewPage() {
           instance={joinedGroup}
           variant="view"
           type="joined"
-          buttonLabel="View Chat"
+          button={{ buttonLabel: "View Chat", loading: false }}
           onButtonClick={handleButtonClick}
         />
       </Paper>

@@ -27,7 +27,7 @@ export default function GroupGrid({
         type={type}
         onButtonClick={onButtonClick}
         onSelect={onSelect}
-        buttonLabel={btnLabel()}
+        button={{ buttonLabel: btnLabel(), loading: false }}
       />
     );
   });

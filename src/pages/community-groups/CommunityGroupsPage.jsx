@@ -33,7 +33,7 @@ export default function CommunityGroupsPage() {
   }, []);
 
   function handleSelect(ref) {
-    navigate(`/community-groups/${ref}`);
+    navigate(`/community-group/${ref}`);
   }
 
   function handleJoinGroup(ref) {
