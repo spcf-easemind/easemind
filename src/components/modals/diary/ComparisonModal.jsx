@@ -7,7 +7,7 @@ import {
   Group,
   SimpleGrid,
 } from "@mantine/core";
-import MoodTrackerCard from "../cards/MoodTrackerCard";
+import MoodTrackerCard from "../../cards/MoodTrackerCard";
 
 const comparisonAttributes = [
   {

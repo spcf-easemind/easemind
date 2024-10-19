@@ -10,10 +10,10 @@ import {
   Anchor,
   Card,
 } from "@mantine/core";
-import AuthCard from "../cards/AuthCard";
-import { DATE_SELECTS } from "../../static/date";
-import { useUsersStore } from "../../store/users";
-import TermsAndConditionsModal from "./TermsAndConditionsModal";
+import AuthCard from "../../cards/AuthCard";
+import { DATE_SELECTS } from "../../../static/date";
+import { useUsersStore } from "../../../store/users";
+import TermsAndConditionsModal from "../TermsAndConditionsModal";
 
 const header = {
   title: "Sign Up",

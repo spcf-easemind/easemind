@@ -2,16 +2,16 @@ import { Modal, Group, Stack, Text, Box, Card } from "@mantine/core";
 import { useMatches } from "@mantine/core";
 import { useCounter } from "@mantine/hooks";
 
-import Heading from "../headings/Heading.jsx";
-import RolePicker from "../forms/RolePicker.jsx";
-import Questions from "../forms/Questions.jsx";
-import Stepper from "../Stepper.jsx";
+import Heading from "../../headings/Heading.jsx";
+import RolePicker from "../../forms/RolePicker.jsx";
+import Questions from "../../forms/Questions.jsx";
+import Stepper from "../../Stepper.jsx";
 
 import {
   STEPPER_DATA,
   QUESTION_DATA,
   STEPPER_LABELS,
-} from "../../static/register.js";
+} from "../../../static/register.js";
 
 export default function SurveyModal({ form, opened, onClose, onSubmit }) {
   const [stepper, { increment, decrement, set }] = useCounter(1, {
