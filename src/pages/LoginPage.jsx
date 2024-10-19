@@ -123,7 +123,8 @@ export default function LoginPage() {
       "date.day": isNotEmpty("Day is required"),
       "date.month": isNotEmpty("Month is required"),
       "date.year": isNotEmpty("Year is required"),
-      termsOfService: (value) => value || "You must agree to the terms",
+      termsOfService: (value) =>
+        !value ? "You must agree to the terms" : null,
     },
   });
 
@@ -160,6 +161,8 @@ export default function LoginPage() {
       formData["dateOfBirth"] = date;
       delete formData.date;
       delete formData.termsOfService;
+
+      console.log(formData);
 
       await userSignUpFn(formData);
       handleSignupClose();
