@@ -311,6 +311,26 @@ export const useUsersStore = create((set) => ({
           doc: userGroup,
         });
 
+        const userDiary = await getDoc({
+          collection: "userDiaries",
+          key: items.items[0].key,
+        });
+
+        await deleteDoc({
+          collection: "userDiaries",
+          doc: userDiary,
+        });
+
+        const anonymousUser = await getDoc({
+          collection: "anonymousUsers",
+          key: items.items[0].key,
+        });
+
+        await deleteDoc({
+          collection: "anonymousUsers",
+          doc: anonymousUser,
+        });
+
         return true;
       } else {
         set(() => ({
