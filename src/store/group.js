@@ -366,13 +366,14 @@ export const useGroupStore = create((set) => ({
         group.data.description = formData.updatedGroupInfo.description;
 
         let newCategories = [];
+
         for (const groupCategory of formData.updatedGroupInfo.categories) {
           const category = await getDoc({
             collection: "categories",
             key: groupCategory.key,
           });
 
-          newCategories.push(category.data);
+          newCategories.push(category);
         }
         group.data.categories = newCategories;
 
