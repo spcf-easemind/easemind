@@ -1,15 +1,5 @@
-import {
-  Group,
-  Avatar,
-  Title,
-  Box,
-  Text,
-  Stack,
-  NavLink,
-  ScrollArea,
-} from "@mantine/core";
+import { Stack } from "@mantine/core";
 
-import SampleUserImage from "../../assets/images/SampleUserImage1.webp";
 import EndlessThoughtsDiaryIcon from "../../assets/icons/navigation/EndlessThoughtsDiary.svg";
 import EaseCompanionIcon from "../../assets/icons/navigation/EaseCompanions.svg";
 import CommunityGroupIcon from "../../assets/icons/navigation/CommunityGroups.svg";
@@ -26,12 +16,6 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuthenticationStore } from "../../store/authentication";
 import { useShallow } from "zustand/shallow";
-
-const sample_user = {
-  name: "John Doe",
-  role: "Ease Companion",
-  image: SampleUserImage,
-};
 
 const navLinksAttributes = [
   {
