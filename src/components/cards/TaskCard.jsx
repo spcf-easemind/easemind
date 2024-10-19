@@ -5,12 +5,12 @@ import { EDIT_DELETE } from "../../static/popover";
 
 const popoverOptions = EDIT_DELETE;
 
-export default function TaskCard() {
+export default function TaskCard({ onPopoverClick }) {
   return (
     <Card radius="lg" bg="gray.0" withBorder>
       <Group>
         <Text flex={1}>Task Sample</Text>
-        <ActionsBox options={popoverOptions}>
+        <ActionsBox onClick={onPopoverClick} options={popoverOptions}>
           <IconDotsVertical size={30} stroke={1.5} />
         </ActionsBox>
       </Group>

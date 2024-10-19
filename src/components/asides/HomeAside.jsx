@@ -23,13 +23,17 @@ import {
 } from "../../static/aside";
 import TaskCard from "../cards/TaskCard.jsx";
 import CreateButtonCard from "../buttons/CreateButtonCard.jsx";
+import { useDisclosure } from "@mantine/hooks";
+import TaskModal from "../modals/diary/TaskModal.jsx";
 
 const withDailyTasksRoutes = ["/endless-thoughts-diary"];
 
 export default function HomeAside() {
-  const [activeTag, setActiveTag] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
+  const [activeTag, setActiveTag] = useState("");
+  const [modalTitle, setModalTitle] = useState("");
+  const [opened, { toggle }] = useDisclosure();
 
   function handleSelectTag(name) {
     activeTag !== name ? setActiveTag(name) : setActiveTag("");
@@ -59,6 +63,15 @@ export default function HomeAside() {
     );
   });
 
+  function handleToggleModal(title) {
+    if (title === "create" || title === "edit") {
+      setModalTitle(title);
+      toggle();
+    } else {
+      // Delete Function
+    }
+  }
+
   const dailyTasksContent = withDailyTasksRoutes.includes(
     location.pathname
   ) && (
@@ -68,9 +81,11 @@ export default function HomeAside() {
       </Title>
 
       <Stack>
-        <TaskCard />
+        <TaskCard onPopoverClick={handleToggleModal} />
 
-        <CreateButtonCard>Add Task</CreateButtonCard>
+        <CreateButtonCard onClick={() => handleToggleModal("create")}>
+          Add Task
+        </CreateButtonCard>
       </Stack>
     </Box>
   );
@@ -103,11 +118,15 @@ export default function HomeAside() {
   });
 
   return (
-    <ScrollArea type="scroll" scrollbarSize={6}>
-      <QuoteBox {...SAMPLE_DAILY_QUOTES} />
-      {dailyTasksContent}
-      {pillContent}
-      {suggestedContent}
-    </ScrollArea>
+    <>
+      <ScrollArea type="scroll" scrollbarSize={6}>
+        <QuoteBox {...SAMPLE_DAILY_QUOTES} />
+        {dailyTasksContent}
+        {pillContent}
+        {suggestedContent}
+      </ScrollArea>
+
+      <TaskModal modal={{ opened, onClose: toggle, title: modalTitle }} />
+    </>
   );
 }
