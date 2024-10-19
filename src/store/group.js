@@ -361,7 +361,7 @@ export const useGroupStore = create((set) => ({
 
         group.data.key = formData.groupKey;
         group.data.owner = user.data;
-        group.data.groupImageUrl = formData.updatedGroupInfo.groupPathProfile;
+        group.data.groupImageUrl = formData.updatedGroupInfo.groupProfilePath;
         group.data.name = formData.updatedGroupInfo.name;
         group.data.description = formData.updatedGroupInfo.description;
         group.data.categories = formData.updatedGroupInfo.categories;
