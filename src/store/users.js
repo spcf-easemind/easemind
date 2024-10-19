@@ -74,27 +74,27 @@ export const useUsersStore = create((set) => ({
         },
       });
 
-      const anonymousName = formData.name
-        .split(" ")
-        .map((word) => {
-          if (word.length > 1) {
-            return word[0] + "*".repeat(word.length - 1);
-          }
-          return word;
-        })
-        .join(" ");
+      // const anonymousName = formData.name
+      //   .split(" ")
+      //   .map((word) => {
+      //     if (word.length > 1) {
+      //       return word[0] + "*".repeat(word.length - 1);
+      //     }
+      //     return word;
+      //   })
+      //   .join(" ");
 
-      await setDoc({
-        collection: "anonymousUsers",
-        doc: {
-          key,
-          data: {
-            profileImageUrl: placeholderImageUrl,
-            key,
-            name: anonymousName,
-          },
-        },
-      });
+      // await setDoc({
+      //   collection: "anonymousUsers",
+      //   doc: {
+      //     key,
+      //     data: {
+      //       profileImageUrl: placeholderImageUrl,
+      //       key,
+      //       name: anonymousName,
+      //     },
+      //   },
+      // });
 
       await setDoc({
         collection: "userGroups",
@@ -321,15 +321,15 @@ export const useUsersStore = create((set) => ({
           doc: userDiary,
         });
 
-        const anonymousUser = await getDoc({
-          collection: "anonymousUsers",
-          key: items.items[0].key,
-        });
+        // const anonymousUser = await getDoc({
+        //   collection: "anonymousUsers",
+        //   key: items.items[0].key,
+        // });
 
-        await deleteDoc({
-          collection: "anonymousUsers",
-          doc: anonymousUser,
-        });
+        // await deleteDoc({
+        //   collection: "anonymousUsers",
+        //   doc: anonymousUser,
+        // });
 
         return true;
       } else {
