@@ -814,8 +814,24 @@ export const useGroupStore = create((set) => ({
         key: formData.groupKey,
       });
 
+      const pendingMembersArray = [];
+      for (const pendingMember of groupPendingMember.data.pendingMembers) {
+        const user = await getDoc({
+          collection: "users",
+          key: pendingMember.userKey,
+        });
+
+        if (user) {
+          const data = {
+            pendingMembers: groupPendingMember.data.pendingMembers,
+            userInfo: user.data,
+          };
+          pendingMembersArray.push(data);
+        }
+      }
+
       set(() => ({
-        groupData: groupPendingMember.data.pendingMembers,
+        groupData: pendingMembersArray,
         groupMessage: "Group Pending Members fetched successfully!",
         groupLoading: false,
       }));

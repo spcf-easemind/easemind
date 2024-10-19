@@ -25,6 +25,12 @@ export const useUsersStore = create((set) => ({
         collection: "userCredentials",
       });
 
+      const placeholderProfileImage = await listDocs({
+        collection: "userPlaceholderImages",
+      });
+
+      const placeholderImageUrl =
+        placeholderProfileImage.items[0].data.placeholderProfileImagePath;
       if (items.items[0]) {
         throw new Error("This identity already have an account!.");
       }
@@ -35,6 +41,7 @@ export const useUsersStore = create((set) => ({
         doc: {
           key,
           data: {
+            profileImageUrl: placeholderImageUrl,
             dateOfBirth: formData.dateOfBirth,
             email: formData.email,
             fullName: formData.fullName,
@@ -58,10 +65,33 @@ export const useUsersStore = create((set) => ({
         doc: {
           key,
           data: {
+            profileImageUrl: placeholderImageUrl,
             key,
             fullName: formData.fullName,
             status: "offline",
             role: formData.role,
+          },
+        },
+      });
+
+      const anonymousName = formData.name
+        .split(" ")
+        .map((word) => {
+          if (word.length > 1) {
+            return word[0] + "*".repeat(word.length - 1);
+          }
+          return word;
+        })
+        .join(" ");
+
+      await setDoc({
+        collection: "anonymousUsers",
+        doc: {
+          key,
+          data: {
+            profileImageUrl: placeholderImageUrl,
+            key,
+            name: anonymousName,
           },
         },
       });
@@ -72,6 +102,17 @@ export const useUsersStore = create((set) => ({
           key,
           data: {
             groups: [],
+          },
+        },
+      });
+
+      await setDoc({
+        collection: "userDiaries",
+        doc: {
+          key,
+          data: {
+            moods: [],
+            thoughts: [],
           },
         },
       });
@@ -475,6 +516,93 @@ export const useUsersStore = create((set) => ({
         loading: false,
       }));
       return false; // Indicate failed update
+    }
+  },
+
+  uploadPlaceHolderImage: async (file) => {
+    set(() => ({
+      data: null,
+      message: "Loading...",
+      loading: true,
+    }));
+
+    try {
+      let placeholderProfileImageUrl = null;
+
+      if (file) {
+        const key = nanoid();
+        const filename = `${key}-placeholder-profile`;
+        const { downloadUrl } = await uploadFile({
+          collection: "userPlaceholderImages",
+          data: file,
+          filename,
+        });
+        placeholderProfileImageUrl = downloadUrl;
+
+        await setDoc({
+          collection: "userPlaceholderImages",
+          doc: {
+            key,
+            data: {
+              name: filename,
+              placeholderProfileImagePath: placeholderProfileImageUrl,
+            },
+          },
+        });
+      }
+
+      set(() => ({
+        groupData: null,
+        groupMessage: "Placeholder Image uploaded successfully!",
+        groupLoading: false,
+      }));
+      return true;
+    } catch (error) {
+      console.error("Error uploading placeholder image:", error);
+      set(() => ({
+        data: null,
+        message:
+          error.message ||
+          "An error occurred while uploading placeholder image",
+        loading: false,
+      }));
+      return false;
+    }
+  },
+
+  getPlaceHolderProfileImages: async () => {
+    set(() => ({
+      data: null,
+      message: "Loading...",
+      loading: true,
+    }));
+
+    try {
+      const placeholderProfileImages = await listDocs({
+        collection: "userPlaceholderImages",
+      });
+
+      const allPlaceholderProfileImages = [];
+      for (const placeholderProfileImage of placeholderProfileImages.items) {
+        allPlaceholderProfileImages.push(placeholderProfileImage);
+      }
+
+      set(() => ({
+        data: allPlaceholderProfileImages,
+        message: "All placeholder images fetched successfully!",
+        loading: false,
+      }));
+      return true;
+    } catch (error) {
+      console.error("Error fetching placeholder images:", error);
+      set(() => ({
+        data: null,
+        message:
+          error.message ||
+          "An error occurred while fetching placeholder images",
+        loading: false,
+      }));
+      return false;
     }
   },
 }));

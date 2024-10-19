@@ -34,7 +34,7 @@ export default defineDevConfig(() => ({
           mutablePermissions: true,
         },
         {
-          collection: "anonymousUser",
+          collection: "anonymousUsers",
           read: "public",
           write: "private",
           memory: "heap",
@@ -145,6 +145,20 @@ export default defineDevConfig(() => ({
           memory: "heap",
           mutablePermissions: true,
         },
+        {
+          collection: "userDiaries",
+          read: "private",
+          write: "private",
+          memory: "heap",
+          mutablePermissions: true,
+        },
+        {
+          collection: "userPlaceholderImages",
+          read: "public",
+          write: "managed",
+          memory: "heap",
+          mutablePermissions: true,
+        },
       ],
       storage: [
         {
@@ -191,6 +205,20 @@ export default defineDevConfig(() => ({
         },
         {
           collection: "postProfileCollections",
+          read: "public",
+          write: "managed",
+          memory: "heap",
+          mutablePermissions: true,
+        },
+        {
+          collection: "userDiaryImages",
+          read: "private",
+          write: "private",
+          memory: "heap",
+          mutablePermissions: true,
+        },
+        {
+          collection: "userPlaceholderImages",
           read: "public",
           write: "managed",
           memory: "heap",

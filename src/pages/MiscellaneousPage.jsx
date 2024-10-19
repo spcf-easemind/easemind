@@ -14,6 +14,7 @@ import { useAuthenticationStore } from "../store/authentication";
 import { usePublicMaterials } from "../store/miscellaneous";
 import { useGroupStore } from "../store/group";
 import { usePostStore } from "../store/post";
+import { useDiariesStore } from "../store/diary";
 import { useShallow } from "zustand/shallow";
 import { useForm } from "@mantine/form";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -34,6 +35,9 @@ export default function MiscellaneousPage() {
     getAllUsersFn,
     updateUserInfoFn,
     deleteUserInfoFn,
+    deleteAllUsersFn,
+    uploadPlaceHolderImageFn,
+    getPlaceHolderProfileImagesFn,
   } = useUsersStore(
     useShallow((state) => ({
       data: state.data,
@@ -43,6 +47,9 @@ export default function MiscellaneousPage() {
       getAllUsersFn: state.getAllUsers,
       updateUserInfoFn: state.updateUserInfo,
       deleteUserInfoFn: state.deleteUserInfo,
+      deleteAllUsersFn: state.deleteAllUsers,
+      uploadPlaceHolderImageFn: state.uploadPlaceHolderImage,
+      getPlaceHolderProfileImagesFn: state.getPlaceHolderProfileImages,
     }))
   );
 
@@ -85,6 +92,7 @@ export default function MiscellaneousPage() {
     editGroupInfoFn,
     removeMemberFn,
     deleteGroupFn,
+    getAvailableGroupFn,
     getAllAvailableGroupsFn,
     joinUserGroupFn,
     userGroupPendingApprovalFn,
@@ -111,6 +119,7 @@ export default function MiscellaneousPage() {
       groupPendingMembersFn: state.groupPendingMembers,
       approvePendingMemberFn: state.approvePendingMember,
       rejectPendingMemberFn: state.rejectPendingMember,
+      getAvailableGroupFn: state.getAvailableGroup,
     }))
   );
 
@@ -137,6 +146,22 @@ export default function MiscellaneousPage() {
       createPostFn: state.createPost,
       getAllUserPostsFn: state.getAllUserPosts,
       deleteAllUserPostsFn: state.deleteAllUserPosts,
+    }))
+  );
+
+  const {
+    diaryData,
+    diaryMessage,
+    diaryLoading,
+    createThoughtsFn,
+    getUserThoughtDiariesFn,
+  } = useDiariesStore(
+    useShallow((state) => ({
+      diaryData: state.diaryData,
+      diaryMessage: state.diaryMessage,
+      diaryLoading: state.diaryLoading,
+      createThoughtsFn: state.createThoughts,
+      getUserThoughtDiariesFn: state.getUserThoughtDiaries,
     }))
   );
 
@@ -231,6 +256,19 @@ export default function MiscellaneousPage() {
     }
   };
 
+  const handleDeleteAllUsers = async () => {
+    try {
+      const deleteSuccess = await deleteAllUsersFn();
+      if (deleteSuccess) {
+        console.log("All User Info deleted successfully!", data);
+      } else {
+        console.error("Failed to delete user info");
+      }
+    } catch (error) {
+      console.error("Error deleting user info:", error);
+    }
+  };
+
   const handleSubmitFile = async (values) => {
     const { file } = values;
 
@@ -257,6 +295,35 @@ export default function MiscellaneousPage() {
       console.error("Error uploading file:", error);
     } finally {
       setIsUploading(false);
+    }
+  };
+
+  const handleUploadPlaceHolderImage = async (values) => {
+    const { file } = values;
+    try {
+      const uploadSuccess = await uploadPlaceHolderImageFn(file);
+      if (uploadSuccess) {
+        console.log("Place holder image uploaded successfully!");
+      } else {
+        console.error("Failed to upload place holder image");
+      }
+    } catch (error) {
+      console.error("Error uploading place holder image:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleGetPlaceHolderProfileImages = async () => {
+    try {
+      const getSuccess = await getPlaceHolderProfileImagesFn();
+      if (getSuccess) {
+        console.log("All User Info fetched successfully!", data);
+      } else {
+        console.error("Failed to fetched user info");
+      }
+    } catch (error) {
+      console.error("Error fetching user info:", error);
     }
   };
 
@@ -462,6 +529,26 @@ export default function MiscellaneousPage() {
       setIsUploading(false);
     }
   };
+
+  const handleGetAvailableGroup = async () => {
+    const formData = {
+      groupKey: "jkBOyprLvU1RA9wZz0tgU",
+      userKey: "v1DNhZd_vhjIEMLEcFM4z",
+    };
+    try {
+      const getSuccess = await getAvailableGroupFn(formData);
+      if (getSuccess) {
+        console.log("Available Group Fetched Successfully!", groupData);
+      } else {
+        console.error("Failed to fetch groups");
+      }
+    } catch (error) {
+      console.error("Error fetching groups:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   const handleGetAllGroups = async () => {
     try {
       const getSuccess = await getAllGroupsFn();
@@ -605,8 +692,8 @@ export default function MiscellaneousPage() {
 
   const handleJoinUserGroup = async () => {
     const formData = {
-      groupKey: "e163XMKdWgtwKMPAlesle",
-      userKey: "KV_NQMbT7TDrCru7ZpUlH",
+      groupKey: "jkBOyprLvU1RA9wZz0tgU",
+      userKey: "v1DNhZd_vhjIEMLEcFM4z",
     };
     try {
       const joinSuccess = await joinUserGroupFn(formData);
@@ -627,7 +714,7 @@ export default function MiscellaneousPage() {
 
   const handleUserGroupPendingApproval = async () => {
     const formData = {
-      userKey: "3JkiWUaMis6ziIHwRrKsK",
+      userKey: "Kc-vC3qsRa5uHYnuDErS9",
     };
     try {
       const getSuccess = await userGroupPendingApprovalFn(formData);
@@ -873,6 +960,49 @@ export default function MiscellaneousPage() {
     }
   };
 
+  const handleCreateThoughts = async (values) => {
+    const { files } = values;
+    const formData = {
+      userKey: "Kc-vC3qsRa5uHYnuDErS9",
+      thoughtDiaryInfo: {
+        title: "My Thoughts Diary",
+        description: "This is a diary of my thoughts and feelings.",
+      },
+    };
+
+    try {
+      const createSuccess = await createThoughtsFn(formData, files);
+      if (createSuccess) {
+        console.log("User thoughts diary created successfully!");
+      } else {
+        console.error("Failed to create user thoughts diary");
+      }
+    } catch (error) {
+      console.error("Error creating user thoughts:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleGetUserThoughtDiaries = async () => {
+    const formData = {
+      userKey: "Kc-vC3qsRa5uHYnuDErS9",
+    };
+
+    try {
+      const getSuccess = await getUserThoughtDiariesFn(formData);
+      if (getSuccess) {
+        console.log("User thoughts diary fetched successfully!", diaryData);
+      } else {
+        console.error("Failed to fetch user thoughts diary");
+      }
+    } catch (error) {
+      console.error("Error fetching user thoughts:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   return (
     <Box position="relative">
       <LoadingOverlay visible={isUploading || loading} overlayBlur={2} />
@@ -894,7 +1024,28 @@ export default function MiscellaneousPage() {
         <Button onClick={handleLogoutUser} loading={loading}>
           Log Out
         </Button>
+        <Button onClick={handleDeleteAllUsers} loading={loading}>
+          Log Out
+        </Button>
+        <Button onClick={handleGetPlaceHolderProfileImages} loading={loading}>
+          Get Placeholder Profiles
+        </Button>
       </Group>
+
+      <Title order={2} mt="xl">
+        Upload Placeholder Profile
+      </Title>
+      <form onSubmit={form.onSubmit(handleUploadPlaceHolderImage)}>
+        <FileInput
+          label="Upload file here"
+          {...form.getInputProps("file")}
+          disabled={isUploading}
+        />
+        <Button type="submit" mt="md" loading={diaryLoading}>
+          {isUploading ? "Uploading..." : "Upload Placeholder Profile"}
+        </Button>
+      </form>
+      {message && <p>{message}</p>}
 
       <Title order={2} mt="xl">
         Upload User Profile
@@ -980,6 +1131,9 @@ export default function MiscellaneousPage() {
         </Button>
         <Button onClick={handleGetGroup} loading={groupLoading}>
           Get Groups
+        </Button>
+        <Button onClick={handleGetAvailableGroup} loading={groupLoading}>
+          Get Available Group
         </Button>
         <Button onClick={handleGetAllGroups} loading={groupLoading}>
           Get All Groups
@@ -1072,14 +1226,27 @@ export default function MiscellaneousPage() {
           Delete All User Posts
         </Button>
       </Group>
-      <form onSubmit={form.onSubmit(handleCreatePost)}>
+
+      <Title order={2} mt="xl">
+        Diary Buttons
+      </Title>
+      <Group mt="md">
+        <Button onClick={handleCreateThoughts} loading={diaryLoading}>
+          Create Thoughts
+        </Button>
+        <Button onClick={handleGetUserThoughtDiaries} loading={diaryLoading}>
+          Get User Thought Diaries
+        </Button>
+      </Group>
+      <form onSubmit={form.onSubmit(handleCreateThoughts)}>
         <FileInput
           label="Upload file here"
-          {...form.getInputProps("file")}
+          multiple
+          {...form.getInputProps("files")}
           disabled={isUploading}
         />
-        <Button type="submit" mt="md" loading={postLoading}>
-          {isUploading ? "Uploading..." : "Create Anonymous Profile"}
+        <Button type="submit" mt="md" loading={diaryLoading}>
+          {isUploading ? "Uploading..." : "Create Thoughts Diary"}
         </Button>
       </form>
       {message && <p>{message}</p>}
