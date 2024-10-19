@@ -720,7 +720,7 @@ export const useGroupStore = create((set) => ({
         const newPendingMember = {
           userKey: user.key,
           name: user.data.fullName,
-          groupRole: "member",
+          groupRole: "Group Member",
         };
 
         groupPendingMembers.data.pendingMembers.push(newPendingMember);
