@@ -243,6 +243,8 @@ export default function DisplayCard({
       </Button>
     ) : undefined;
 
+  const isDisabled = type === "community" ? instance.userJoinStatus : undefined;
+
   const whichMainButton = useMemo(() => {
     const popoverOptions = [
       {
@@ -267,6 +269,7 @@ export default function DisplayCard({
         onClick={() => onButtonClick(instance.key)}
         style={{ zIndex: 1 }}
         loading={loading}
+        disabled={isDisabled}
       >
         {buttonLabel}
       </Button>

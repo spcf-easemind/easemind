@@ -1,14 +1,20 @@
 import { SimpleGrid } from "@mantine/core";
 import PendingCard from "../cards/PendingCard";
 
-export default function PendingGrid({ onClick }) {
+export default function PendingGrid({ pendingApprovals, onClick }) {
   const label = "10 Pending";
 
-  return (
-    <SimpleGrid cols={2}>
-      <PendingCard image={null} button={{ label, onClick: onClick }} />
+  const pendingInstances = pendingApprovals.map((instance) => (
+    <PendingCard
+      image={instance.groupInfo.groupImageUrl}
+      name={instance.groupInfo.name}
+      membersCount={instance.groupInfo.membersCount}
+      button={{
+        approvalCount: instance.groupPendingMemberCount,
+        onClick: () => onClick(instance.groupInfo.key),
+      }}
+    />
+  ));
 
-      <PendingCard image={null} button={{ label, onClick: onClick }} />
-    </SimpleGrid>
-  );
+  return <SimpleGrid cols={2}>{pendingInstances}</SimpleGrid>;
 }

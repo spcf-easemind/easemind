@@ -17,7 +17,6 @@ export default function JoinedGroupViewPage() {
   );
 
   useEffect(() => {
-    console.log(joinedGroupRef);
     fetchJoinedGroupFn(joinedGroupRef);
   }, []);
 

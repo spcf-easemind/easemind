@@ -5,10 +5,15 @@ import { useGroupAPIStore } from "../../store/group-api";
 import { useShallow } from "zustand/shallow";
 import { useNavigate, useParams } from "react-router-dom";
 import { notificationsFn } from "../../utils/notifications";
+import { useAuthenticationStore } from "../../store/authentication";
 
 export default function CommunityGroupViewPage() {
   const { communityGroupRef } = useParams();
   const navigate = useNavigate();
+
+  const loggedInUserKey = useAuthenticationStore(
+    (state) => state.user.data?.key
+  );
 
   const { fetchCommunityGroupFn, communityGroup, loading, joinGroupFn } =
     useGroupAPIStore(
@@ -21,17 +26,16 @@ export default function CommunityGroupViewPage() {
     );
 
   useEffect(() => {
-    fetchCommunityGroupFn(communityGroupRef);
+    fetchCommunityGroupFn(loggedInUserKey, communityGroupRef);
   }, []);
 
-  async function handleJoinGroup(userKey) {
-    console.log(userKey, communityGroupRef);
+  async function handleJoinGroup(communityGroupRef) {
     const id = notificationsFn.load();
-    const response = await joinGroupFn(userKey, communityGroupRef);
+    const response = await joinGroupFn(loggedInUserKey, communityGroupRef);
 
     if (response.type === "success") {
       notificationsFn.success(id, response.message);
-      navigate(`/joined-group/${response.key}`);
+      fetchCommunityGroupFn(loggedInUserKey, communityGroupRef);
     } else {
       notificationsFn.error(id, response.message);
     }

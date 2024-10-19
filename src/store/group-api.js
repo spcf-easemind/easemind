@@ -12,6 +12,9 @@ export const useGroupAPIStore = create((set, get) => ({
   joinedGroups: [],
   joinedGroup: null,
 
+  pendingApprovals: [],
+  pendingMembers: [],
+
   // Owned Groups
   fetchOwnedGroups: async (loggedInUserId) => {
     const formData = { userKey: loggedInUserId };
@@ -59,9 +62,9 @@ export const useGroupAPIStore = create((set, get) => ({
       }));
     }
   },
-  fetchCommunityGroup: async (communityRef) => {
-    const formData = { groupKey: communityRef };
-    const fetchCommunityGroupFn = useGroupStore.getState().getGroup;
+  fetchCommunityGroup: async (loggedInUserId, communityRef) => {
+    const formData = { userKey: loggedInUserId, groupKey: communityRef };
+    const fetchCommunityGroupFn = useGroupStore.getState().getAvailableGroup;
     const response = await fetchCommunityGroupFn(formData);
 
     if (response) {
@@ -98,6 +101,34 @@ export const useGroupAPIStore = create((set, get) => ({
       }));
     }
   },
+  fetchPendingApprovals: async (loggedInUserId) => {
+    const formData = { userKey: loggedInUserId };
+    const fetchPendingApprovalsFn =
+      useGroupStore.getState().userGroupPendingApproval;
+    const response = await fetchPendingApprovalsFn(formData);
+
+    if (response) {
+      const groupData = useGroupStore.getState().groupData;
+      console.log("groupData", groupData);
+      set(() => ({
+        pendingApprovals: groupData,
+      }));
+    }
+  },
+  fetchPendingMembers: async (groupKey) => {
+    const formData = { groupKey: groupKey };
+    const fetchPendingMembersFn = useGroupStore.getState().groupPendingMembers;
+    const response = await fetchPendingMembersFn(formData);
+
+    if (response) {
+      const groupData = useGroupStore.getState().groupData;
+      console.log("groupData", groupData);
+      set(() => ({
+        pendingMembers: groupData,
+      }));
+    }
+  },
+
   createGroup: async (formData) => {
     const createGroupFn = useGroupStore.getState().createGroup;
     const response = await createGroupFn(formData);
@@ -136,9 +167,9 @@ export const useGroupAPIStore = create((set, get) => ({
       set(() => ({
         loading: false,
       }));
-      await get().fetchOwnedGroup(loggedInUserId, ownedGroupRef);
+      // await get().fetchOwnedGroup(loggedInUserId, ownedGroupRef);
       const fetchGroupMessage = useGroupStore.getState().groupMessage;
-      return { type: "success", message: fetchGroupMessage };
+      return { type: "success", message: fetchGroupMessage, key: ownedGroupRef };
     } else {
       set(() => ({
         loading: false,
@@ -167,6 +198,37 @@ export const useGroupAPIStore = create((set, get) => ({
       }));
       const fetchGroupMessage = useGroupStore.getState().groupMessage;
       return { type: "error", message: fetchGroupMessage, key: groupKey };
+    }
+  },
+  memberApproval: async (choice, groupKey, payload) => {
+    const formData = { groupPendingKey: groupKey, groupPendingMember: payload };
+
+    console.log("formData", formData, groupKey);
+    console.log(choice);
+    const approvePendingMemberFn =
+      useGroupStore.getState().approvePendingMember;
+    const rejectPendingMemberFn = useGroupStore.getState().rejectPendingMember;
+
+    if (choice === "approve") {
+      const response = await approvePendingMemberFn(formData);
+      if (response) {
+        const fetchGroupMessage = useGroupStore.getState().groupMessage;
+        get().fetchPendingMembers(groupKey);
+        return { type: "success", message: fetchGroupMessage };
+      } else {
+        const fetchGroupMessage = useGroupStore.getState().groupMessage;
+        return { type: "error", message: fetchGroupMessage };
+      }
+    } else {
+      const response = await rejectPendingMemberFn(formData);
+      if (response) {
+        const fetchGroupMessage = useGroupStore.getState().groupMessage;
+        get().fetchPendingMembers(groupKey);
+        return { type: "success", message: fetchGroupMessage };
+      } else {
+        const fetchGroupMessage = useGroupStore.getState().groupMessage;
+        return { type: "error", message: fetchGroupMessage };
+      }
     }
   },
 }));

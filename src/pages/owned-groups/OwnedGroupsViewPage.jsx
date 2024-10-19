@@ -52,6 +52,7 @@ export default function OwnedGroupsViewPage() {
     const id = notificationsFn.load();
     if (response.type === "success") {
       notificationsFn.success(id, response.message);
+      fetchOwnedGroupFn(loggedInUserKey, ownedGroupRef);
     } else {
       notificationsFn.error(id, response.message);
     }

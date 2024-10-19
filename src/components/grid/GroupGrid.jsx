@@ -6,6 +6,7 @@ export default function GroupGrid({
   type,
   onSelect,
   onButtonClick,
+  loading,
 }) {
   const btnLabel = () => {
     if (type === "community") {
@@ -27,7 +28,7 @@ export default function GroupGrid({
         type={type}
         onButtonClick={onButtonClick}
         onSelect={onSelect}
-        button={{ buttonLabel: btnLabel(), loading: false }}
+        button={{ buttonLabel: btnLabel(), loading: loading }}
       />
     );
   });

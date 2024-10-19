@@ -21,7 +21,7 @@ const popoverOptions = [
   },
 ];
 
-export default function PendingApprovalCard() {
+export default function PendingApprovalCard({image, role, name, onClick}) {
   return (
     <Card withBorder bg="gray.0" py={28}>
       <Title order={3} mb={12}>
@@ -29,12 +29,12 @@ export default function PendingApprovalCard() {
       </Title>
 
       <GroupMemberCard
-        image={null}
-        role="Easebuddy"
-        name="Gabriel Gatbonton"
+        image={image}
+        role={role}
+        name={name}
         bg="sky-blue.0"
       >
-        <ActionsBox options={popoverOptions}>
+        <ActionsBox onClick={(choice) => onClick(choice)} options={popoverOptions}>
           <IconDotsVertical size={20} stroke={1.5} />
         </ActionsBox>
       </GroupMemberCard>

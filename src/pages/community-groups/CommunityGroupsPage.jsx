@@ -6,6 +6,7 @@ import { useGroupAPIStore } from "../../store/group-api";
 import { useAuthenticationStore } from "../../store/authentication";
 import { useShallow } from "zustand/shallow";
 import { useEffect } from "react";
+import { notificationsFn } from "../../utils/notifications";
 
 const header = {
   title: "Community Groups",
@@ -21,12 +22,15 @@ export default function CommunityGroupsPage() {
     (state) => state.user.data?.key
   );
 
-  const { fetchCommunityGroupsFn, communityGroups } = useGroupAPIStore(
-    useShallow((state) => ({
-      fetchCommunityGroupsFn: state.fetchCommunityGroups,
-      communityGroups: state.communityGroups,
-    }))
-  );
+  const { fetchCommunityGroupsFn, communityGroups, joinGroupFn, loading } =
+    useGroupAPIStore(
+      useShallow((state) => ({
+        fetchCommunityGroupsFn: state.fetchCommunityGroups,
+        communityGroups: state.communityGroups,
+        joinGroupFn: state.joinGroup,
+        loading: state.loading,
+      }))
+    );
 
   useEffect(() => {
     fetchCommunityGroupsFn(loggedInUserKey);
@@ -36,8 +40,16 @@ export default function CommunityGroupsPage() {
     navigate(`/community-group/${ref}`);
   }
 
-  function handleJoinGroup(ref) {
-    console.log(`Join group with ref: ${ref}`);
+  async function handleJoinGroup(ref) {
+    const id = notificationsFn.load();
+    const response = await joinGroupFn(loggedInUserKey, ref);
+
+    if (response.type === "success") {
+      notificationsFn.success(id, response.message);
+      fetchCommunityGroupsFn(loggedInUserKey);
+    } else {
+      notificationsFn.error(id, response.message);
+    }
   }
 
   return (
@@ -50,6 +62,7 @@ export default function CommunityGroupsPage() {
           onButtonClick={handleJoinGroup}
           type="community"
           onSelect={handleSelect}
+          loading={loading}
         />
       </Box>
     </Paper>
