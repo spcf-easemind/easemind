@@ -597,10 +597,20 @@ export const useGroupStore = create((set) => ({
         key: formData.groupKey,
       });
 
+      const groupPendingMember = await getDoc({
+        collection: "groupPendingMembers",
+        key: formData.groupKey,
+      });
+
+      const userAlreadyJoined = groupPendingMember.data.pendingMembers.some(
+        (member) => member.userKey === formData.userKey
+      );
+
       const groupInfo = {
         ...group.data,
-        userJoinStatus: formData.userJoinStatus,
+        userJoinStatus: userAlreadyJoined,
       };
+
       set(() => ({
         groupData: groupInfo,
         groupMessage: "Group Info",
