@@ -990,23 +990,32 @@ export const useGroupStore = create((set) => ({
         key: formData.groupPendingKey,
       });
 
-      let updatedPendingMemberArray = [];
-      for (const pendingMember of groupPendingMember.data.pendingMembers) {
-        if (pendingMember.userKey != formData.groupPendingMember.userKey) {
-          updatedPendingMemberArray.push(pendingMember);
+      if (groupPendingMember) {
+        let updatedPendingMemberArray = [];
+        for (const pendingMember of groupPendingMember.data.pendingMembers) {
+          if (pendingMember.userKey != formData.groupPendingMember.userKey) {
+            updatedPendingMemberArray.push(pendingMember);
+          }
         }
+
+        groupPendingMember.data.pendingMembers = updatedPendingMemberArray;
+
+        await setDoc({
+          collection: "groupPendingMembers",
+          doc: {
+            key: groupPendingMember.key,
+            data: groupPendingMember.data,
+            version: groupPendingMember.version,
+          },
+        });
+      } else {
+        set(() => ({
+          groupData: null,
+          groupMessage: "Group Pending Member not found!",
+          groupLoading: false,
+        }));
+        return false;
       }
-
-      groupPendingMember.data.pendingMembers = updatedPendingMemberArray;
-
-      await setDoc({
-        collection: "groupPendingMembers",
-        doc: {
-          key: groupPendingMember.key,
-          data: groupPendingMember.data,
-          version: groupPendingMember.version,
-        },
-      });
 
       set(() => ({
         groupData: null,
