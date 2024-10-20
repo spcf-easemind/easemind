@@ -16,7 +16,7 @@ import {
 } from "@mantine/core";
 import { IconChevronLeft, IconSearch } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
-import { useEnumsStore } from "../../store/enums";
+import { useEnumsStore } from "../../../store/enums";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useShallow } from "zustand/shallow";
 import classes from "./PostControlCard.module.css";
@@ -26,11 +26,11 @@ import IconImage from "../../assets/icons/input/IconImage.svg";
 import IconPaperClip from "../../assets/icons/input/IconPaperClip.svg";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
-import { REMOVED_EMOJIS } from "../../static/chat";
+import { REMOVED_EMOJIS } from "../../../static/chat";
 
-import Pill from "../pills/Pill";
-import PillButton from "../buttons/PillButton";
-import MultiInputsCard from "./MultiInputsCard";
+import Pill from "../../pills/Pill";
+import PillButton from "../../buttons/PillButton";
+import MultiInputsCard from "../MultiInputsCard";
 
 const tabsAttributes = [
   {

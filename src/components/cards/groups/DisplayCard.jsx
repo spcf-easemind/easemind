@@ -11,12 +11,12 @@ import {
   SimpleGrid,
 } from "@mantine/core";
 
-import Pill from "../pills/Pill.jsx";
+import Pill from "../../pills/Pill.jsx";
 import GroupMemberCard from "./GroupMemberCard.jsx";
-import ActionsBox from "../ActionsBox.jsx";
+import ActionsBox from "../../ActionsBox.jsx";
 import { useMemo } from "react";
 import { IconDotsVertical } from "@tabler/icons-react";
-import { EDIT_OPTION } from "../../static/popover.js";
+import { EDIT_OPTION } from "../../../static/popover.js";
 
 const MAX_PILLS = 3;
 

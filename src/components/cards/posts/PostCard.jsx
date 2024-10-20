@@ -8,11 +8,11 @@ import {
   ActionIcon,
   Stack,
 } from "@mantine/core";
-import ActionsBox from "../ActionsBox";
+import ActionsBox from "../../ActionsBox";
 import { IconDotsVertical } from "@tabler/icons-react";
 
-import Pill from "../pills/Pill";
-import { EDIT_DELETE, SAVE_REPORT } from "../../static/popover";
+import Pill from "../../pills/Pill";
+import { EDIT_DELETE, SAVE_REPORT } from "../../../static/popover";
 
 const sample_pills = [
   "Depression",

@@ -1,7 +1,7 @@
 import { Card, Group, Stack, Title, Text, Divider, Box } from "@mantine/core";
-import ActionsBox from "../ActionsBox";
+import ActionsBox from "../../ActionsBox";
 import { IconDotsVertical } from "@tabler/icons-react";
-import { EDIT_DELETE } from "../../static/popover";
+import { EDIT_DELETE } from "../../../static/popover";
 
 export default function DiaryCard({ onClick }) {
   const popoverOptions = EDIT_DELETE;

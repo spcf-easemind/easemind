@@ -1,8 +1,8 @@
 import { Card, Title } from "@mantine/core";
 import GroupMemberCard from "./GroupMemberCard";
 import { IconDotsVertical } from "@tabler/icons-react";
-import ActionsBox from "../ActionsBox";
-import { APPROVE_REJECT } from "../../static/popover";
+import ActionsBox from "../../ActionsBox";
+import { APPROVE_REJECT } from "../../../static/popover";
 
 const popoverOptions = APPROVE_REJECT;
 

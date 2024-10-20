@@ -1,5 +1,5 @@
 import { SimpleGrid } from "@mantine/core";
-import PendingCard from "../cards/PendingCard";
+import PendingCard from "../cards/groups/PendingCard";
 
 export default function PendingGrid({ pendingApprovals, onClick }) {
   const label = "10 Pending";

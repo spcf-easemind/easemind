@@ -15,15 +15,15 @@ import { IconChevronLeft, IconSearch } from "@tabler/icons-react";
 import classes from "./GroupControlCard.module.css";
 import _ from "lodash";
 // Components
-import PhotoControlButton from "../buttons/PhotoControlButton";
-import MultiInputsCard from "./MultiInputsCard";
-import Pill from "../pills/Pill";
-import PillButton from "../buttons/PillButton";
-import CheckboxList from "../CheckboxList.jsx";
+import PhotoControlButton from "../../buttons/PhotoControlButton.jsx";
+import MultiInputsCard from "../MultiInputsCard.jsx";
+import Pill from "../../pills/Pill.jsx";
+import PillButton from "../../buttons/PillButton.jsx";
+import CheckboxList from "../../CheckboxList.jsx";
 
 // Hooks
 import { useEffect, useMemo, useState } from "react";
-import { useEnumsStore } from "../../store/enums";
+import { useEnumsStore } from "../../../store/enums.js";
 import { useShallow } from "zustand/shallow";
 import { useNavigate } from "react-router-dom";
 
