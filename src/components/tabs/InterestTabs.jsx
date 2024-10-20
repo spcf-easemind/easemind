@@ -5,6 +5,7 @@ import Pill from "../pills/Pill.jsx";
 import PillButton from "../buttons/PillButton.jsx";
 import { useEnumsStore } from "../../store/enums.js";
 import { useShallow } from "zustand/shallow";
+import _ from "lodash";
 
 const tabsAttributes = [
   {
@@ -41,6 +42,7 @@ export default function InterestTabs({ form }) {
       ...tab,
       choices: Array.isArray(interestsEnum[tab.value])
         ? interestsEnum[tab.value].map((choice) => ({
+            tab: tab.value,
             key: choice.key,
             value: choice.data.name,
           }))
@@ -50,24 +52,36 @@ export default function InterestTabs({ form }) {
   }, [interestsEnum]);
 
   const [active, setActive] = useState("thoughts");
-  const [selectedPill, setSelectedPill] = useState();
+  const [selectedPills, setSelectedPills] = useState([]);
 
-  function handleSelectPill(key, value) {
-    form.setFieldValue(key, value);
-    setSelectedPill(value);
+  function handleSelectPill(choice) {
+    const isSelected = selectedPills.some((pill) => _.isEqual(pill, choice));
+    const updatedPills = isSelected
+      ? selectedPills.filter((pill) => !_.isEqual(pill, choice))
+      : [...selectedPills, choice];
+
+    form.setFieldValue("initialCategories", updatedPills);
+    setSelectedPills(updatedPills);
   }
 
-  const getFormPills = useMemo(() => {
-    const formValues = form.getValues();
-    const formPills = Object.keys(formValues)
-      .map((key) =>
-        formValues[key] === ""
-          ? undefined
-          : { keyId: key, value: formValues[key] }
-      )
-      .filter((value) => value !== undefined);
-    return formPills;
-  }, [form]);
+  const getInterests = form.getValues().initialCategories;
+
+  const pillInstances = getInterests.map((choice) => (
+    <Pill
+      styles={{
+        root: {
+          borderRadius: 5,
+          backgroundColor: "var(--mantine-primary-color-5)",
+          color: "white",
+        },
+      }}
+      size="md"
+      withRemoveButton
+      key={choice.key}
+      name={choice.value}
+      onRemove={() => handleSelectPill(choice)}
+    ></Pill>
+  ));
 
   const tabHeader = tabsAttributes.map((tab) => {
     const isActive = tab.value === active;
@@ -92,35 +106,23 @@ export default function InterestTabs({ form }) {
     );
   });
 
-  const pillInstances = getFormPills.map((pill) => (
-    <Pill
-      styles={{
-        root: {
-          borderRadius: 5,
-          backgroundColor: "var(--mantine-primary-color-5)",
-          color: "white",
-        },
-      }}
-      size="md"
-      withRemoveButton
-      key={pill.value}
-      name={pill.value}
-      onRemove={() => handleSelectPill(pill.keyId, "")}
-    ></Pill>
-  ));
-
   const tabContent = enumArrays.map((tab) => {
     return (
       <Tabs.Panel value={tab.value} key={tab.value}>
         <Group gap={8}>
-          {tab.choices.map((choice) => (
-            <PillButton
-              key={choice.key}
-              data-active={selectedPill === choice.value || undefined}
-              name={choice.value}
-              onSelect={(name) => handleSelectPill(tab.value, name)}
-            />
-          ))}
+          {tab.choices.map((choice) => {
+            const isActive = selectedPills.some((pill) =>
+              _.isEqual(pill, choice)
+            );
+            return (
+              <PillButton
+                key={choice.key}
+                data-active={isActive || undefined}
+                name={choice.value}
+                onSelect={() => handleSelectPill(choice)}
+              />
+            );
+          })}
         </Group>
       </Tabs.Panel>
     );
