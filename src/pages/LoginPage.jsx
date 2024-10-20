@@ -41,6 +41,8 @@ export default function LoginPage() {
     getUserInfoFn,
     deleteUserInfoFn,
     createSuperAdminFn,
+    message,
+    deleteAllUsers,
   } = useUsersStore(
     useShallow((state) => ({
       data: state.data,
@@ -49,6 +51,8 @@ export default function LoginPage() {
       getUserInfoFn: state.getUserInfo,
       deleteUserInfoFn: state.deleteUserInfo,
       createSuperAdminFn: state.createSuperAdmin,
+      message: state.message,
+      deleteAllUsers: state.deleteAllUsers,
     }))
   );
 
@@ -81,12 +85,13 @@ export default function LoginPage() {
     //   userKey: "uOl9RnXouVl9vU1fbUXU1",
     // };
     // getUserGroupFn(formData);
-    // getUserInfoFn();
+    getUserInfoFn();
     // getAllUsersFn();
     // deleteUserInfoFn();
     // createSuperAdminFn();
-    // console.log(message);
-    // console.log(data);
+    // deleteAllUsers();
+    console.log(message);
+    console.log(data);
   }, []);
 
   const loginForm = useForm({
