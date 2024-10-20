@@ -133,11 +133,10 @@ export default function ChatPage() {
   });
 
   const findNewChatForm = useForm({
-    mode: "controlled",
+    mode: "uncontrolled",
     initialValues: {
-      thoughts: "",
-      emotions: "",
-      members: "",
+      categories: [],
+      initialCategories: [],
     },
   });
 
