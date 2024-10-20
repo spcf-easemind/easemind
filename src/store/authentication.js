@@ -151,16 +151,19 @@ export const useAuthenticationStore = create(
             items.items[0].data.email === email &&
             items.items[0].data.password === password
           ) {
-            const user = await getDoc({
+            const users = await listDocs({
               collection: "users",
-              key: items.items[0].key,
             });
 
-            const userWithConvertedDates = convertTimestamps(user);
-            const userData = user.data;
-            const userKey = user.key;
-            const userVersion = user.version;
-            const userItems = items.items[0].data;
+            const userContent = [];
+            for (const user of users.items) {
+              if (user.data.role === "super-admin") {
+                userContent.push(user);
+              }
+            }
+
+            console.log("result: ", userContent);
+            // let lastUpdated = new Date(user.updatedAt);
 
             let profileImageUrl = "";
             if (placeholderProfileImage.items[0].data) {
@@ -169,40 +172,38 @@ export const useAuthenticationStore = create(
             }
 
             // use the formData when you needed to update the userCredentials.
-            const updatedData = {
-              key: userData.key,
-              fullName: userData.fullName,
-              status: "online",
-              role: userData.role,
-              lastUpdated: userWithConvertedDates,
-              profileImageUrl: profileImageUrl,
-            };
+            user.data.status = "online";
+            user.data.lastUpdated = lastUpdated;
 
             await setDoc({
               collection: "users",
               doc: {
-                key: userKey,
-                data: updatedData,
-                version: userVersion,
+                key: user.key,
+                data: user.data,
+                version: user.version,
               },
             });
+
+            console.log("fullName: ", user.fullName);
+            console.log("role: ", user.role);
+            console.log("profileImageUrl: ", profileImageUrl);
 
             set((state) => ({
               user: {
                 ...state.user,
                 data: {
-                  fullName: userData.fullName,
-                  email: userItems.email,
-                  key: userKey,
-                  role: userItems.role,
-                  // profileImageUrl: profileImageUrl,
+                  fullName: user.fullName,
+                  email: items.items[0].data.email,
+                  key: user.key,
+                  role: user.role,
+                  profileImageUrl: profileImageUrl,
                 },
               },
               message: "Login Successfully!",
             }));
 
             // Set Loading False
-            set(() => ({ loading: false }));
+            return true;
           } else {
             set((state) => ({
               user: {

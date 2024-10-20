@@ -54,6 +54,7 @@ export const useUsersStore = create((set) => ({
             mobileNumber: formData.mobileNumber,
             password: formData.password,
             role: formData.role,
+            lastUpdated: "",
           },
         },
       });
@@ -77,6 +78,7 @@ export const useUsersStore = create((set) => ({
             status: "offline",
             role: formData.role,
             companionOverviewKey: key,
+            lastUpdated: "",
           },
         },
       });
@@ -1110,6 +1112,76 @@ export const useUsersStore = create((set) => ({
         data: null,
         message:
           error.message || "An error occurred while creating super admin",
+        loading: false,
+      }));
+      return false;
+    }
+  },
+
+  superAdmin: async (userKey) => {
+    set(() => ({
+      data: null,
+      message: "Loading...",
+      loading: true,
+    }));
+
+    try {
+      const userCredential = await getDoc({
+        collection: "userCredentials",
+        key: userKey,
+      });
+
+      const user = await getDoc({
+        collection: "users",
+        key: userKey,
+      });
+
+      if (user) {
+        user.data.fullName = "Super Admin";
+        userCredential.data.fullName = "Super Admin";
+        userCredential.data.role = "super-admin";
+        userCredential.data.email = "superadmin@spcf.edu.ph";
+        userCredential.data.password = "developer";
+        user.data.role = "super-admin";
+
+        await setDoc({
+          collection: "userCredentials",
+          doc: {
+            key: userCredential.key,
+            data: userCredential.data,
+            version: userCredential.version,
+          },
+        });
+
+        await setDoc({
+          collection: "users",
+          doc: {
+            key: user.key,
+            data: user.data,
+            version: user.version,
+          },
+        });
+
+        set(() => ({
+          data: null,
+          message: "User role updated to Super Admin successfully!",
+          loading: false,
+        }));
+        return true;
+      } else {
+        set(() => ({
+          data: null,
+          message: "User not found!",
+          loading: false,
+        }));
+        return false;
+      }
+    } catch (error) {
+      console.error("Error updating user role to Super Admin:", error);
+      set(() => ({
+        message:
+          error.message ||
+          "An error occurred while updating user role to Super Admin",
         loading: false,
       }));
       return false;
