@@ -44,12 +44,10 @@ export default function PrivacyPolicy() {
 
             {/* Section List if it exists */}
             {section.list && (
-              <List withPadding>
+              <List withPadding pr={16}>
                 {section.list.map((item, i) => (
-                  <List.Item key={i}>
-                    <Text size="sm" lh={1.2}>
-                      {formatText(item)}
-                    </Text>
+                  <List.Item key={i} fz="sm" lh={1.2}>
+                    {formatText(item)}
                   </List.Item>
                 ))}
               </List>

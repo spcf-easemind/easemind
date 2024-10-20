@@ -44,7 +44,7 @@ export default function TermsAndConditions() {
 
             {/* Section List if it exists */}
             {section.list && (
-              <List withPadding>
+              <List withPadding pr={16}>
                 {section.list.map((item, i) => (
                   <List.Item key={i}>
                     <Text size="sm" lh={1.2}>
