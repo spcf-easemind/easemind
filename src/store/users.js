@@ -7,6 +7,7 @@ import {
   uploadFile,
   listAssets,
   deleteAsset,
+  signOut,
 } from "@junobuild/core";
 import { nanoid } from "nanoid";
 import { kebabCase } from "lodash";
@@ -413,6 +414,8 @@ export const useUsersStore = create((set) => ({
             doc: anonymousUser,
           });
         }
+
+        await signOut();
 
         set(() => ({
           data: null,
