@@ -86,18 +86,8 @@ export const useAuthenticationStore = create(
         });
 
         if (userCredential && user) {
-          const userWithConvertedDates = convertTimestamps(user);
-          const userData = user.data;
-          const userKey = user.key;
-          const userVersion = user.version;
-
-          const updatedUserData = {
-            key: userKey,
-            fullName: userData.fullName,
-            status: "offline",
-            lastUpdated: userWithConvertedDates,
-            role: userData.role,
-          };
+          user.data.status = "offline";
+          userCredential.data.status = "offline";
 
           await setDoc({
             collection: "users",
@@ -108,9 +98,27 @@ export const useAuthenticationStore = create(
             },
           });
 
-          const response = await signOut();
+          await setDoc({
+            collection: "userCredentials",
+            doc: {
+              key: userCredential.key,
+              data: userCredential.data,
+              version: userCredential.version,
+            },
+          });
+
+          await signOut();
 
           // sessionStorage.removeItem('authentication');
+
+          set(() => ({
+            user: {
+              identity_provider: null,
+              data: null,
+            },
+            message: "Logout Successfully!",
+            loading: false,
+          }));
           return true;
         } else {
           set(() => ({
@@ -153,8 +161,12 @@ export const useAuthenticationStore = create(
             const userKey = user.key;
             const userVersion = user.version;
             const userItems = items.items[0].data;
-            const profileImageUrl =
-              placeholderProfileImage.items[0].data.placeholderProfileImagePath;
+
+            // let profileImageUrl = "";
+            // if (placeholderProfileImage.items[0].data) {
+            //   profileImageUrl =
+            //     placeholderProfileImage.items[0].data.profileImageUrl;
+            // }
 
             // use the formData when you needed to update the userCredentials.
             const updatedData = {
@@ -183,7 +195,7 @@ export const useAuthenticationStore = create(
                   email: userItems.email,
                   key: userKey,
                   role: userItems.role,
-                  profileImageUrl: profileImageUrl,
+                  // profileImageUrl: profileImageUrl,
                 },
               },
               message: "Login Successfully!",

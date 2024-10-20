@@ -29,9 +29,13 @@ export const useUsersStore = create((set) => ({
       const placeholderProfileImage = await listDocs({
         collection: "userPlaceholderImages",
       });
+      let placeholderImageUrl = "";
 
-      const placeholderImageUrl =
-        placeholderProfileImage.items[0].data.placeholderProfileImagePath;
+      if (placeholderProfileImage.items[0].data) {
+        placeholderImageUrl =
+          placeholderProfileImage.items[0].data.placeholderProfileImagePath;
+      }
+
       if (items.items[0]) {
         throw new Error("This identity already have an account!.");
       }
@@ -46,7 +50,7 @@ export const useUsersStore = create((set) => ({
             dateOfBirth: formData.dateOfBirth,
             email: formData.email,
             fullName: formData.fullName,
-            pronouns: formData.pronouns,
+            pronouns: "",
             mobileNumber: formData.mobileNumber,
             password: formData.password,
             role: formData.role,
@@ -247,6 +251,7 @@ export const useUsersStore = create((set) => ({
       set(() => ({
         data: null,
         message: error.message || "An error occurred while fetching user data",
+        loading: false,
       }));
       return false;
     }

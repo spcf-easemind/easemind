@@ -21,7 +21,7 @@ export const usePublicMaterials = create((set, get) => ({
     set(() => ({
       miscData: null,
       miscMessage: "Loading...",
-      loading: true,
+      miscLoading: true,
     }));
 
     try {
@@ -500,18 +500,4 @@ export const usePublicMaterials = create((set, get) => ({
       return false;
     }
   },
-
-  testFunction: async (formData) => {
-    set(() => ({
-      miscData: null,
-      miscMessage: "Loading...",
-      miscLoading: true,
-    }));
-
-    try {
-      c
-    } catch (error) {
-
-    }
-  }
 }));

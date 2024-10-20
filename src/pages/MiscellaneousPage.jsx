@@ -1080,7 +1080,7 @@ export default function MiscellaneousPage() {
     };
 
     try {
-      const createSuccess = await createPostFn(formData3, file);
+      const createSuccess = await createPostFn(formData1, file);
       if (createSuccess) {
         console.log("Post created successfully!");
       } else {
@@ -1397,6 +1397,9 @@ export default function MiscellaneousPage() {
         Post Buttons
       </Title>
       <Group mt="md">
+        <Button onClick={handleCreatePost} loading={postLoading}>
+          Create Post
+        </Button>
         <Button onClick={handleGetAllUserPosts} loading={postLoading}>
           Get All User Posts
         </Button>
