@@ -83,6 +83,11 @@ export default function SurveyModal({ form, opened, onClose, onSubmit }) {
       <RolePicker onClick={handleFormData} />
     );
 
+    const minHeight = useMatches({
+      base: 500,
+      sm: 550,
+    })
+
   return (
     <Modal
       opened={opened}
@@ -101,7 +106,7 @@ export default function SurveyModal({ form, opened, onClose, onSubmit }) {
         className={classes.card}
         padding={36}
         h={500}
-        mih={500}
+        mih={minHeight}
         ta="center"
         component="form"
         style={{
