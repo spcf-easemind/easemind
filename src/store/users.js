@@ -312,25 +312,30 @@ export const useUsersStore = create((set) => ({
 
       if (items.items && items.items.length > 0 && items.items[0].data) {
         for (const item of items.items) {
-          await deleteDoc({
-            collection: "userCredentials",
-            doc: item,
-          });
-          set(() => ({
-            data: null,
-            message: "User credential deleted successfully!",
-          }));
+          if (item) {
+            await deleteDoc({
+              collection: "userCredentials",
+              doc: item,
+            });
+
+            set(() => ({
+              data: null,
+              message: "User credential deleted successfully!",
+            }));
+          }
         }
 
         for (const itemSurvey of itemSurveys.items) {
-          await deleteDoc({
-            collection: "userSurveys",
-            doc: itemSurvey,
-          });
-          set(() => ({
-            data: null,
-            message: "User surveys deleted successfully!",
-          }));
+          if (itemSurvey) {
+            await deleteDoc({
+              collection: "userSurveys",
+              doc: itemSurvey,
+            });
+            set(() => ({
+              data: null,
+              message: "User surveys deleted successfully!",
+            }));
+          }
         }
 
         const user = await getDoc({
@@ -338,31 +343,35 @@ export const useUsersStore = create((set) => ({
           key: items.items[0].key,
         });
 
-        await deleteDoc({
-          collection: "users",
-          doc: user,
-        });
+        if (user) {
+          await deleteDoc({
+            collection: "users",
+            doc: user,
+          });
 
-        set(() => ({
-          data: null,
-          message: "User deleted successfully!",
-        }));
+          set(() => ({
+            data: null,
+            message: "User deleted successfully!",
+          }));
+        }
 
         const userProfiles = await listAssets({
           collection: "userProfilePicture",
         });
 
-        for (const userProfile of userProfiles.items) {
-          await deleteAsset({
-            collection: "userProfilePicture",
-            fullPath: userProfile.fullPath,
-          });
+        if (userProfiles) {
+          for (const userProfile of userProfiles.items) {
+            await deleteAsset({
+              collection: "userProfilePicture",
+              fullPath: userProfile.fullPath,
+            });
 
-          set(() => ({
-            data: null,
-            message: "User profile picture deleted successfully!",
-            loading: false,
-          }));
+            set(() => ({
+              data: null,
+              message: "User profile picture deleted successfully!",
+              loading: false,
+            }));
+          }
         }
 
         const userGroup = await getDoc({
@@ -370,31 +379,42 @@ export const useUsersStore = create((set) => ({
           key: items.items[0].key,
         });
 
-        await deleteDoc({
-          collection: "userGroups",
-          doc: userGroup,
-        });
+        if (userGroup) {
+          await deleteDoc({
+            collection: "userGroups",
+            doc: userGroup,
+          });
+        }
 
         const userDiary = await getDoc({
           collection: "userDiaries",
           key: items.items[0].key,
         });
 
-        await deleteDoc({
-          collection: "userDiaries",
-          doc: userDiary,
-        });
+        if (userDiary) {
+          await deleteDoc({
+            collection: "userDiaries",
+            doc: userDiary,
+          });
+        }
 
         const anonymousUser = await getDoc({
           collection: "anonymousUsers",
           key: items.items[0].key,
         });
 
-        await deleteDoc({
-          collection: "anonymousUsers",
-          doc: anonymousUser,
-        });
+        if (anonymousUser) {
+          await deleteDoc({
+            collection: "anonymousUsers",
+            doc: anonymousUser,
+          });
+        }
 
+        set(() => ({
+          data: null,
+          message: "User data deleted successfully!",
+          loading: false,
+        }));
         return true;
       } else {
         set(() => ({
@@ -438,52 +458,79 @@ export const useUsersStore = create((set) => ({
         collection: "userGroups",
       });
 
-      for (const userSurvey of userSurveys.items) {
-        const user = await getDoc({
-          collection: "users",
-          key: userSurvey.key,
-        });
+      const anonymousUsers = await listDocs({
+        collection: "anonymousUsers",
+      });
 
-        await deleteDoc({
-          collection: "userSurveys",
-          doc: userSurvey,
-        });
+      if (userSurveys) {
+        for (const userSurvey of userSurveys.items) {
+          const user = await getDoc({
+            collection: "users",
+            key: userSurvey.key,
+          });
 
-        console.log(`${user.data.name} user surveys deleted successfully!`);
+          await deleteDoc({
+            collection: "userSurveys",
+            doc: userSurvey,
+          });
+
+          console.log(`${user.data.name} user surveys deleted successfully!`);
+        }
       }
 
-      for (const userGroup of userGroups.items) {
-        const user = await getDoc({
-          collection: "users",
-          key: userGroup.key,
-        });
+      if (userGroups) {
+        for (const userGroup of userGroups.items) {
+          const user = await getDoc({
+            collection: "users",
+            key: userGroup.key,
+          });
 
-        await deleteDoc({
-          collection: "userGroups",
-          doc: userGroup,
-        });
+          await deleteDoc({
+            collection: "userGroups",
+            doc: userGroup,
+          });
 
-        console.log(`${user.data.name} user group deleted successfully!`);
+          console.log(`${user.data.name} user group deleted successfully!`);
+        }
       }
 
-      for (const user of users.items) {
-        await deleteDoc({
-          collection: "users",
-          doc: user,
-        });
+      if (users) {
+        for (const user of users.items) {
+          await deleteDoc({
+            collection: "users",
+            doc: user,
+          });
 
-        console.log(`${user.data.name} user credentials deleted successfully!`);
+          console.log(
+            `${user.data.name} user credentials deleted successfully!`
+          );
+        }
       }
 
-      for (const userCredential of userCredentials.items) {
-        await deleteDoc({
-          collection: "userCredentials",
-          doc: userCredential,
-        });
+      if (userCredentials) {
+        for (const userCredential of userCredentials.items) {
+          await deleteDoc({
+            collection: "userCredentials",
+            doc: userCredential,
+          });
 
-        console.log(
-          `${userCredential.data.name} user credentials deleted successfully!`
-        );
+          console.log(
+            `${userCredential.data.name} user credentials deleted successfully!`
+          );
+        }
+      }
+
+      if (anonymousUsers) {
+        for (const anonymousUser of anonymousUsers.items) {
+          await deleteDoc({
+            collection: "anonymousUsers",
+            doc: anonymousUser,
+          });
+
+          console.log(
+            `${anonymousUser.data.name} anonymous user deleted successfully!`
+          );
+        }
       }
 
       set(() => ({
@@ -952,6 +999,117 @@ export const useUsersStore = create((set) => ({
         message:
           error.message ||
           "An error occurred while fetching placeholder images",
+        loading: false,
+      }));
+      return false;
+    }
+  },
+
+  createSuperAdmin: async () => {
+    set(() => ({
+      data: null,
+      message: "Loading...",
+      loading: true,
+    }));
+    try {
+      const users = await listDocs({
+        collection: "users",
+      });
+
+      for (const user of users.items) {
+        if (user.data.role === "super-admin") {
+          throw new Error("Super Admin already exists!");
+        }
+      }
+
+      const key = nanoid();
+      await setDoc({
+        collection: "userCredentials",
+        doc: {
+          key,
+          data: {
+            profileImageUrl: "",
+            dateOfBirth: "",
+            email: "superadmin@spcf.edu.ph",
+            fullName: "Super Admin",
+            pronouns: "",
+            mobileNumber: "",
+            password: "developer",
+            role: "super-admin",
+          },
+        },
+      });
+
+      await setDoc({
+        collection: "users",
+        doc: {
+          key,
+          data: {
+            profileImageUrl: "",
+            key,
+            fullName: "Super Admin",
+            status: "offline",
+            role: "super-admin",
+            companionOverviewKey: key,
+          },
+        },
+      });
+
+      await setDoc({
+        collection: "userCompanionOverviews",
+        doc: {
+          key,
+          data: {
+            key,
+            title: "",
+            description: "",
+            categories: [],
+            availability: {
+              monday: {
+                startTime: "",
+                endTime: "",
+              },
+              tuesday: {
+                startTime: "",
+                endTime: "",
+              },
+              wednesday: {
+                startTime: "",
+                endTime: "",
+              },
+              thursday: {
+                startTime: "",
+                endTime: "",
+              },
+              friday: {
+                startTime: "",
+                endTime: "",
+              },
+              saturday: {
+                startTime: "",
+                endTime: "",
+              },
+              sunday: {
+                startTime: "",
+                endTime: "",
+              },
+            },
+          },
+        },
+      });
+
+      set(() => ({
+        data: null,
+        message: "Super Admin created successfully!",
+        loading: false,
+      }));
+      return true;
+    } catch (error) {
+      console.error("Error creating super admin:", error);
+      set(() => ({
+        data: null,
+        message:
+          error.message || "An error occurred while creating super admin",
         loading: false,
       }));
       return false;
