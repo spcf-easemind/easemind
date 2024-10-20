@@ -161,7 +161,7 @@ function App() {
   }, [location]);
 
   const withBackground = useMemo(() => {
-    let paths = ["/internet-identity"];
+    let paths = ["/internet-identity", "/"];
     const mapMainRoutes = mainRoutes.map(({ path }) => path);
     const mapNavRoutes = navRoutes.map(({ path }) => path);
     const mapProfileRoutes = profileRoutes.map(({ path }) => path);

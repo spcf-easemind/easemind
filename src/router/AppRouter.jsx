@@ -5,6 +5,7 @@ import ProtectedRoute from "./ProtectedRoute.jsx";
 import App from "../App";
 import LoginPage from "../pages/LoginPage";
 import InternetIdentityPage from "../pages/InternetIdentityPage";
+import SuperAdminPage from "../pages/SuperAdminPage.jsx";
 import mainRoutes from "./modules/main-routes.jsx";
 import navRoutes from "./modules/nav-routes.jsx";
 import profileRoutes from "./modules/profile-routes.jsx";
@@ -12,6 +13,7 @@ import profileRoutes from "./modules/profile-routes.jsx";
 import { useAuthenticationStore } from "../store/authentication.js";
 import { useEffect } from "react";
 import { useShallow } from "zustand/shallow";
+import LandingPage from "../pages/landing-page/LandingPage.jsx";
 
 export default function AppRouter() {
   const { initialize, user, logout } = useAuthenticationStore(
@@ -37,6 +39,14 @@ export default function AppRouter() {
       path: "/",
       element: <App />,
       children: [
+        {
+          path: "/",
+          element: <LandingPage />,
+        },
+        {
+          path: "/super-admin",
+          element: <SuperAdminPage />,
+        },
         {
           element: <ProtectedRoute />,
           children: [
