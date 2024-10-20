@@ -768,32 +768,32 @@ export const useUsersStore = create((set) => ({
         userCompanionOverview.data.categories = formData.categories;
         userCompanionOverview.data.availability = {
           monday: {
-            startTime: formData.mondayStartTime,
-            endTime: formData.mondayEndTime,
+            startTime: formData.availability.monday.startTime,
+            endTime: formData.availability.monday.endTime,
           },
           tuesday: {
-            startTime: formData.tuesdayStartTime,
-            endTime: formData.tuesdayEndTime,
+            startTime: formData.availability.tuesday.startTime,
+            endTime: formData.availability.tuesday.endTime,
           },
           wednesday: {
-            startTime: formData.wednesdayStartTime,
-            endTime: formData.wednesdayEndTime,
+            startTime: formData.availability.wednesday.startTime,
+            endTime: formData.availability.wednesday.endTime,
           },
           thursday: {
-            startTime: formData.thursdayStartTime,
-            endTime: formData.thursdayEndTime,
+            startTime: formData.availability.thursday.startTime,
+            endTime: formData.availability.thursday.endTime,
           },
           friday: {
-            startTime: formData.fridayStartTime,
-            endTime: formData.fridayEndTime,
+            startTime: formData.availability.friday.startTime,
+            endTime: formData.availability.friday.endTime,
           },
           saturday: {
-            startTime: formData.saturdayStartTime,
-            endTime: formData.saturdayEndTime,
+            startTime: formData.availability.saturday.startTime,
+            endTime: formData.availability.saturday.endTime,
           },
           sunday: {
-            startTime: formData.sundayStartTime,
-            endTime: formData.sundayEndTime,
+            startTime: formData.availability.sunday.startTime,
+            endTime: formData.availability.sunday.endTime,
           },
         };
 
