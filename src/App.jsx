@@ -126,13 +126,25 @@ function App() {
     <HomeAside />
   );
 
-  const withContainer = includeNavigation.navigation ? (
-    <Outlet />
-  ) : (
-    <Container size={containerBreakpoint} h="100%">
+  const withContainer = useMemo(() => {
+    let withoutContainer = [];
+    const mainRoutes = ["/home", "/chat"];
+    const mapNavRoutes = navRoutes.map(({ path }) => path);
+
+    withoutContainer = [...mainRoutes, ...mapNavRoutes];
+
+    const computedWithoutContainer = withoutContainer.some(
+      (path) => routeMatcher(path, location.pathname) === path
+    );
+
+    return computedWithoutContainer ? (
       <Outlet />
-    </Container>
-  );
+    ) : (
+      <Container size={containerBreakpoint} h="100%">
+        <Outlet />
+      </Container>
+    );
+  }, [location.pathname]);
 
   const chatValues = useMemo(() => {
     const pathsWithoutPadding = [

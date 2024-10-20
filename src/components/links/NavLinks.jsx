@@ -10,8 +10,9 @@ export default function NavLinks({
   type = null,
   ...props
 }) {
-  const { w, h } = type === "profile" ? { w: 27, h: 27 } : { w: 35, h: 30 };
-  const {boxW, boxH} = type === "profile" ? {boxW: 35, boxH: 25} : {boxW: 40, boxH: undefined};
+  const { w, h } = type === "profile" ? { w: 24, h: 24 } : { w: 35, h: 30 };
+  const { boxW, boxH } =
+    type === "profile" ? { boxW: 35, boxH: 25 } : { boxW: 40, boxH: undefined };
   return (
     <UnstyledButton
       className={classes.linkStyling}

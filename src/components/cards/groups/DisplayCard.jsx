@@ -163,7 +163,7 @@ export default function DisplayCard({
       </Grid.Col>
     ) : undefined;
 
-  const sharedTypesOfCompanions = ["companion", "posts"];
+  const sharedTypesOfCompanions = ["companion", "posts", "overview"];
 
   const availabilityInstance =
     sharedTypesOfCompanions.includes(type) && variant === "view" ? (
@@ -251,7 +251,7 @@ export default function DisplayCard({
 
   const whichMainButton = useMemo(() => {
     const popoverOptions = EDIT_OPTION;
-    return type === "posts" ? (
+    return type === "posts" || type === "overview" ? (
       <ActionsBox
         onClick={(option) => onButtonClick(option, "1")}
         options={popoverOptions}
