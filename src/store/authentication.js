@@ -195,6 +195,7 @@ export const useAuthenticationStore = create(
                   key: user.key,
                   role: user.data.role,
                   profileImageUrl: profileImageUrl,
+                  pronouns: items.items[0].data.pronouns,
                 },
               },
               message: "Login Successfully!",
