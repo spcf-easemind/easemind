@@ -767,7 +767,6 @@ export const useUsersStore = create((set) => ({
         userCompanionOverview.data.description = formData.description;
 
         const categories = [];
-
         if (formData.categories.length > 0) {
           for (const category of formData.categories) {
             const categoryData = await getDoc({
@@ -776,7 +775,7 @@ export const useUsersStore = create((set) => ({
             });
 
             if (category) {
-              categories.push(categoryData.data);
+              categories.push(categoryData);
             }
           }
         }
