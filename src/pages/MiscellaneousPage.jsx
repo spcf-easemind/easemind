@@ -297,7 +297,7 @@ export default function MiscellaneousPage() {
       userKey: "",
       title: "",
       description: "",
-      category: [],
+      categories: [],
       availability: {
         monday: {
           startTime: "",

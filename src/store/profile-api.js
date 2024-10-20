@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { useUsersStore } from "./users";
+import { useAuthenticationStore } from "./authentication";
 
 export const useProfileAPIStore = create((set, get) => ({
   loading: false,
@@ -65,6 +66,19 @@ export const useProfileAPIStore = create((set, get) => ({
       get().setLoading(false);
       const fetchEditProfileMessage = useUsersStore.getState().message;
       return { type: "error", message: fetchEditProfileMessage };
+    }
+  },
+
+  deleteUser: async () => {
+    const deleteUserFn = useUsersStore.getState().deleteUserInfo;
+    const response = await deleteUserFn();
+
+    if (response) {
+      const deleteUserMessage = useUsersStore.getState().message;
+      return { type: "success", message: deleteUserMessage };
+    } else {
+      const deleteUserMessage = useUsersStore.getState().message;
+      return { type: "error", message: deleteUserMessage };
     }
   },
 

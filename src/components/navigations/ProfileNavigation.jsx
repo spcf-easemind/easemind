@@ -134,23 +134,25 @@ export default function ProfileNavigation() {
       );
     });
   return (
-    <Stack gap={0}>
-      <Box ta="center" py={24}>
-        <Avatar
-          display="inline-block"
-          src={loggedInUser.profileImageUrl}
-          radius="sm"
-          w={100}
-          h={100}
-        />
-        <Title order={4} ta="center">
-          {loggedInUser.fullName}
-        </Title>
-        <Text size="sm" c="dimmed">
-          {role}
-        </Text>
-      </Box>
-      <Stack gap={0}>{navLinks}</Stack>
-    </Stack>
+    loggedInUser && (
+      <Stack gap={0}>
+        <Box ta="center" py={24}>
+          <Avatar
+            display="inline-block"
+            src={loggedInUser.profileImageUrl}
+            radius="sm"
+            w={100}
+            h={100}
+          />
+          <Title order={4} ta="center">
+            {loggedInUser.fullName}
+          </Title>
+          <Text size="sm" c="dimmed">
+            {role}
+          </Text>
+        </Box>
+        <Stack gap={0}>{navLinks}</Stack>
+      </Stack>
+    )
   );
 }

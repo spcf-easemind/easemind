@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Card,
   Group,
@@ -19,15 +18,27 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { parseISO, getDate, getYear, getMonth, format, parse } from "date-fns";
 import { notificationsFn } from "../../utils/notifications";
+import { useDisclosure } from "@mantine/hooks";
+import WarningModal from "../../components/modals/WarningModal";
+
+const warningModal = {
+  title: "Delete Account?",
+  message:
+    "Are you sure you want to delete your account? This action is permanent, and all your data will be erased and cannot be recovered.",
+};
 
 export default function EditProfilePage() {
   const navigate = useNavigate();
-  const { fetchEditProfileFn, editProfile, updateProfileFn } =
+
+  const [opened, { toggle }] = useDisclosure();
+
+  const { fetchEditProfileFn, editProfile, updateProfileFn, deleteUserFn } =
     useProfileAPIStore(
       useShallow((state) => ({
         fetchEditProfileFn: state.fetchEditProfile,
         editProfile: state.editProfile,
         updateProfileFn: state.updateProfile,
+        deleteUserFn: state.deleteUser,
       }))
     );
 
@@ -155,6 +166,18 @@ export default function EditProfilePage() {
     }
   }
 
+  async function handleDeletionAccount() {
+    const id = notificationsFn.load();
+    const response = await deleteUserFn();
+
+    if (response.type === "success") {
+      notificationsFn.success(id, response.message);
+      navigate("/internet-identity");
+    } else {
+      notificationsFn.error(id, response.message);
+    }
+  }
+
   return (
     editProfile && (
       <>
@@ -266,10 +289,22 @@ export default function EditProfilePage() {
             all your data will be permanently erased and cannot be recovered.
           </Text>
 
-          <Button mt={18} color="red.8" size="lg" w={200}>
+          <Button onClick={toggle} mt={18} color="red.8" size="lg" w={200}>
             Delete Account
           </Button>
         </Card>
+
+        <WarningModal
+          modal={{ opened: opened, onClose: toggle }}
+          form={{ ...warningModal }}
+        >
+          <Button onClick={toggle} variant="light" color="red">
+            Cancel
+          </Button>
+          <Button onClick={handleDeletionAccount} loading={false} color="red">
+            Delete Account
+          </Button>
+        </WarningModal>
       </>
     )
   );
