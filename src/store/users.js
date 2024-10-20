@@ -770,13 +770,13 @@ export const useUsersStore = create((set) => ({
 
         if (formData.categories.length > 0) {
           for (const category of formData.categories) {
-            const category = await getDoc({
+            const categoryData = await getDoc({
               collection: "categories",
               key: category.key,
             });
 
             if (category) {
-              categories.push(category.data);
+              categories.push(categoryData.data);
             }
           }
         }
