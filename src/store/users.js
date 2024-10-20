@@ -492,7 +492,7 @@ export const useUsersStore = create((set) => ({
             doc: userGroup,
           });
 
-          console.log(`${user.data.name} user group deleted successfully!`);
+          console.log(`user group deleted successfully!`);
         }
       }
 
