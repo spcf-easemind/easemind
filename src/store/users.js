@@ -624,6 +624,11 @@ export const useUsersStore = create((set) => ({
         key: formData.userKey,
       });
 
+      const anonymousUser = await getDoc({
+        collection: "anonymousUsers",
+        key: formData.userKey,
+      });
+
       if (userCredential && user) {
         let profileImageUrl = user.profileImageUrl || formData.profileImageUrl;
 
@@ -662,6 +667,27 @@ export const useUsersStore = create((set) => ({
             key: user.key,
             data: user.data,
             version: user.version,
+          },
+        });
+
+        const anonymousName = formData.fullName
+          .split(" ")
+          .map((word) => {
+            if (word.length > 1) {
+              return word[0] + "*".repeat(word.length - 1);
+            }
+            return word;
+          })
+          .join(" ");
+
+        anonymousUser.data.name = anonymousName;
+
+        await setDoc({
+          collection: "anonymousUsers",
+          doc: {
+            key,
+            data: anonymousUser.data,
+            version: anonymousUser.version,
           },
         });
       }
