@@ -12,7 +12,6 @@ import {
 } from "@mantine/core";
 import { IconChevronLeft } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
-import HappyImage from "../../assets/HappyImage.jpg";
 import { useState } from "react";
 
 export default function PhotoControlCard({ images, onSubmit }) {

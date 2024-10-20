@@ -14,8 +14,9 @@ import InterestsMultiInputs from "../inputs/InterestsMultiInputs";
 import AvailabilityMultiInputs from "../inputs/AvailabilityMultiInputs";
 import { useForm, isNotEmpty, hasLength } from "@mantine/form";
 import { AVAILABILITY_ATTRIBUTES } from "../../static/availability";
+import { useEffect } from "react";
 
-export default function UserModal({ modal: { opened, onClose } }) {
+export default function UserModal({ modal: { opened, onClose }, instance, onFormSubmit }) {
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
@@ -38,12 +39,47 @@ export default function UserModal({ modal: { opened, onClose } }) {
     },
   });
 
+  function formInitialize() {
+    const { title, description, categories, availability } = instance;
+
+    const mappedCategories = categories.map(({ key, data }) => ({
+      tab: data.category,
+      key,
+      value: data.name,
+    }));
+
+    const formValues = {
+      title: title,
+      description: description,
+      categories: [],
+      availability: availability,
+      initialCategories: mappedCategories,
+    };
+
+    form.initialize(formValues);
+  }
+
+  useEffect(() => {
+    if (instance) {
+      formInitialize();
+    }
+  }, [instance]);
+
   const interestsInputs = <InterestsMultiInputs form={{ form }} />;
 
   const availabilityInputs = <AvailabilityMultiInputs form={{ form }} />;
 
   function handleSubmit(data) {
-    console.log(data);
+    const formData = { ...data };
+
+    const mappedCategories = formData.initialCategories.map(({ key }) => ({
+      key,
+    }));
+
+    formData.categories = mappedCategories;
+    delete formData.initialCategories;
+
+    onFormSubmit(formData);
   }
 
   return (

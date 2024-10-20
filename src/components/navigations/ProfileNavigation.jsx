@@ -8,6 +8,7 @@ import IconAboutUs from "../../assets/icons/profile/IconAboutUs.svg";
 import IconLogout from "../../assets/icons/profile/IconLogout.svg";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuthenticationStore } from "../../store/authentication";
+import { notificationsFn } from "../../utils/notifications";
 import NavLinks from "../links/NavLinks";
 import { useShallow } from "zustand/shallow";
 import { useEffect, useState } from "react";
@@ -69,12 +70,15 @@ export default function ProfileNavigation() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { role, loggedInUser } = useAuthenticationStore(
-    useShallow((state) => ({
-      role: state.user.data?.role,
-      loggedInUser: state.user.data,
-    }))
-  );
+  const { role, loggedInUser, logoutInternetIdentityFn } =
+    useAuthenticationStore(
+      useShallow((state) => ({
+        role: state.user.data?.role,
+        loggedInUser: state.user.data,
+        logoutInternetIdentityFn: state.logoutInternetIdentity,
+        message: state.message,
+      }))
+    );
 
   const [active, setActive] = useState();
 
@@ -93,12 +97,23 @@ export default function ProfileNavigation() {
     }
   }, [location.pathname]);
 
+  async function handleLogoutUser() {
+    const id = notificationsFn.load();
+    const response = await logoutInternetIdentityFn(loggedInUser.key);
+    if (response) {
+      notificationsFn.success(id, message);
+      navigate("/internet-identity");
+    } else {
+      notificationsFn.error(id, message);
+    }
+  }
+
   function handleActive(link) {
     if (link.route) {
       navigate(link.route);
       setActive(link.label);
     } else {
-      // LogoutFn
+      handleLogoutUser();
     }
   }
 
