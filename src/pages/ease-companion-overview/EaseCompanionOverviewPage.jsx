@@ -1,5 +1,7 @@
+import { useDisclosure } from "@mantine/hooks";
 import DisplayCard from "../../components/cards/groups/DisplayCard";
 import { Box } from "@mantine/core";
+import UserModal from "../../components/modals/UserModal";
 
 const groupData = {
   name: "Gabriel Gatbonton",
@@ -60,14 +62,26 @@ const groupData = {
 };
 
 export default function EaseCompanionOverviewPage() {
+  const [opened, { toggle }] = useDisclosure();
+
+  function handlePopoverClick(choice, key) {
+    if (choice === "edit") {
+      toggle();
+    }
+  }
+
   return (
-    <Box maw={800} mx="auto">
-      <DisplayCard
-        instance={groupData}
-        variant="view"
-        type="overview"
-        button={{ buttonLabel: null, loading: false }}
-      />
-    </Box>
+    <>
+      <Box maw={800} mx="auto">
+        <DisplayCard
+          instance={groupData}
+          variant="view"
+          type="overview"
+          button={{ buttonLabel: null, loading: false }}
+          onButtonClick={handlePopoverClick}
+        />
+      </Box>
+      <UserModal modal={{ opened, onClose: toggle }} />
+    </>
   );
 }

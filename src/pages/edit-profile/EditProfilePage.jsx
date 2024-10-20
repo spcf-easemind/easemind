@@ -37,7 +37,7 @@ export default function EditProfilePage() {
         maw={800}
       >
         <Title ta="center" order={3}>
-          Edit Group
+          Edit Profile
         </Title>
 
         <Stack mt={18} align="center">

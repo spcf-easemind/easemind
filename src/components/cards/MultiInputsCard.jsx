@@ -8,7 +8,6 @@ export default function MultiInputsCard({ formError, header, children }) {
       radius="md"
       padding={0}
       mih={350}
-      mah={400}
       style={{
         borderColor: formError ? "var(--mantine-color-red-5)" : undefined,
       }}
