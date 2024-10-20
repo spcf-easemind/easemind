@@ -1,5 +1,5 @@
 import { Grid, SimpleGrid } from "@mantine/core";
-import DisplayCard from "../cards/DisplayCard";
+import DisplayCard from "../cards/groups/DisplayCard";
 
 export default function GroupGrid({
   groupData,

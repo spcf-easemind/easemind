@@ -1,4 +1,4 @@
-import DisplayCard from "../../components/cards/DisplayCard";
+import DisplayCard from "../../components/cards/groups/DisplayCard";
 import { Paper } from "@mantine/core";
 import { useEffect } from "react";
 import { useGroupAPIStore } from "../../store/group-api";
@@ -13,7 +13,7 @@ export default function CommunityGroupViewPage() {
 
   const loggedInUserKey = useAuthenticationStore(
     (state) => state.user.data?.key
-  );
+  );P
 
   const { fetchCommunityGroupFn, communityGroup, loading, joinGroupFn } =
     useGroupAPIStore(

@@ -21,9 +21,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useShallow } from "zustand/shallow";
 import classes from "./PostControlCard.module.css";
 
-import IconEmoticon from "../../assets/icons/input/IconEmoticon.svg";
-import IconImage from "../../assets/icons/input/IconImage.svg";
-import IconPaperClip from "../../assets/icons/input/IconPaperClip.svg";
+import IconEmoticon from "../../../assets/icons/input/IconEmoticon.svg";
+import IconImage from "../../../assets/icons/input/IconImage.svg";
+import IconPaperClip from "../../../assets/icons/input/IconPaperClip.svg";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { REMOVED_EMOJIS } from "../../../static/chat";

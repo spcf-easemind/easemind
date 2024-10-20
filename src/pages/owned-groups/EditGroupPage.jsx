@@ -1,5 +1,5 @@
 import { Paper } from "@mantine/core";
-import GroupControlCard from "../../components/cards/GroupControlCard";
+import GroupControlCard from "../../components/cards/groups/GroupControlCard";
 import { useForm, isNotEmpty } from "@mantine/form";
 import { useEnumsStore } from "../../store/enums";
 import { useAuthenticationStore } from "../../store/authentication";

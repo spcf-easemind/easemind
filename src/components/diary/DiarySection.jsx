@@ -1,10 +1,10 @@
 import { Box, Stack, Title, Text, Anchor } from "@mantine/core";
 import { IconDotsVertical } from "@tabler/icons-react";
-import MoodTrackerCard from "../../components/cards/MoodTrackerCard";
+import MoodTrackerCard from "../../components/cards/diary/MoodTrackerCard";
 import ActionsBox from "../ActionsBox";
 
 import CreateButtonCard from "../../components/buttons/CreateButtonCard";
-import DiaryCard from "../../components/cards/DiaryCard";
+import DiaryCard from "../../components/cards/diary/DiaryCard";
 import { HISTORY_OPTION } from "../../static/popover";
 
 const popoverOptions = HISTORY_OPTION;

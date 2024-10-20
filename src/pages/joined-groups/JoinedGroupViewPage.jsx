@@ -1,6 +1,6 @@
 import { Paper } from "@mantine/core";
 import { useParams, useNavigate } from "react-router-dom";
-import DisplayCard from "../../components/cards/DisplayCard";
+import DisplayCard from "../../components/cards/groups/DisplayCard";
 import { useGroupAPIStore } from "../../store/group-api";
 import { useShallow } from "zustand/shallow";
 import { useEffect } from "react";

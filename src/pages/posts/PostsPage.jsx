@@ -1,8 +1,8 @@
 import { Box, Paper, Stack } from "@mantine/core";
 import HeadingCard from "../../components/headings/HeadingCard";
-import DisplayCard from "../../components/cards/DisplayCard";
+import DisplayCard from "../../components/cards/groups/DisplayCard";
 import CreateButtonCard from "../../components/buttons/CreateButtonCard";
-import PostCard from "../../components/cards/PostCard";
+import PostCard from "../../components/cards/posts/PostCard";
 import { useNavigate } from "react-router-dom";
 import WarningModal from "../../components/modals/WarningModal";
 import { useDisclosure } from "@mantine/hooks";

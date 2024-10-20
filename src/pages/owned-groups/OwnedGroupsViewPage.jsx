@@ -1,5 +1,5 @@
 import { Paper } from "@mantine/core";
-import DisplayCard from "../../components/cards/DisplayCard";
+import DisplayCard from "../../components/cards/groups/DisplayCard";
 import WarningModal from "../../components/modals/WarningModal";
 import { useDisclosure } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";

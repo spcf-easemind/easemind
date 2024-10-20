@@ -1,5 +1,5 @@
 import { Paper } from "@mantine/core";
-import DisplayCard from "../../components/cards/DisplayCard";
+import DisplayCard from "../../components/cards/groups/DisplayCard";
 
 const groupData = {
   name: "Gabriel Gatbonton",

@@ -3,7 +3,7 @@ import { useForm, isNotEmpty } from "@mantine/form";
 import { useAuthenticationStore } from "../../store/authentication";
 import { useParams } from "react-router-dom";
 
-import PostControlCard from "../../components/cards/PostControlCard";
+import PostControlCard from "../../components/cards/posts/PostControlCard";
 const header = {
   title: "Edit Post",
   description:

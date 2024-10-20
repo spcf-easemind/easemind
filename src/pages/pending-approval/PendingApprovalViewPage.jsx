@@ -1,5 +1,5 @@
 import { Paper } from "@mantine/core";
-import PendingApprovalCard from "../../components/cards/PendingApprovalCard";
+import PendingApprovalCard from "../../components/cards/groups/PendingApprovalCard";
 import { useGroupAPIStore } from "../../store/group-api";
 import { useAuthenticationStore } from "../../store/authentication";
 import { useShallow } from "zustand/shallow";
