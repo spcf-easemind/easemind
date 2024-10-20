@@ -162,11 +162,11 @@ export const useAuthenticationStore = create(
             const userVersion = user.version;
             const userItems = items.items[0].data;
 
-            // let profileImageUrl = "";
-            // if (placeholderProfileImage.items[0].data) {
-            //   profileImageUrl =
-            //     placeholderProfileImage.items[0].data.profileImageUrl;
-            // }
+            let profileImageUrl = "";
+            if (placeholderProfileImage.items[0].data) {
+              profileImageUrl =
+                placeholderProfileImage.items[0].data.profileImageUrl;
+            }
 
             // use the formData when you needed to update the userCredentials.
             const updatedData = {
