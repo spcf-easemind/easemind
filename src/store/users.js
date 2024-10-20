@@ -313,6 +313,8 @@ export const useUsersStore = create((set) => ({
       });
 
       if (items.items && items.items.length > 0 && items.items[0].data) {
+        const userKey = items.items[0].key;
+
         for (const item of items.items) {
           if (item) {
             await deleteDoc({
@@ -342,7 +344,7 @@ export const useUsersStore = create((set) => ({
 
         const user = await getDoc({
           collection: "users",
-          key: items.items[0].key,
+          key: userKey,
         });
 
         if (user) {
@@ -357,28 +359,28 @@ export const useUsersStore = create((set) => ({
           }));
         }
 
-        const userProfiles = await listAssets({
-          collection: "userProfilePicture",
-        });
+        // const userProfiles = await listAssets({
+        //   collection: "userProfilePicture",
+        // });
 
-        if (userProfiles) {
-          for (const userProfile of userProfiles.items) {
-            await deleteAsset({
-              collection: "userProfilePicture",
-              fullPath: userProfile.fullPath,
-            });
+        // if (userProfiles) {
+        //   for (const userProfile of userProfiles.items) {
+        //     await deleteAsset({
+        //       collection: "userProfilePicture",
+        //       fullPath: userProfile.fullPath,
+        //     });
 
-            set(() => ({
-              data: null,
-              message: "User profile picture deleted successfully!",
-              loading: false,
-            }));
-          }
-        }
+        //     set(() => ({
+        //       data: null,
+        //       message: "User profile picture deleted successfully!",
+        //       loading: false,
+        //     }));
+        //   }
+        // }
 
         const userGroup = await getDoc({
           collecton: "userGroups",
-          key: items.items[0].key,
+          key: userKey,
         });
 
         if (userGroup) {
@@ -390,7 +392,7 @@ export const useUsersStore = create((set) => ({
 
         const userDiary = await getDoc({
           collection: "userDiaries",
-          key: items.items[0].key,
+          key: userKey,
         });
 
         if (userDiary) {
@@ -402,7 +404,7 @@ export const useUsersStore = create((set) => ({
 
         const anonymousUser = await getDoc({
           collection: "anonymousUsers",
-          key: items.items[0].key,
+          key: userKey,
         });
 
         if (anonymousUser) {
