@@ -10,7 +10,7 @@ import {
   Text,
 } from "@mantine/core";
 import PhotoControlButton from "../../components/buttons/PhotoControlButton";
-import { useForm } from "@mantine/form";
+import { useForm, isNotEmpty, isEmail, hasLength } from "@mantine/form";
 import { DATE_SELECTS } from "../../static/date";
 import { useProfileAPIStore } from "../../store/profile-api";
 import { useFormStore } from "../../store/form";
@@ -55,6 +55,17 @@ export default function EditProfilePage() {
       email: "",
       mobileNumber: "",
       fullName: "",
+    },
+    validate: {
+      profileImageUrl: isNotEmpty("Please select a profile image"),
+      "date.day": isNotEmpty("Day is required"),
+      "date.month": isNotEmpty("Month is required"),
+      "date.year": isNotEmpty("Year is required"),
+      email: isEmail("A valid email is required"),
+      mobileNumber: hasLength(
+        { min: 10, max: 10 },
+        "Mobile number should be exactly 10 characters long"
+      ),
     },
   });
 
