@@ -5,11 +5,16 @@ import AnonymousNotifications from "../../pages/anonymous-notifications/Anonymou
 import TermsConditions from "../../pages/terms-conditions/TermsConditionsPage";
 import PrivacyPolicyPage from "../../pages/privacy-policy/PrivacyPolicyPage";
 import AboutUsPage from "../../pages/about-us/AboutUsPage";
+import EditProfilePhotoPage from "../../pages/edit-profile/EditProfilePhotoPage";
 
 const profileRoutes = [
   {
     path: "/edit-profile",
     element: <EditProfilePage />,
+  },
+  {
+    path: "/edit-profile/edit-photo",
+    element: <EditProfilePhotoPage />,
   },
   {
     path: "/change-password",

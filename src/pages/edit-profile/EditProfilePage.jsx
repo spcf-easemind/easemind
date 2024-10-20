@@ -10,95 +10,267 @@ import {
   Text,
 } from "@mantine/core";
 import PhotoControlButton from "../../components/buttons/PhotoControlButton";
-import { useForm } from "@mantine/form";
+import { useForm, isNotEmpty, isEmail, hasLength } from "@mantine/form";
 import { DATE_SELECTS } from "../../static/date";
+import { useProfileAPIStore } from "../../store/profile-api";
+import { useFormStore } from "../../store/form";
+import { useShallow } from "zustand/shallow";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { parseISO, getDate, getYear, getMonth, format, parse } from "date-fns";
+import { notificationsFn } from "../../utils/notifications";
 
 export default function EditProfilePage() {
+  const navigate = useNavigate();
+  const { fetchEditProfileFn, editProfile, updateProfileFn } =
+    useProfileAPIStore(
+      useShallow((state) => ({
+        fetchEditProfileFn: state.fetchEditProfile,
+        editProfile: state.editProfile,
+        updateProfileFn: state.updateProfile,
+      }))
+    );
+
+  const { savedForm, setSavedForm } = useFormStore(
+    useShallow((state) => ({
+      savedForm: state.form,
+      setSavedForm: state.setForm,
+    }))
+  );
+
+  useEffect(() => {
+    fetchEditProfileFn();
+  }, []);
+
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
-      image: "",
+      profileImageUrl: "",
+      pronouns: "",
+      date: {
+        month: "",
+        day: "",
+        year: "",
+      },
+      email: "",
+      mobileNumber: "",
+      fullName: "",
+    },
+    validate: {
+      profileImageUrl: isNotEmpty("Please select a profile image"),
+      "date.day": isNotEmpty("Day is required"),
+      "date.month": isNotEmpty("Month is required"),
+      "date.year": isNotEmpty("Year is required"),
+      email: isEmail("A valid email is required"),
+      mobileNumber: hasLength(
+        { min: 10, max: 10 },
+        "Mobile number should be exactly 10 characters long"
+      ),
     },
   });
 
+  function formInitialize() {
+    const {
+      dateOfBirth,
+      email,
+      fullName,
+      mobileNumber,
+      profileImageUrl,
+      pronouns,
+    } = editProfile?.data;
+
+    const date = parseISO(dateOfBirth);
+    const year = String(getYear(date));
+    const month = String(getMonth(date) + 1);
+    const day = String(getDate(date));
+
+    const formValues = {
+      profileImageUrl,
+      pronouns,
+      date: {
+        year,
+        month,
+        day,
+      },
+      email,
+      fullName,
+      mobileNumber,
+    };
+
+    form.initialize(formValues);
+  }
+
+  useEffect(() => {
+    if (editProfile) {
+      formInitialize();
+    }
+  }, [editProfile]);
+
+  function iterateSavedData() {
+    for (const key in savedForm) {
+      form.setFieldValue(key, savedForm[key]);
+    }
+  }
+
+  useEffect(() => {
+    if (savedForm) {
+      iterateSavedData();
+    }
+  }, [savedForm]);
+
   function handlePhotoControlButton() {
-    console.log("PhotoControlButton clicked");
+    setSavedForm(form.getValues());
+    navigate("/edit-profile/edit-photo");
+  }
+
+  async function handleFormSubmit(value) {
+    const formData = { ...value };
+
+    const date = format(
+      parse(
+        formData.date.year +
+          "-" +
+          formData.date.month +
+          "-" +
+          formData.date.day,
+        "yyyy-MM-dd",
+        new Date()
+      ),
+      "yyyy-MM-dd"
+    );
+
+    // Reassign and Delete Necessary Fields
+    formData["dateOfBirth"] = date;
+    formData["userKey"] = editProfile.key;
+    delete formData.date;
+
+    const id = notificationsFn.load();
+    const response = await updateProfileFn(formData);
+
+    if (response.type === "success") {
+      notificationsFn.success(id, response.message);
+      fetchEditProfileFn();
+    } else {
+      notificationsFn.error(id, response.message);
+    }
   }
 
   return (
-    <>
-      <Card
-        px={20}
-        py={28}
-        mx="auto"
-        bg="gray.0"
-        withBorder
-        radius="md"
-        maw={800}
-      >
-        <Title ta="center" order={3}>
-          Edit Profile
-        </Title>
+    editProfile && (
+      <>
+        <Card
+          px={20}
+          py={28}
+          mx="auto"
+          bg="gray.0"
+          withBorder
+          radius="md"
+          maw={800}
+        >
+          <Title ta="center" order={3}>
+            Edit Profile
+          </Title>
 
-        <Stack mt={18} align="center">
-          <PhotoControlButton
-            image={form.getValues().image}
-            onClick={handlePhotoControlButton}
-          />
+          <Stack mt={18} align="center">
+            <PhotoControlButton
+              image={form.getValues().profileImageUrl}
+              onClick={handlePhotoControlButton}
+            />
 
-          <form style={{ width: "100%" }}>
-            <Stack>
-              <TextInput size="lg" label="Full name" />
+            <form
+              onSubmit={form.onSubmit(handleFormSubmit)}
+              style={{ width: "100%" }}
+            >
+              <Stack>
+                <Group>
+                  <TextInput
+                    flex={1}
+                    size="lg"
+                    label="Full name"
+                    key={form.key("fullName")}
+                    {...form.getInputProps("fullName")}
+                  />
+                  <Select
+                    label="Pronouns"
+                    size="lg"
+                    data={["He/Him", "She/Her", "They/Them"]}
+                    searchable
+                    key={form.key("pronouns")}
+                    {...form.getInputProps("pronouns")}
+                  />
+                </Group>
 
-              <Group align="end" wrap="no-wrap">
-                <Select
-                  label="Date of birth"
+                <Group align="end" wrap="no-wrap">
+                  <Select
+                    label="Date of birth"
+                    size="lg"
+                    data={DATE_SELECTS.month}
+                    searchable
+                    key={form.key("date.month")}
+                    {...form.getInputProps("date.month")}
+                  />
+                  <Select
+                    size="lg"
+                    data={DATE_SELECTS.day}
+                    searchable
+                    key={form.key("date.day")}
+                    {...form.getInputProps("date.day")}
+                  />
+                  <Select
+                    size="lg"
+                    data={DATE_SELECTS.year}
+                    searchable
+                    key={form.key("date.year")}
+                    {...form.getInputProps("date.year")}
+                  />
+                </Group>
+
+                <TextInput
                   size="lg"
-                  data={DATE_SELECTS.month}
-                  searchable
+                  label="Mobile Number"
+                  type="telephone"
+                  leftSection={<small>+63 </small>}
+                  key={form.key("mobileNumber")}
+                  {...form.getInputProps("mobileNumber")}
                 />
-                <Select size="lg" data={DATE_SELECTS.day} searchable />
-                <Select size="lg" data={DATE_SELECTS.year} searchable />
-              </Group>
 
-              <TextInput
-                size="lg"
-                label="Mobile Number"
-                type="telephone"
-                leftSection={<small>+63 </small>}
-              />
+                <TextInput
+                  size="lg"
+                  label="Email Address"
+                  key={form.key("email")}
+                  {...form.getInputProps("email")}
+                />
 
-              <TextInput size="lg" label="Email Address" />
+                <Button type="submit" fullWidth size="lg">
+                  Save Changes
+                </Button>
+              </Stack>
+            </form>
+          </Stack>
+        </Card>
 
-              <Button type="submit" fullWidth size="lg">
-                Save Changes
-              </Button>
-            </Stack>
-          </form>
-        </Stack>
-      </Card>
+        <Card
+          mt={18}
+          px={20}
+          py={28}
+          mx="auto"
+          bg="gray.0"
+          withBorder
+          radius="md"
+          maw={800}
+        >
+          <Title order={3}>Account Deletion</Title>
 
-      <Card
-        mt={18}
-        px={20}
-        py={28}
-        mx="auto"
-        bg="gray.0"
-        withBorder
-        radius="md"
-        maw={800}
-      >
-        <Title order={3}>Account Deletion</Title>
+          <Text mt={8} lh={1.2}>
+            Delete your account permanently. This action cannot be undone, and
+            all your data will be permanently erased and cannot be recovered.
+          </Text>
 
-        <Text mt={8} lh={1.2}>
-          Delete your account permanently. This action cannot be undone, and all
-          your data will be permanently erased and cannot be recovered.
-        </Text>
-
-        <Button mt={18} color="red.8" size="lg" w={200}>
-          Delete Account
-        </Button>
-      </Card>
-    </>
+          <Button mt={18} color="red.8" size="lg" w={200}>
+            Delete Account
+          </Button>
+        </Card>
+      </>
+    )
   );
 }

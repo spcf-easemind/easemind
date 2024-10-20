@@ -124,9 +124,13 @@ export default function DisplayCard({
       variant === "view"
         ? instance.categories
         : instance.categories.slice(0, MAX_PILLS);
-    return categories.map((interest) => (
-      <Pill size={pills.size} key={interest.key} name={interest.data.name} />
-    ));
+    return categories.length > 1 ? (
+      categories.map((interest) => (
+        <Pill size={pills.size} key={interest.key} name={interest.data.name} />
+      ))
+    ) : (
+      <Text size="lg">The user has no input on Support Interests...</Text>
+    );
   }, [instance.categories, pills.size, variant]);
 
   const memberListTypes = ["owned", "joined"];
@@ -166,6 +170,12 @@ export default function DisplayCard({
 
   const sharedTypesOfCompanions = ["companion", "posts", "overview"];
 
+  const mappedAvailability = Object.keys(instance.availability).map((day) => ({
+    day,
+    startTime: instance.availability[day].startTime,
+    endTime: instance.availability[day].endTime,
+  }));
+
   const availabilityInstance =
     sharedTypesOfCompanions.includes(type) && variant === "view" ? (
       <Grid.Col order={4}>
@@ -176,14 +186,21 @@ export default function DisplayCard({
 
           <Card bg="sky-blue.0">
             <SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 7 }}>
-              {instance.availability.map(({ day, time }) => (
-                <Box ta="center">
-                  <Title order={6} fw={500}>
-                    {day}
-                  </Title>
-                  <Text size="xs">{time}</Text>
-                </Box>
-              ))}
+              {mappedAvailability.map(({ day, startTime, endTime }) => {
+                const formattedDay = day.charAt(0).toUpperCase() + day.slice(1);
+                const isAvailable =
+                  startTime !== "" && endTime !== ""
+                    ? `${startTime} - ${endTime}`
+                    : "Not Available";
+                return (
+                  <Box ta="center">
+                    <Title order={6} fw={500}>
+                      {formattedDay}
+                    </Title>
+                    <Text size="xs">{isAvailable}</Text>
+                  </Box>
+                );
+              })}
             </SimpleGrid>
           </Card>
         </Box>
@@ -218,7 +235,7 @@ export default function DisplayCard({
     ) : undefined;
 
   const whichDescriptionTitle = sharedTypesOfCompanions.includes(type)
-    ? "Your Mental Health Ease Companion"
+    ? instance.title
     : "Description";
   const isTruncated = (text) =>
     variant === "view" ? text : truncateToWords(text);

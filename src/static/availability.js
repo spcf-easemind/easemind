@@ -1,44 +1,30 @@
-export const AVAILABILITY_ATTRIBUTES = [
-  {
-    day: "Mon",
-    enabled: false,
-    start: "",
-    end: "",
+export const AVAILABILITY_ATTRIBUTES = {
+  monday: {
+    startTime: "",
+    endTime: "",
   },
-  {
-    day: "Tue",
-    enabled: false,
-    start: "",
-    end: "",
+  tuesday: {
+    startTime: "",
+    endTime: "",
   },
-  {
-    day: "Wed",
-    enabled: false,
-    start: "",
-    end: "",
+  wednesday: {
+    startTime: "",
+    endTime: "",
   },
-  {
-    day: "Thu",
-    enabled: false,
-    start: "",
-    end: "",
+  thursday: {
+    startTime: "",
+    endTime: "",
   },
-  {
-    day: "Fri",
-    enabled: false,
-    start: "",
-    end: "",
+  friday: {
+    startTime: "",
+    endTime: "",
   },
-  {
-    day: "Sat",
-    enabled: false,
-    start: "",
-    end: "",
+  saturday: {
+    startTime: "",
+    endTime: "",
   },
-  {
-    day: "Sun",
-    enabled: false,
-    start: "",
-    end: "",
+  sunday: {
+    startTime: "",
+    endTime: "",
   },
-];
+};

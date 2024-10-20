@@ -99,7 +99,7 @@ export default function CreateGroupPage() {
       },
       initialMembers: hasLength(
         {
-          min: 1,
+          min: 2,
         },
         "Please select at least 2 members"
       ),
