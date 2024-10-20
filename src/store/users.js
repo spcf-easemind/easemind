@@ -767,14 +767,17 @@ export const useUsersStore = create((set) => ({
         userCompanionOverview.data.description = formData.description;
 
         const categories = [];
-        for (const categoryKey of formData.category.key) {
-          const category = await getDoc({
-            collection: "categories",
-            key: categoryKey,
-          });
 
-          if (category) {
-            categories.push(category.data);
+        if (formData.category.length > 0) {
+          for (const categoryKey of formData.category.key) {
+            const category = await getDoc({
+              collection: "categories",
+              key: categoryKey,
+            });
+
+            if (category) {
+              categories.push(category.data);
+            }
           }
         }
         userCompanionOverview.data.categories = categories;
