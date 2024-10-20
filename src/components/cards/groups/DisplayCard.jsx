@@ -170,11 +170,13 @@ export default function DisplayCard({
 
   const sharedTypesOfCompanions = ["companion", "posts", "overview"];
 
-  const mappedAvailability = Object.keys(instance.availability).map((day) => ({
-    day,
-    startTime: instance.availability[day].startTime,
-    endTime: instance.availability[day].endTime,
-  }));
+  const mappedAvailability = instance.availability
+    ? Object.keys(instance.availability).map((day) => ({
+        day,
+        startTime: instance.availability[day].startTime,
+        endTime: instance.availability[day].endTime,
+      }))
+    : [];
 
   const availabilityInstance =
     sharedTypesOfCompanions.includes(type) && variant === "view" ? (

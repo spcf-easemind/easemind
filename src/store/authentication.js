@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { authSubscribe, initSatellite, signOut } from "@junobuild/core";
+import { authSubscribe, initSatellite } from "@junobuild/core";
 import {
   signIn,
   signOut,

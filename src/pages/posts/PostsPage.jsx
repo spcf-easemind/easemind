@@ -1,4 +1,4 @@
-import { Box, Paper, Stack } from "@mantine/core";
+import { Box, Paper, Stack, Button } from "@mantine/core";
 import HeadingCard from "../../components/headings/HeadingCard";
 import DisplayCard from "../../components/cards/groups/DisplayCard";
 import CreateButtonCard from "../../components/buttons/CreateButtonCard";
@@ -144,15 +144,16 @@ export default function PostsPage() {
       </Stack>
 
       <WarningModal
-        form={{
-          onClick: handleModalConfirmation,
-          loading: false,
-          message,
-          title: "Remove Post?",
-          btnType: "Remove",
-        }}
+        form={{ message, title: "Remove Post?" }}
         modal={{ opened: opened, onClose: toggle }}
-      />
+      >
+        <Button onClick={toggle} variant="light">
+          Cancel
+        </Button>
+        <Button onClick={handleModalConfirmation} loading={false}>
+          Remove
+        </Button>
+      </WarningModal>
     </Paper>
   );
 }

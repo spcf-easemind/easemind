@@ -1,4 +1,4 @@
-import { Paper } from "@mantine/core";
+import { Paper, Button } from "@mantine/core";
 import DisplayCard from "../../components/cards/groups/DisplayCard";
 import WarningModal from "../../components/modals/WarningModal";
 import { useDisclosure } from "@mantine/hooks";
@@ -80,14 +80,15 @@ export default function OwnedGroupsViewPage() {
         />
         <WarningModal
           modal={{ opened: opened, onClose: toggle }}
-          form={{
-            onClick: handleModalClick,
-            loading: groupLoading,
-            message,
-            title,
-            btnType: "Remove",
-          }}
-        />
+          form={{ message, title }}
+        >
+          <Button onClick={toggle} variant="light">
+            Cancel
+          </Button>
+          <Button onClick={handleModalClick} loading={groupLoading}>
+            Remove
+          </Button>
+        </WarningModal>
       </Paper>
     )
   );

@@ -1,4 +1,4 @@
-import { Paper, SimpleGrid } from "@mantine/core";
+import { Paper, SimpleGrid, Button } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import DiaryLogModal from "../../components/modals/diary/DiaryLogModal";
@@ -47,7 +47,6 @@ const diaryData = {
 const warningDialogData = {
   title: "Delete Diary Log?",
   message: "Are you sure you want to delete this diary log?",
-  btnType: "Delete",
 };
 
 export default function EndlessThoughtsDiaryPage() {
@@ -132,12 +131,15 @@ export default function EndlessThoughtsDiaryPage() {
 
       <WarningModal
         modal={{ opened: openedWarning, onClose: toggleWarning }}
-        form={{
-          onClick: onDeleteConfirm,
-          loading: false,
-          ...warningDialogData,
-        }}
-      />
+        form={{ ...warningDialogData }}
+      >
+        <Button onClick={toggleWarning} variant="light">
+          Cancel
+        </Button>
+        <Button onClick={onDeleteConfirm} loading={loading}>
+          Delete
+        </Button>
+      </WarningModal>
 
       <EmotionModal
         modal={{ opened: openedEmotion, onClose: toggleEmotion }}
