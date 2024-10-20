@@ -768,8 +768,8 @@ export const useUsersStore = create((set) => ({
 
         const categories = [];
 
-        if (formData.category.length > 0) {
-          for (const categoryKey of formData.category.key) {
+        if (formData.categories.length > 0) {
+          for (const categoryKey of formData.categories.key) {
             const category = await getDoc({
               collection: "categories",
               key: categoryKey,
