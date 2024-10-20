@@ -606,7 +606,7 @@ export const useUsersStore = create((set) => ({
   //     }
   // },
 
-  updateUserInfo: async (formData, file) => {
+  updateUserInfo: async (formData) => {
     set(() => ({
       data: null,
       message: "Loading...",
@@ -625,23 +625,24 @@ export const useUsersStore = create((set) => ({
       });
 
       if (userCredential && user) {
-        let profileImageUrl = user.profileImageUrl;
+        let profileImageUrl = user.profileImageUrl || formData.profileImageUrl;
 
-        if (file) {
-          const filename = `${userKey}-profile`;
-          const { downloadUrl } = await uploadFile({
-            collection: "userProfilePicture",
-            data: file,
-            filename,
-          });
-          profileImageUrl = downloadUrl;
-        }
+        // if (file) {
+        //   const filename = `${userKey}-profile`;
+        //   const { downloadUrl } = await uploadFile({
+        //     collection: "userProfilePicture",
+        //     data: file,
+        //     filename,
+        //   });
+        //   profileImageUrl = downloadUrl;
+        // }
 
         userCredential.data.profileImageUrl = profileImageUrl;
         userCredential.data.dateOfBirth = formData.dateOfBirth;
         userCredential.data.email = formData.email;
         userCredential.data.fullName = formData.fullName;
         userCredential.data.mobileNumber = formData.mobileNumber;
+        userCredential.data.pronouns = formData.pronouns;
 
         await setDoc({
           collection: "userCredentials",
