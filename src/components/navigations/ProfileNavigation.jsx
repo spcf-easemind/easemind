@@ -4,11 +4,14 @@ import IconOverview from "../../assets/icons/profile/IconOverview.svg";
 import IconAnonymous from "../../assets/icons/profile/IconAnonymous.svg";
 import IconTerms from "../../assets/icons/profile/IconTerms.svg";
 import IconPrivacy from "../../assets/icons/profile/IconPrivacy.svg";
+import IconAboutUs from "../../assets/icons/profile/IconAboutUs.svg";
+import IconLogout from "../../assets/icons/profile/IconLogout.svg";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuthenticationStore } from "../../store/authentication";
 import NavLinks from "../links/NavLinks";
 import { useShallow } from "zustand/shallow";
 import { useEffect, useState } from "react";
+
 import { Avatar, Box, Stack, Title, Text } from "@mantine/core";
 
 const profileLinksAttributes = [
@@ -50,16 +53,16 @@ const profileLinksAttributes = [
   },
   {
     label: "About Us",
-    icon: IconPrivacy,
+    icon: IconAboutUs,
     route: "/about-us",
     roles: ["EaseBuddy", "EaseCompanion", "super-admin"],
   },
-  // {
-  //   label: "Saved",
-  //   icon: SavedIcon,
-  //   route: "/saved",
-  //   roles: ["EaseBuddy", "EaseCompanion", "super-admin"],
-  // },
+  {
+    label: "Logout",
+    icon: IconLogout,
+    action: "logout",
+    roles: ["EaseBuddy", "EaseCompanion", "super-admin"],
+  },
 ];
 
 export default function ProfileNavigation() {
@@ -91,8 +94,12 @@ export default function ProfileNavigation() {
   }, [location.pathname]);
 
   function handleActive(link) {
-    navigate(link.route);
-    setActive(link.label);
+    if (link.route) {
+      navigate(link.route);
+      setActive(link.label);
+    } else {
+      // LogoutFn
+    }
   }
 
   const navLinks = profileLinksAttributes

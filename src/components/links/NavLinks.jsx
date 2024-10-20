@@ -1,6 +1,5 @@
 import { Image, UnstyledButton, Text, Group, Box } from "@mantine/core";
 import classes from "./NavLinks.module.css";
-import { hi } from "date-fns/locale";
 
 export default function NavLinks({
   active,
@@ -13,9 +12,12 @@ export default function NavLinks({
   const { w, h } = type === "profile" ? { w: 24, h: 24 } : { w: 35, h: 30 };
   const { boxW, boxH } =
     type === "profile" ? { boxW: 35, boxH: 25 } : { boxW: 40, boxH: undefined };
+
+  const whichStyling =
+    label === "Logout" ? classes.logoutStyling : classes.linkStyling;
   return (
     <UnstyledButton
-      className={classes.linkStyling}
+      className={whichStyling}
       data-active={active === label || undefined}
       p={16}
       onClick={() => onSelect()}
