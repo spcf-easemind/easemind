@@ -1,5 +1,6 @@
 import { Stack, Title, Text, Group, Box, Card } from "@mantine/core";
 import CardButton from "../buttons/CardButton.jsx";
+import classes from "./RolePicker.module.css";
 
 import IconManyPeople from "../../assets/icons/IconManyPeople.svg";
 import IconVolunteer from "../../assets/icons/IconVolunteer.svg";
@@ -11,11 +12,10 @@ export default function RolePicker({ onClick }) {
     };
     onClick(data);
   }
-
   return (
     <>
-      <Group justify="center" gap={48} flex={1}>
-        <Stack align="center">
+      <Group justify="center" className={classes.gap} flex={1}>
+        <Box className={classes.flexItem}>
           <CardButton
             image={IconManyPeople}
             alt="Interface Icon of 3 People"
@@ -23,14 +23,14 @@ export default function RolePicker({ onClick }) {
             onClick={handleOnClick}
           />
           <Box ta="center" c="white">
-            <Title order={3}>User</Title>
-            <Text size="xs" maw={150}>
+            <Title className={classes.header}>User</Title>
+            <Text className={classes.subHeader} maw={150}>
               Share your feelings and connect with others.
             </Text>
           </Box>
-        </Stack>
+        </Box>
 
-        <Stack align="center">
+        <Box className={classes.flexItem}>
           <CardButton
             image={IconVolunteer}
             alt="Interface Icon of Volunteer Jacket"
@@ -38,12 +38,12 @@ export default function RolePicker({ onClick }) {
             onClick={handleOnClick}
           />
           <Box ta="center" c="white">
-            <Title order={3}>Volunteer</Title>
-            <Text size="xs" maw={150}>
+            <Title className={classes.header}>Volunteer</Title>
+            <Text className={classes.subHeader} maw={150}>
               Support others in their mental health journey.
             </Text>
           </Box>
-        </Stack>
+        </Box>
       </Group>
 
       <Card.Section bg="white" p={16} mih={100}>

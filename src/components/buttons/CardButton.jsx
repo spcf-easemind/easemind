@@ -1,28 +1,22 @@
 import { Card, Image } from "@mantine/core";
-import { useHover } from "@mantine/hooks";
+import classes from "./CardButton.module.css";
 
 export default function CardButton({ image, alt, value, onClick }) {
-  const { hovered, ref } = useHover();
-
   function handleClick(value) {
     onClick(value);
   }
 
   return (
     <Card
-      padding="xl"
-      maw="200"
       radius="lg"
       component="button"
-      style={{ border: "none", cursor: "pointer" }}
-      bg={hovered ? "gray.0" : "white"}
+      className={classes.card}
       onClick={(event) => {
         event.preventDefault();
         handleClick(value);
       }}
-      ref={ref}
     >
-      <Image w={50} src={image} alt={alt} />
+      <Image src={image} alt={alt} className={classes.image} />
     </Card>
   );
 }

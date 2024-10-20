@@ -6,6 +6,7 @@ import Heading from "../../headings/Heading.jsx";
 import RolePicker from "../../forms/RolePicker.jsx";
 import Questions from "../../forms/Questions.jsx";
 import Stepper from "../../Stepper.jsx";
+import classes from "./SurveyModal.module.css";
 
 import {
   STEPPER_DATA,
@@ -39,16 +40,6 @@ export default function SurveyModal({ form, opened, onClose, onSubmit }) {
     };
     handleFormData(updatedSurvey);
   }
-
-  const size = useMatches({
-    base: "md",
-    md: "lg",
-  });
-
-  const padding = useMatches({
-    base: 24,
-    md: 36,
-  });
 
   const headerProps =
     form.getValues().role === "EaseBuddy"
@@ -102,22 +93,23 @@ export default function SurveyModal({ form, opened, onClose, onSubmit }) {
         blur: 5,
       }}
       radius="lg"
-      size={size}
+      size={500}
       padding={0}
       withCloseButton={false}
     >
       <Card
+        className={classes.card}
         padding={36}
-        bg="sky-blue.5"
         h={500}
-        mih={600}
+        mih={500}
         ta="center"
         component="form"
+        style={{
+          overflowY: "auto",
+        }}
       >
         {headingInstance}
-        <Stack h="inherit">
-          {formInstance}
-        </Stack>
+        <Stack h="inherit">{formInstance}</Stack>
       </Card>
     </Modal>
   );

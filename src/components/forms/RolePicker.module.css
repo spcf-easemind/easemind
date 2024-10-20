@@ -1,21 +1,37 @@
+.gap {
+  gap: 18px;
+  padding: 14px 0;
 
-
-.cardFooter {
-  position: relative;
-  bottom: 0;
-  left: 0;
-  height: rem(80px);
-  width: 100%;
-  margin-top: rem(20px);
-  background-color: transparent;
+  @media (min-width: $mantine-breakpoint-sm) {
+    gap: 32px;
+    padding: 0;
+  }
 }
 
-.footerText {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: rem(120px);
-  background-color: white;
-  text-align: center;
-  padding: rem(30px) rem(30px);
+.flexItem {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 12px;
+
+  @media (min-width: rem(430px)) {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.header {
+  font-size: 16px;
+
+  @media (min-width: $mantine-breakpoint-sm) {
+    font-size: 24px;
+  }
+}
+
+.subHeader {
+  font-size: 12px;
+  
+  @media (min-width: $mantine-breakpoint-sm) {
+    font-size: 14px;
+  }
 }
