@@ -464,6 +464,14 @@ export const useUsersStore = create((set) => ({
         collection: "anonymousUsers",
       });
 
+      const userDiaries = await listDocs({
+        collection: "userDiaries",
+      });
+
+      const userCompanionOverview = await listDocs({
+        collection: "userCompanionOverviews",
+      });
+
       if (userSurveys) {
         for (const userSurvey of userSurveys.items) {
           const user = await getDoc({
@@ -531,6 +539,32 @@ export const useUsersStore = create((set) => ({
 
           console.log(
             `${anonymousUser.data.name} anonymous user deleted successfully!`
+          );
+        }
+      }
+
+      if (userDiaries) {
+        for (const userDiary of userDiaries.items) {
+          await deleteDoc({
+            collection: "userDiaries",
+            doc: userDiary,
+          });
+
+          console.log(
+            `${userDiary.data.name} user diary deleted successfully!`
+          );
+        }
+      }
+
+      if (userCompanionOverview) {
+        for (const companionOverview of userCompanionOverview.items) {
+          await deleteDoc({
+            collection: "userCompanionOverviews",
+            doc: companionOverview,
+          });
+
+          console.log(
+            `${companionOverview.data.name} companion overview deleted successfully!`
           );
         }
       }

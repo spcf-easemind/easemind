@@ -92,9 +92,9 @@ export const useAuthenticationStore = create(
           await setDoc({
             collection: "users",
             doc: {
-              key: userKey,
-              data: updatedUserData,
-              version: userVersion,
+              key: user.key,
+              data: user.data,
+              version: user.version,
             },
           });
 
@@ -151,29 +151,22 @@ export const useAuthenticationStore = create(
             items.items[0].data.email === email &&
             items.items[0].data.password === password
           ) {
-            const users = await listDocs({
+            const user = await getDoc({
               collection: "users",
+              key: items.items[0].key,
             });
-
-            const userContent = [];
-            for (const user of users.items) {
-              if (user.data.role === "super-admin") {
-                userContent.push(user);
-              }
-            }
-
-            console.log("result: ", userContent);
-            // let lastUpdated = new Date(user.updatedAt);
 
             let profileImageUrl = "";
             if (placeholderProfileImage.items[0].data) {
               profileImageUrl =
-                placeholderProfileImage.items[0].data.profileImageUrl;
+                placeholderProfileImage.items[0].data
+                  .placeholderProfileImagePath;
             }
 
             // use the formData when you needed to update the userCredentials.
             user.data.status = "online";
-            user.data.lastUpdated = lastUpdated;
+
+            items.items[0].data.lastUpdated = convertTimestamps(items.items[0]);
 
             await setDoc({
               collection: "users",
@@ -184,18 +177,23 @@ export const useAuthenticationStore = create(
               },
             });
 
-            console.log("fullName: ", user.fullName);
-            console.log("role: ", user.role);
-            console.log("profileImageUrl: ", profileImageUrl);
+            await setDoc({
+              collection: "userCredentials",
+              doc: {
+                key: items.items[0].key,
+                data: items.items[0].data,
+                version: items.items[0].version,
+              },
+            });
 
             set((state) => ({
               user: {
                 ...state.user,
                 data: {
-                  fullName: user.fullName,
+                  fullName: user.data.fullName,
                   email: items.items[0].data.email,
                   key: user.key,
-                  role: user.role,
+                  role: user.data.role,
                   profileImageUrl: profileImageUrl,
                 },
               },
