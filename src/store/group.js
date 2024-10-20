@@ -305,22 +305,28 @@ export const useGroupStore = create((set) => ({
     }));
 
     try {
-      const userGroup = await getDoc({
+      // const userGroup = await getDoc({
+      //   collection: "userGroups",
+      //   key: formData.userKey,
+      // });
+
+      // const userGroupArray = [];
+      // for (const groupOfUser of userGroup.data.groups) {
+      //   const group = await getDoc({
+      //     collection: "groups",
+      //     key: groupOfUser.key,
+      //   });
+
+      //   if (userGroup.key != group.data.owner.key) {
+      //     userGroupArray.push(group);
+      //   }
+      // }
+
+      const userGroups = {
         collection: "userGroups",
-        key: formData.userKey,
-      });
+      };
 
-      const userGroupArray = [];
-      for (const groupOfUser of userGroup.data.groups) {
-        const group = await getDoc({
-          collection: "groups",
-          key: groupOfUser.key,
-        });
-
-        if (userGroup.key != group.data.owner.key) {
-          userGroupArray.push(group);
-        }
-      }
+      console.log(userGroups);
 
       set(() => ({
         groupData: userGroupArray,

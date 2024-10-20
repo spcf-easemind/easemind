@@ -380,7 +380,7 @@ export const useUsersStore = create((set) => ({
         // }
 
         const userGroup = await getDoc({
-          collecton: "userGroups",
+          collection: "userGroups",
           key: userKey,
         });
 
