@@ -26,16 +26,23 @@ const title =
 export default function LoginPage() {
   const navigate = useNavigate();
 
-  const { data, userSignUpFn, getAllUsersFn, getUserInfoFn, deleteUserInfoFn } =
-    useUsersStore(
-      useShallow((state) => ({
-        data: state.data,
-        userSignUpFn: state.userSignUp,
-        getAllUsersFn: state.getAllUsers,
-        getUserInfoFn: state.getUserInfo,
-        deleteUserInfoFn: state.deleteUserInfo,
-      }))
-    );
+  const {
+    data,
+    userSignUpFn,
+    getAllUsersFn,
+    getUserInfoFn,
+    deleteUserInfoFn,
+    createSuperAdminFn,
+  } = useUsersStore(
+    useShallow((state) => ({
+      data: state.data,
+      userSignUpFn: state.userSignUp,
+      getAllUsersFn: state.getAllUsers,
+      getUserInfoFn: state.getUserInfo,
+      deleteUserInfoFn: state.deleteUserInfo,
+      createSuperAdminFn: state.createSuperAdmin,
+    }))
+  );
 
   const { groupData, getUserGroupFn } = useGroupStore(
     useShallow((state) => ({
@@ -69,7 +76,10 @@ export default function LoginPage() {
     // getUserInfoFn();
     // getAllUsersFn();
     // deleteUserInfoFn();
+        // createSuperAdminFn();
+    // console.log(message);
     // console.log(data);
+
   }, []);
 
   const loginForm = useForm({
@@ -165,6 +175,7 @@ export default function LoginPage() {
       console.log(formData);
 
       await userSignUpFn(formData);
+      signupForm.reset();
       handleSignupClose();
     } catch (error) {
       console.error("Error in Sign Up Form submission", error);
