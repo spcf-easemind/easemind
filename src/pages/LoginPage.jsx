@@ -1,4 +1,12 @@
-import { Flex, Title, Group, TextInput, Checkbox, Anchor } from "@mantine/core";
+import {
+  Flex,
+  Title,
+  Group,
+  TextInput,
+  Checkbox,
+  Anchor,
+  PasswordInput,
+} from "@mantine/core";
 
 import classes from "./LoginPage.module.css";
 
@@ -76,10 +84,9 @@ export default function LoginPage() {
     // getUserInfoFn();
     // getAllUsersFn();
     // deleteUserInfoFn();
-        // createSuperAdminFn();
+    // createSuperAdminFn();
     // console.log(message);
     // console.log(data);
-
   }, []);
 
   const loginForm = useForm({
@@ -172,8 +179,6 @@ export default function LoginPage() {
       delete formData.date;
       delete formData.termsOfService;
 
-      console.log(formData);
-
       await userSignUpFn(formData);
       signupForm.reset();
       handleSignupClose();
@@ -192,18 +197,36 @@ export default function LoginPage() {
     handleSignupClose();
   }, []);
 
-  const inputInstances = LOGIN_INPUTS.map((item) => (
-    <TextInput
-      classNames={{
-        input: classes.textInputBorder,
-      }}
-      className={classes.textInput}
-      type={item.type}
-      placeholder={item.placeholder}
-      key={loginForm.key(item.name)}
-      {...loginForm.getInputProps(item.name)}
-    />
-  ));
+  const inputInstances = LOGIN_INPUTS.map((item) => {
+    if (item.type === "password") {
+      return (
+        <PasswordInput
+          size="md"
+          classNames={{
+            input: classes.textInputBorder,
+          }}
+          className={classes.textInput}
+          placeholder={item.placeholder}
+          key={loginForm.key(item.name)}
+          {...loginForm.getInputProps(item.name)}
+        />
+      );
+    }
+
+    return (
+      <TextInput
+        size="md"
+        classNames={{
+          input: classes.textInputBorder,
+        }}
+        className={classes.textInput}
+        type={item.type}
+        placeholder={item.placeholder}
+        key={loginForm.key(item.name)}
+        {...loginForm.getInputProps(item.name)}
+      />
+    );
+  });
 
   return (
     <>

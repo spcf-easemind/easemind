@@ -67,8 +67,8 @@ export default function SurveyModal({ form, opened, onClose, onSubmit }) {
 
   const formInstance =
     stepper > 1 ? (
-      <Box>
-        <Group justify="center" mb={32}>
+      <>
+        <Group flex={1} mt={32} justify="center">
           <Stack gap={24}>
             {QUESTION_DATA[form.getValues().role][stepper].map((question) => (
               <Questions
@@ -80,14 +80,14 @@ export default function SurveyModal({ form, opened, onClose, onSubmit }) {
           </Stack>
         </Group>
 
-        <Box mb={32}>
+        <Box mt={16}>
           <Stepper active={activeStepper} steppers={stepperKeys} />
         </Box>
 
-        <Text size="xs" ta="center" c="white" mb={16}>
+        <Text mt={16} size="xs" c="white">
           Rest assured, your responses will be kept completely confidential
         </Text>
-      </Box>
+      </>
     ) : (
       <RolePicker onClick={handleFormData} />
     );
@@ -106,13 +106,18 @@ export default function SurveyModal({ form, opened, onClose, onSubmit }) {
       padding={0}
       withCloseButton={false}
     >
-      <Card padding={0} bg="sky-blue.5" h={500} mih={600}>
-        <Stack ta="center" justify="center" h="35%">
-          {headingInstance}
-        </Stack>
-        <form style={{ height: "65%", position: "relative" }}>
+      <Card
+        padding={36}
+        bg="sky-blue.5"
+        h={500}
+        mih={600}
+        ta="center"
+        component="form"
+      >
+        {headingInstance}
+        <Stack h="inherit">
           {formInstance}
-        </form>
+        </Stack>
       </Card>
     </Modal>
   );

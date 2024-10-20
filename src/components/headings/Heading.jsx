@@ -4,7 +4,7 @@ import classes from "./Heading.module.css";
 export default function Heading({ title, text }) {
   return (
     <>
-      <Title className={classes.title}>{title}</Title>
+      <Title className={classes.title} mb={16}>{title}</Title>
       <Text className={classes.subTitle}>{text}</Text>
     </>
   );

@@ -39,6 +39,7 @@ export default function DisplayCard({
   onModalSelect,
   onButtonClick,
   onLeaveBtnClick,
+  ...props
 }) {
   function handleClick(ref) {
     onSelect(ref);
@@ -281,6 +282,7 @@ export default function DisplayCard({
       component="a"
       style={card.style}
       pos="relative"
+      {...props}
     >
       {/* Overlay Button */}
       {variant !== "view" && (

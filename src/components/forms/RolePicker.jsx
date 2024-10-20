@@ -14,7 +14,7 @@ export default function RolePicker({ onClick }) {
 
   return (
     <>
-      <Group justify="center" gap={48}>
+      <Group justify="center" gap={48} flex={1}>
         <Stack align="center">
           <CardButton
             image={IconManyPeople}
@@ -46,7 +46,7 @@ export default function RolePicker({ onClick }) {
         </Stack>
       </Group>
 
-      <Card.Section bg="white" p={16} mih={100} pos="absolute" bottom={0}>
+      <Card.Section bg="white" p={16} mih={100}>
         <Text size="sm" ta="center">
           You are valuable, no matter the challenges you face. Your feelings,
           struggles, and experiences matter. You deserve to be seen, heard, and
