@@ -228,6 +228,158 @@ export const useAuthenticationStore = create(
           set(() => ({ loading: false }));
         }
       },
+
+      deleteUserInfo: async () => {
+        set(() => ({
+          data: null,
+          message: "Loading...",
+          loading: true,
+        }));
+        try {
+          const items = await listDocs({
+            collection: "userCredentials",
+          });
+          const itemSurveys = await listDocs({
+            collection: "userSurveys",
+          });
+
+          if (items.items && items.items.length > 0 && items.items[0].data) {
+            const userKey = items.items[0].key;
+
+            for (const item of items.items) {
+              if (item) {
+                await deleteDoc({
+                  collection: "userCredentials",
+                  doc: item,
+                });
+
+                set(() => ({
+                  data: null,
+                  message: "User credential deleted successfully!",
+                }));
+              }
+            }
+
+            for (const itemSurvey of itemSurveys.items) {
+              if (itemSurvey) {
+                await deleteDoc({
+                  collection: "userSurveys",
+                  doc: itemSurvey,
+                });
+                set(() => ({
+                  data: null,
+                  message: "User surveys deleted successfully!",
+                }));
+              }
+            }
+
+            const user = await getDoc({
+              collection: "users",
+              key: userKey,
+            });
+
+            if (user) {
+              await deleteDoc({
+                collection: "users",
+                doc: user,
+              });
+
+              set(() => ({
+                data: null,
+                message: "User deleted successfully!",
+              }));
+            }
+
+            // const userProfiles = await listAssets({
+            //   collection: "userProfilePicture",
+            // });
+
+            // if (userProfiles) {
+            //   for (const userProfile of userProfiles.items) {
+            //     await deleteAsset({
+            //       collection: "userProfilePicture",
+            //       fullPath: userProfile.fullPath,
+            //     });
+
+            //     set(() => ({
+            //       data: null,
+            //       message: "User profile picture deleted successfully!",
+            //       loading: false,
+            //     }));
+            //   }
+            // }
+
+            const userGroup = await getDoc({
+              collection: "userGroups",
+              key: userKey,
+            });
+
+            if (userGroup) {
+              await deleteDoc({
+                collection: "userGroups",
+                doc: userGroup,
+              });
+            }
+
+            const userDiary = await getDoc({
+              collection: "userDiaries",
+              key: userKey,
+            });
+
+            if (userDiary) {
+              await deleteDoc({
+                collection: "userDiaries",
+                doc: userDiary,
+              });
+            }
+
+            const anonymousUser = await getDoc({
+              collection: "anonymousUsers",
+              key: userKey,
+            });
+
+            if (anonymousUser) {
+              await deleteDoc({
+                collection: "anonymousUsers",
+                doc: anonymousUser,
+              });
+            }
+
+            await signOut();
+
+            set(() => ({
+              user: {
+                identity_provider: null,
+                data: null,
+              },
+              message: "Logout Successfully!",
+              loading: false,
+            }));
+            return true;
+          } else {
+            set(() => ({
+              user: {
+                identity_provider: null,
+                data: null,
+              },
+              message: "There is no user to delete",
+              loading: false,
+            }));
+            return false;
+          }
+        } catch (error) {
+          console.error("Error deleting user info:", error);
+          set(() => ({
+            user: {
+              identity_provider: null,
+              data: null,
+            },
+            message: "Deleted",
+            loading: false,
+          }));
+          return false;
+        }
+      },
     }),
     {
       name: "authentication",

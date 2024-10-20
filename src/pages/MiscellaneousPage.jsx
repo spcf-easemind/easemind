@@ -28,6 +28,11 @@ export default function MiscellaneousPage() {
   const logoutUserFn = useAuthenticationStore(
     (state) => state.logoutInternetIdentity
   );
+  const deleteUserInfoFn = useAuthenticationStore(
+    (state) => state.deleteUserInfo
+  );
+  const userLoading = useAuthenticationStore((state) => state.loading);
+
   const {
     data,
     message,
@@ -38,7 +43,6 @@ export default function MiscellaneousPage() {
     createCompanionOverviewInfoFn,
     updateCompanionOverviewInfoFn,
     userChangePasswordFn,
-    deleteUserInfoFn,
     deleteAllUsersFn,
     uploadPlaceHolderImageFn,
     getPlaceHolderProfileImagesFn,
@@ -52,7 +56,6 @@ export default function MiscellaneousPage() {
       getUserInfoFn: state.getUserInfo,
       getAllUsersFn: state.getAllUsers,
       updateUserInfoFn: state.updateUserInfo,
-      deleteUserInfoFn: state.deleteUserInfo,
       deleteAllUsersFn: state.deleteAllUsers,
       uploadPlaceHolderImageFn: state.uploadPlaceHolderImage,
       getPlaceHolderProfileImagesFn: state.getPlaceHolderProfileImages,
@@ -1181,7 +1184,7 @@ export default function MiscellaneousPage() {
         <Button onClick={handleGetAllUsers} loading={loading}>
           Get All Users
         </Button>
-        <Button onClick={handleDeleteUserInfo} loading={loading}>
+        <Button onClick={handleDeleteUserInfo} loading={userLoading}>
           Delete User
         </Button>
         <Button onClick={handleLogoutUser} loading={loading}>
