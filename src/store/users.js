@@ -765,7 +765,19 @@ export const useUsersStore = create((set) => ({
       if (userCompanionOverview) {
         userCompanionOverview.data.title = formData.title;
         userCompanionOverview.data.description = formData.description;
-        userCompanionOverview.data.categories = formData.categories;
+
+        const categories = [];
+        for (const categoryKey of formData.categories.key) {
+          const category = await getDoc({
+            collection: "categories",
+            key: categoryKey,
+          });
+
+          if (category) {
+            categories.push(category.data);
+          }
+        }
+        userCompanionOverview.data.categories = categories;
         userCompanionOverview.data.availability = {
           monday: {
             startTime: formData.availability.monday.startTime,
