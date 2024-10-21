@@ -204,6 +204,7 @@ export const useAuthenticationStore = create(
                     anonymousStatus: anonymousUser.data.status,
                     pronouns: items.items[0].data.pronouns,
                   },
+                  loading: false,
                   message: "Login Successfully!",
                 },
               }));
@@ -220,6 +221,7 @@ export const useAuthenticationStore = create(
                     pronouns: items.items[0].data.pronouns,
                   },
                 },
+                loading: false,
                 message: "Login Successfully!",
               }));
             }
