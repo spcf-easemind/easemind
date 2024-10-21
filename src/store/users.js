@@ -147,6 +147,7 @@ export const useUsersStore = create((set) => ({
             key,
             name: anonymousName,
             role: formData.role,
+            status: false,
           },
         },
       });

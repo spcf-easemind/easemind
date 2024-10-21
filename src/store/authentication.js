@@ -156,6 +156,11 @@ export const useAuthenticationStore = create(
               key: items.items[0].key,
             });
 
+            const anonymousUser = await getDoc({
+              collection: "anonymousUsers",
+              key: items.items[0].key,
+            });
+
             let profileImageUrl = "";
             if (placeholderProfileImage.items[0].data) {
               profileImageUrl =
@@ -186,21 +191,38 @@ export const useAuthenticationStore = create(
               },
             });
 
-            set((state) => ({
-              user: {
-                ...state.user,
-                data: {
-                  fullName: user.data.fullName,
-                  email: items.items[0].data.email,
-                  key: user.key,
-                  role: user.data.role,
-                  profileImageUrl: profileImageUrl,
-                  pronouns: items.items[0].data.pronouns,
+            if (anonymousUser.data.status === true) {
+              set((state) => ({
+                user: {
+                  ...state.user,
+                  data: {
+                    fullName: anonymousUser.data.name,
+                    email: items.items[0].data.email,
+                    key: user.key,
+                    role: anonymousUser.data.role,
+                    profileImageUrl: anonymousUser.data.profileImageUrl,
+                    anonymousStatus: anonymousUser.data.status,
+                    pronouns: items.items[0].data.pronouns,
+                  },
+                  message: "Login Successfully!",
                 },
-              },
-              message: "Login Successfully!",
-            }));
-
+              }));
+            } else {
+              set((state) => ({
+                user: {
+                  ...state.user,
+                  data: {
+                    fullName: user.data.fullName,
+                    email: items.items[0].data.email,
+                    key: user.key,
+                    role: user.data.role,
+                    profileImageUrl: profileImageUrl,
+                    pronouns: items.items[0].data.pronouns,
+                  },
+                },
+                message: "Login Successfully!",
+              }));
+            }
             // Set Loading False
             return true;
           } else {
@@ -231,8 +253,6 @@ export const useAuthenticationStore = create(
 
       deleteUserInfo: async () => {
         set(() => ({
-          data: null,
-          message: "Loading...",
           loading: true,
         }));
         try {
@@ -369,6 +389,81 @@ export const useAuthenticationStore = create(
           }
         } catch (error) {
           console.error("Error deleting user info:", error);
+          set(() => ({
+            user: {
+              identity_provider: null,
+              data: null,
+            },
+            message: "Deleted",
+            loading: false,
+          }));
+          return false;
+        }
+      },
+
+      setAnonymousUser: async (userKey, anonymousStatus) => {
+        set(() => ({
+          loading: true,
+        }));
+
+        try {
+          const anonymousUser = await getDoc({
+            collection: "anonymousUsers",
+            key: userKey,
+          });
+
+          const userCredential = await getDoc({
+            collection: "userCredentials",
+            key: userKey,
+          });
+
+          if (anonymousUser && userCredential) {
+            anonymousUser.data.status = anonymousStatus;
+
+            await setDoc({
+              collection: "anonymousUsers",
+              doc: {
+                key: anonymousUser.key,
+                data: anonymousUser.data,
+                version: anonymousUser.version,
+              },
+            });
+
+            if (anonymousStatus === true) {
+              set((state) => ({
+                user: {
+                  ...state.user,
+                  data: {
+                    fullName: anonymousUser.data.name,
+                    email: userCredential.data.email,
+                    key: anonymousUser.key,
+                    role: anonymousUser.data.role,
+                    profileImageUrl: anonymousUser.data.profileImageUrl,
+                    anonymousStatus: true,
+                    pronouns: userCredential.data.pronouns,
+                  },
+                },
+              }));
+            } else {
+              set((state) => ({
+                user: {
+                  ...state.user,
+                  data: {
+                    fullName: userCredential.data.fullName,
+                    email: userCredential.data.email,
+                    key: userCredential.key,
+                    role: userCredential.data.role,
+                    profileImageUrl: userCredential.data.profileImageUrl,
+                    pronouns: userCredential.data.pronouns,
+                    anonymousStatus: false,
+                  },
+                },
+              }));
+            }
+          }
+          return true;
+        } catch (error) {
+          console.error("Error getting anonymous user:", error);
           set(() => ({
             user: {
               identity_provider: null,
