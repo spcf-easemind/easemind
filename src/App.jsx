@@ -128,7 +128,7 @@ function App() {
 
   const withContainer = useMemo(() => {
     let withoutContainer = [];
-    const mainRoutes = ["/home", "/chat"];
+    const mainRoutes = ["/home", "/chat/:chatRef"];
     const mapNavRoutes = navRoutes.map(({ path }) => path);
 
     withoutContainer = [...mainRoutes, ...mapNavRoutes];
