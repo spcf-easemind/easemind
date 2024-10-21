@@ -9,6 +9,7 @@ import EaseMind from "../../assets/logos/EaseMind.svg";
 
 // Styles
 import classes from "./Header.module.css";
+import { useLocation } from "react-router-dom";
 
 const data = [
   {
@@ -24,6 +25,7 @@ const data = [
 export default function Header() {
   const [active, setActive] = useState();
   const toggleDialogFn = useDialogStore((state) => state.toggleDialog);
+  const location = useLocation();
 
   const TitleComponent = Title.withProps({
     order: 3,
@@ -52,6 +54,10 @@ export default function Header() {
       {item.name}
     </Anchor>
   ));
+
+  function handleButtonClick() {
+
+  }
 
   const ButtonInstance = (
     <Button onClick={() => toggleDialogFn()}>Get Started</Button>

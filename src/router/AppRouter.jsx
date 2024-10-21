@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { useMantineColorScheme } from "@mantine/core";
 
 // Components
 import ProtectedRoute from "./ProtectedRoute.jsx";
@@ -17,6 +18,7 @@ import { useShallow } from "zustand/shallow";
 import LandingPage from "../pages/landing-page/LandingPage.jsx";
 
 export default function AppRouter() {
+  const { setColorScheme } = useMantineColorScheme();
   const { initialize, user, logout } = useAuthenticationStore(
     useShallow((state) => ({
       initialize: state.initializeJuno,
@@ -34,6 +36,12 @@ export default function AppRouter() {
       logout();
     }
   }, [user, logout]);
+
+  useEffect(() => {
+    if (user.data?.anonymousStatus) {
+      setColorScheme("dark");
+    }
+  }, [user.data]);
 
   const router = createBrowserRouter([
     {
