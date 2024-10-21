@@ -888,12 +888,18 @@ export const useUsersStore = create((set) => ({
           user.data.role === "EaseCompanion" &&
           user.data.status === "online"
         ) {
+          const userCredential = await getDoc({
+            collection: "userCredentials",
+            key: user.key,
+          });
+
           const userCompanionOverview = await getDoc({
             collection: "userCompanionOverviews",
             key: user.key,
           });
 
           const newData = {
+            userCredentials: userCredential,
             user: user.data,
             userCompanionOverview: userCompanionOverview.data,
           };
