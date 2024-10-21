@@ -6,11 +6,11 @@
 
 **EaseMind** is a student-led initiative that serves as a platform for users to connect and freely express their feelings, providing comfort and understanding to one another. Dedicated to creating a digital safe and secure environment, EaseMind offers tools to promote mental health growth. By integrating blockchain technology (ICP), it ensures the security of users' data and interactions.
 
-## Introduction
+## 🌟 Introduction
 
 Inspired by the increasing prevalence of mental health disorders in the Philippines and societal perceptions of mental health, EaseMind aims to encourage emotional expression through social interaction and offer a range of services to accommodate diverse needs.
 
-## Highlighted Features
+## 🌈 Highlighted Features
 
 - **User Consent:** Users always stay in control. We provide clear, detailed information about how the services work, the processes involved, and what data is shared. You get to decide who can access your information with full transparency.
 
@@ -24,7 +24,7 @@ Inspired by the increasing prevalence of mental health disorders in the Philippi
 
 - **Build Your Own Buddies:** Create and manage your own community. Whether it's for support, study, or hobbies, you can build a group where you set the tone and connect with others in a safe space.
 
-## Goals
+## 🎯 Goals
 
 - **Provide impactful mental health support:** Through meaningful conversations, interactive tools, and resources, we aim to create an environment where users can seek and offer emotional support easily.
 
@@ -34,7 +34,7 @@ Inspired by the increasing prevalence of mental health disorders in the Philippi
 
 - **Promote mental well-being:** Our personalized features are designed to adapt to individual needs, helping users manage their mental health journey in a way that feels right for them.
 
-## How It Works
+## 🛠️ How It Works
 
 1. **Connect with Available Companions:** Discover and interact with like-minded individuals who share similar interests and mental health journeys. Our platform facilitates connections, allowing users to engage in meaningful conversations and build supportive relationships
 2. **Endless Thoughts Diary:** Utilize your personal diary space to document your thoughts, feelings, and reflections. This feature encourages users to express themselves freely, promoting emotional well-being in a private setting. 
@@ -46,7 +46,7 @@ Inspired by the increasing prevalence of mental health disorders in the Philippi
 8. **Task-Based Rage Release: (Upcoming)** Interactive tasks designed to help users manage and release built-up emotions in a constructive manner, fostering resilience and emotional balance.
 9. **Charity Donations & Event Participation: (Upcoming)** Opportunities for users to contribute to charitable causes, fostering community engagement and social responsibility.
 
-## Installation
+## 🔧 Installation
 
 ### Prerequisites
 
@@ -72,7 +72,7 @@ Inspired by the increasing prevalence of mental health disorders in the Philippi
 
 ```
 
-## Usage
+## 🛠️ Usage
 
 ```typescript
 // Compile the latest state of project for deployment on juno
@@ -94,7 +94,7 @@ Inspired by the increasing prevalence of mental health disorders in the Philippi
 - sudo juno whoami
 ```
 
-## Tech Stack
+## 💻 Tech Stack
 
 - **React:** Powers the dynamic user interface, ensuring smooth and responsive experiences on the platform. ⚛️
 
@@ -154,17 +154,17 @@ Inspired by the increasing prevalence of mental health disorders in the Philippi
 - [ ] Mobile App Integration (Android & iOS)
 - [ ] Free Resources (Articles, Blogs, Stories, and Documents)
 
-## Deployed Canister (Mainnet)
+## 🚀 Deployed Canister (Mainnet)
 - [Easemind](https://llvrf-giaaa-aaaal-amqwa-cai.icp0.io/)
 
-## Developers
+## 👩‍💻 Developers
 - [Alexander John M. Camaddo](https://github.com/Sypth) (Backend Developer)
 
 - [Gabriel Alfonso M. Gatbonton](https://github.com/gabrielgatbonton) (Frontend Developer)
 
 - [Rhymeses Cortez](https://github.com/Ribitises) (Frontend Developer)
 
-- [Tracy Chiel Brandy Tolentino]() (UX Designer)
+- [Tracy Chiel Brandy H. Tolentino]() (UX Designer)
 
-## Coach
-- [Prince Charles Bustamante](https://github.com/PrinceCharles47) (QA & Coach)
+## 👨‍🏫 Coach
+- [Prince Charles M. Clemente](https://github.com/PrinceCharles47) (QA & Coach)
