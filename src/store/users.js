@@ -899,7 +899,7 @@ export const useUsersStore = create((set) => ({
           });
 
           const newData = {
-            userCredentials: userCredential,
+            userCredentials: userCredential.data,
             user: user.data,
             userCompanionOverview: userCompanionOverview.data,
           };
