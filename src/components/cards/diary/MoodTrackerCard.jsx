@@ -1,6 +1,7 @@
 import { Card, Stack } from "@mantine/core";
 import MoodPill from "../../pills/MoodPill";
 import { MOOD_ATTRIBUTES } from "../../../static/diary";
+import classes from "./MoodTrackerCard.module.css";
 
 export default function MoodTrackerCard({ moodData, header, footer }) {
   const computedAttributes = MOOD_ATTRIBUTES.map((mood) => ({
@@ -13,7 +14,7 @@ export default function MoodTrackerCard({ moodData, header, footer }) {
   ));
 
   return (
-    <Card bg="gray.0" radius="lg" withBorder padding={24}>
+    <Card className={classes.card} radius="lg" withBorder padding={24}>
       {header}
       <Stack mt={18}>{moodPillInstances}</Stack>
       {footer}

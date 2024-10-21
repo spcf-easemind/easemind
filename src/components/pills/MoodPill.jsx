@@ -1,11 +1,12 @@
 import { Box, Card, Group, Image, Text } from "@mantine/core";
+import classes from "./MoodPill.module.css";
 export default function MoodPill({ icon, percentage }) {
   return (
-    <Card bg="sky-blue.1" h={60} radius="xl" padding={5}>
+    <Card className={classes.pillBg} h={60} radius="xl" padding={5}>
       <Card
         radius="xl"
-        bg="sky-blue.2"
         h="100%"
+        className={classes.pillFg}
         w={`${percentage}%`}
         padding={5}
       >

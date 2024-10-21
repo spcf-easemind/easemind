@@ -1,6 +1,55 @@
-import { Card, Title, Text, Box, Group, Switch } from "@mantine/core";
+import {
+  Card,
+  Title,
+  Text,
+  Group,
+  Switch,
+  useMantineColorScheme,
+  useComputedColorScheme,
+} from "@mantine/core";
+import { useEffect, useState } from "react";
+import { useAuthenticationStore } from "../../store/authentication";
+import { useShallow } from "zustand/shallow";
+import { notificationsFn } from "../../utils/notifications";
 
 export default function AnonymousNotifications() {
+  const { setAnonymousUserFn, loggedInUser, message, loading } =
+    useAuthenticationStore(
+      useShallow((state) => ({
+        message: state.message,
+        loading: state.loading,
+        loggedInUser: state.user.data,
+        setAnonymousUserFn: state.setAnonymousUser,
+      }))
+    );
+
+  console.log("Loading", loading);
+
+  const [anonymousMode, setAnonymousMode] = useState(false);
+
+  useEffect(() => {
+    setAnonymousMode(loggedInUser.anonymousStatus);
+  }, []);
+
+  const { colorScheme, setColorScheme } = useMantineColorScheme({
+    keepTransitions: true,
+  });
+
+  const computedColorScheme = useComputedColorScheme(colorScheme);
+
+  async function toggleAnonymousMode() {
+    const id = notificationsFn.load();
+    const response = await setAnonymousUserFn(loggedInUser.key, !anonymousMode);
+
+    if (response) {
+      notificationsFn.success(id, message);
+      setAnonymousMode((prev) => !prev);
+      setColorScheme(computedColorScheme === "dark" ? "light" : "dark");
+    } else {
+      notificationsFn.error(id, message);
+    }
+  }
+
   return (
     <>
       <Card
@@ -20,7 +69,12 @@ export default function AnonymousNotifications() {
         </Text>
         <Group mt={18} py={18} justify="space-between" align="center">
           <Title order={4}>Anonymous Mode</Title>
-          <Switch size="lg" />
+          <Switch
+            disabled={loading}
+            checked={anonymousMode}
+            onChange={toggleAnonymousMode}
+            size="lg"
+          />
         </Group>
       </Card>
 
