@@ -82,6 +82,19 @@ export const useProfileAPIStore = create((set, get) => ({
     }
   },
 
+  changePassword: async (formData) => {
+    const changePasswordFn = useUsersStore.getState().userChangePassword;
+    const response = await changePasswordFn(formData);
+
+    if (response) {
+      const changePasswordMessage = useUsersStore.getState().message;
+      return { type: "success", message: changePasswordMessage };
+    } else {
+      const changePasswordMessage = useUsersStore.getState().message;
+      return { type: "error", message: changePasswordMessage };
+    }
+  },
+
   setLoading: (value) => {
     set(() => ({
       loading: value,
