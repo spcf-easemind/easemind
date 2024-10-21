@@ -7,13 +7,18 @@ import {
   Paper,
   Divider,
   Stack,
-  ActionIcon
+  ActionIcon,
+  useMantineColorScheme,
+  useComputedColorScheme,
 } from "@mantine/core";
 import { useState } from "react";
 
 import classes from "./ActionsBox.module.css";
 export default function ActionsBox({ options, children, onClick }) {
   const [opened, setOpened] = useState(false);
+  const { colorScheme } = useMantineColorScheme();
+  const computedColorScheme = useComputedColorScheme(colorScheme);
+  const iconColor = computedColorScheme === "dark" ? "dark.0" : "black";
 
   const handleOptionClick = (value) => {
     onClick(value);
@@ -57,7 +62,7 @@ export default function ActionsBox({ options, children, onClick }) {
         <ActionIcon
           radius="xl"
           variant="subtle"
-          color="black"
+          color={iconColor}
           onClick={() => setOpened((o) => !o)}
         >
           {children}

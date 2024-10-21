@@ -12,8 +12,7 @@ import {
 import Pill from "../pills/Pill";
 import UserProfileIndicator from "../UserProfileIndicator";
 import ActionsBox from "../ActionsBox";
-
-import IconPostOption from "../../assets/icons/buttons/IconPostOption.svg";
+import { IconDotsVertical } from "@tabler/icons-react";
 
 export default function PostSection({
   userProfileImage,
@@ -98,7 +97,7 @@ export default function PostSection({
           <Flex align="flex-start">
             <ActionsBox options={options}>
               <UnstyledButton>
-                <Image src={IconPostOption} />
+                <IconDotsVertical size={30} stroke={1.5} />
               </UnstyledButton>
             </ActionsBox>
           </Flex>
