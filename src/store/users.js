@@ -897,10 +897,24 @@ export const useUsersStore = create((set) => ({
       });
 
       if (user && userCompanionOverview && userGroup) {
+        let userGroupInfo = [];
+        for (const groupData of userGroup.data.groups) {
+          const group = await getDoc({
+            collection: "groups",
+            key: groupData.key,
+          });
+          const groupInfo = {
+            key: group.data.key,
+            groupImageUrl: group.data.groupImageUrl,
+            name: group.data.name,
+            membersCount: group.data.membersCount,
+          };
+          userGroupInfo.push(groupInfo);
+        }
         const userData = {
           user: user.data,
           userCompanionOverview: userCompanionOverview.data,
-          userGroup: userGroup.data.groups,
+          userGroup: userGroupInfo,
         };
 
         set(() => ({
