@@ -104,9 +104,8 @@ export const useDiariesStore = create((set) => ({
         key: formData.userKey,
       });
 
-      console.log(userDiary);
       set(() => ({
-        diaryData: userDiary.data,
+        diaryData: userDiary.data.thoughts,
         diaryMessage: "Loaded",
         diaryLoading: false,
       }));
@@ -136,13 +135,25 @@ export const useDiariesStore = create((set) => ({
         key: formData.userKey,
       });
 
-      console.log(userDiary);
+      // console.log(userDiary);
+
+      for (const thought of userDiary.data.thoughts) {
+        if (thought.key === formData.thoughtKey) {
+          set(() => ({
+            diaryData: thought,
+            diaryMessage: "Loaded",
+            diaryLoading: false,
+          }));
+          return true;
+        }
+      }
+
       set(() => ({
-        diaryData: diaryImages,
-        diaryMessage: "Loaded",
+        diaryData: null,
+        diaryMessage: "User thought diary not found!",
         diaryLoading: false,
       }));
-      return true;
+      return false;
     } catch (error) {
       console.error("Error getting user thought diary:", error);
       set(() => ({
@@ -169,11 +180,6 @@ export const useDiariesStore = create((set) => ({
       });
 
       if (userDiary) {
-        await deleteDoc({
-          collection: "userDiaries",
-          doc: userDiary,
-        });
-
         set(() => ({
           diaryData: null,
           diaryMessage: "User thought diary deleted successfully!",
