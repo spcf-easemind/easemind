@@ -873,6 +873,61 @@ export const useUsersStore = create((set) => ({
     }
   },
 
+  getUserActiveCompanion: async (userCompanionKey) => {
+    set(() => ({
+      data: null,
+      message: "Loading...",
+      loading: true,
+    }));
+
+    try {
+      const user = await getDoc({
+        collection: "users",
+        key: userCompanionKey,
+      });
+
+      const userCompanionOverview = await getDoc({
+        collection: "userCompanionOverviews",
+        key: userCompanionKey,
+      });
+
+      const userGroup = await getDoc({
+        collection: "userGroups",
+        key: userCompanionKey,
+      });
+
+      if (user && userCompanionOverview && userGroup) {
+        const userData = {
+          user: user.data,
+          userCompanionOverview: userCompanionOverview.data,
+          userGroup: userGroup.data.groups,
+        };
+
+        set(() => ({
+          data: userData,
+          message: "Active companion fetched successfully!",
+          loading: false,
+        }));
+        return true;
+      } else {
+        set(() => ({
+          data: null,
+          message: "Active companion not found!",
+          loading: false,
+        }));
+        return false;
+      }
+    } catch (error) {
+      console.error("Error fetching active companion:", error);
+      set(() => ({
+        message:
+          error.message || "An error occurred while fetching active companion",
+        loading: false,
+      }));
+      return false;
+    }
+  },
+
   getAllUserActiveCompanions: async () => {
     set(() => ({
       data: null,
