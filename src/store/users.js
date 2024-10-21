@@ -10,7 +10,7 @@ import {
   signOut,
 } from "@junobuild/core";
 import { nanoid } from "nanoid";
-import { kebabCase } from "lodash";
+import { get, kebabCase } from "lodash";
 
 export const useUsersStore = create((set) => ({
   data: null,
@@ -298,7 +298,6 @@ export const useUsersStore = create((set) => ({
       return false;
     }
   },
-
 
   deleteAllUsers: async () => {
     set(() => ({
@@ -885,10 +884,21 @@ export const useUsersStore = create((set) => ({
 
       let activeCompanions = [];
       for (const user of users.items) {
-        if (user.data.role === "EaseCompanion") {
-          if (user.data.status === "online") {
-            activeCompanions.push(user.data);
-          }
+        if (
+          user.data.role === "EaseCompanion" &&
+          user.data.status === "online"
+        ) {
+          const userCompanionOverview = await getDoc({
+            collection: "userCompanionOverviews",
+            key: user.key,
+          });
+
+          const newData = {
+            user: user.data,
+            userCompanionOverview: userCompanionOverview.data,
+          };
+
+          activeCompanions.push(newData);
         }
       }
 
