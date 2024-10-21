@@ -442,9 +442,9 @@ export const useAuthenticationStore = create(
                     anonymousStatus: true,
                     pronouns: userCredential.data.pronouns,
                   },
-                  message: "User set as anonymous",
-                  loading: false,
                 },
+                message: "User set as anonymous",
+                loading: false,
               }));
             } else {
               set((state) => ({
@@ -459,9 +459,9 @@ export const useAuthenticationStore = create(
                     pronouns: userCredential.data.pronouns,
                     anonymousStatus: false,
                   },
-                  message: "User set as non-anonymous",
-                  loading: false,
                 },
+                message: "User set as non-anonymous",
+                loading: false,
               }));
             }
           }
@@ -473,7 +473,7 @@ export const useAuthenticationStore = create(
               identity_provider: null,
               data: null,
             },
-            message: "Deleted",
+            message: "Error setting anonymous user",
             loading: false,
           }));
           return false;
