@@ -1,5 +1,6 @@
 import { Avatar, Group, Image, Text, UnstyledButton } from "@mantine/core";
 import IconInfo from "../../assets/icons/header/IconInfo.svg";
+import classes from "./ChatHeader.module.css";
 
 export default function ChatHeader({
   onClick: { toggleDesktop, toggleMobile },
@@ -10,9 +11,7 @@ export default function ChatHeader({
     <Group
       {...props}
       justify="space-between"
-      style={{
-        borderBottom: "1px solid var(--mantine-color-gray-3)",
-      }}
+      className={classes.cardBorder}
     >
       <Group>
         <Avatar

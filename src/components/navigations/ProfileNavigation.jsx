@@ -13,7 +13,14 @@ import NavLinks from "../links/NavLinks";
 import { useShallow } from "zustand/shallow";
 import { useEffect, useState } from "react";
 
-import { Avatar, Box, Stack, Title, Text } from "@mantine/core";
+import {
+  Avatar,
+  Box,
+  Stack,
+  Title,
+  Text,
+  useMantineColorScheme,
+} from "@mantine/core";
 
 const profileLinksAttributes = [
   {
@@ -70,6 +77,8 @@ export default function ProfileNavigation() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const { setColorScheme } = useMantineColorScheme();
+
   const { role, loggedInUser, logoutInternetIdentityFn } =
     useAuthenticationStore(
       useShallow((state) => ({
@@ -98,13 +107,12 @@ export default function ProfileNavigation() {
   }, [location.pathname]);
 
   async function handleLogoutUser() {
-    const id = notificationsFn.load();
+    setColorScheme("light");
     const response = await logoutInternetIdentityFn(loggedInUser.key);
     if (response) {
-      notificationsFn.success(id, message);
       navigate("/internet-identity");
     } else {
-      notificationsFn.error(id, message);
+      //
     }
   }
 

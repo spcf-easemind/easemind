@@ -16,6 +16,7 @@ import IconEmoticon from "../../assets/icons/input/IconEmoticon.svg";
 import IconImage from "../../assets/icons/input/IconImage.svg";
 import IconPaperClip from "../../assets/icons/input/IconPaperClip.svg";
 import { REMOVED_EMOJIS } from "../../static/chat";
+import classes from "./ChatInput.module.css";
 
 import { forwardRef, useEffect, useRef, useState } from "react";
 
@@ -141,9 +142,7 @@ const ChatInput = forwardRef(({ form, onSubmit, onUpload, ...props }, ref) => {
         py={0}
         pl={10}
         pr={8}
-        style={{
-          backgroundColor: "var(--mantine-color-gray-1)",
-        }}
+        className={classes.cardBg}
       >
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <Popover trapFocus withArrow position="top-start">

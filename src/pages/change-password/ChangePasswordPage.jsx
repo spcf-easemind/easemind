@@ -3,6 +3,7 @@ import { useForm, hasLength, matchesField } from "@mantine/form";
 import { useAuthenticationStore } from "../../store/authentication";
 import { notificationsFn } from "../../utils/notifications";
 import { useProfileAPIStore } from "../../store/profile-api";
+import classes from "./ChangePasswordPage.module.css";
 
 export default function ChangePasswordPage() {
   const loggedInUserKey = useAuthenticationStore(
@@ -39,8 +40,6 @@ export default function ChangePasswordPage() {
       userKey: loggedInUserKey,
     };
 
-    console.log(formData);
-
     const response = await changePasswordFn(formData);
 
     if (response.type === "success") {
@@ -56,7 +55,7 @@ export default function ChangePasswordPage() {
       px={20}
       py={28}
       mx="auto"
-      bg="gray.0"
+      className={classes.cardBg}
       withBorder
       radius="md"
       maw={800}

@@ -1,14 +1,25 @@
-import { Stack, Title, Text, Button } from "@mantine/core";
+import {
+  Stack,
+  Title,
+  Text,
+  Button,
+  useMantineColorScheme,
+  useComputedColorScheme,
+} from "@mantine/core";
 
 // Zustand
 import { useAuthenticationStore } from "../store/authentication.js";
 import { useShallow } from "zustand/shallow";
-
 // React Router
 import { useNavigate } from "react-router-dom";
 
 export default function InternetIdentityPage() {
   const navigate = useNavigate();
+
+  const { colorScheme } = useMantineColorScheme();
+  const computedColorScheme = useComputedColorScheme(colorScheme);
+  const buttonColor = computedColorScheme === "dark" ? "white" : "black";
+
   const { authenticate, loading } = useAuthenticationStore(
     useShallow((state) => ({
       authenticate: state.authenticateInternetIdentity,
@@ -38,8 +49,8 @@ export default function InternetIdentityPage() {
       <Text size="xl">Sign in to begin your Web3 journey.</Text>
 
       <Button
+        color={buttonColor}
         variant="outline"
-        color="black"
         mt={16}
         size="md"
         onClick={() => authenticateFn()}

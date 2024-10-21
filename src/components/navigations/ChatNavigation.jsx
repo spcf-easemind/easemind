@@ -118,7 +118,7 @@ export default function ChatPage() {
   return (
     <>
       <Group w="100%" justify="space-between">
-        <Title c="gray.8" size={navbarTitleFontSize}>
+        <Title size={navbarTitleFontSize}>
           Messages
         </Title>
         <Tooltip label="Connect with someone" position="bottom">
