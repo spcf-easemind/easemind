@@ -48,25 +48,25 @@ export const SUGGESTED_SECTION_ATTRIBUTES = [
     choices: [
       {
         id: 1,
-        userImage: SampleUserImage1,
+        userImage: "https://robohash.org/profile",
         userName: "Anxiety Room",
         text: "100 members",
       },
       {
         id: 2,
-        userImage: SampleUserImage1,
+        userImage: "https://robohash.org/profile",
         userName: "Sad People",
         text: "57 members",
       },
       {
         id: 3,
-        userImage: SampleUserImage1,
+        userImage: "https://robohash.org/profile",
         userName: "Happy People",
         text: "68 members",
       },
       {
         id: 4,
-        userImage: SampleUserImage1,
+        userImage: "https://robohash.org/profile",
         userName: "Stress Room",
         text: "89 members",
       },
@@ -79,25 +79,25 @@ export const SUGGESTED_SECTION_ATTRIBUTES = [
     choices: [
       {
         id: 1,
-        userImage: SampleUserImage1,
+        userImage: "https://robohash.org/profile",
         userName: "Stress Room",
         text: "89 members",
       },
       {
         id: 2,
-        userImage: SampleUserImage1,
+        userImage: "https://robohash.org/profile",
         userName: "Stress Room",
         text: "89 members",
       },
       {
         id: 3,
-        userImage: SampleUserImage1,
+        userImage: "https://robohash.org/profile",
         userName: "Stress Room",
         text: "89 members",
       },
       {
         id: 4,
-        userImage: SampleUserImage1,
+        userImage: "https://robohash.org/profile",
         userName: "Stress Room",
         text: "89 members",
       },
