@@ -1,8 +1,8 @@
 <div style="text-align: center;">
-  <img src="/assets/easemind-wallpaper.png" width="100%"/><br>
+  <img src="/assets/easemind-wallpaper-1.png" width="100%"/><br>
 </div>
 
-# <img src="https://llvrf-giaaa-aaaal-amqwa-cai.icp0.io/miscImages/logo.png" width="24" height="20" alt="Globe"/> Easemind:
+# <img src="/assets/easemind-logo.png" width="24" height="20" alt="Globe"/> Easemind:
 
 **EaseMind** is a student-led initiative that serves as a platform for users to connect and freely express their feelings, providing comfort and understanding to one another. Dedicated to creating a digital safe and secure environment, EaseMind offers tools to promote mental health growth. By integrating blockchain technology (ICP), it ensures the security of users' data and interactions.
 
@@ -37,7 +37,7 @@ Inspired by the increasing prevalence of mental health disorders in the Philippi
 ## 🛠️ How It Works
 
 1. **Connect with Available Companions:** Discover and interact with like-minded individuals who share similar interests and mental health journeys. Our platform facilitates connections, allowing users to engage in meaningful conversations and build supportive relationships
-2. **Endless Thoughts Diary:** Utilize your personal diary space to document your thoughts, feelings, and reflections. This feature encourages users to express themselves freely, promoting emotional well-being in a private setting. 
+2. **Endless Thoughts Diary:** Utilize your personal diary space to document your thoughts, feelings, and reflections. This feature encourages users to express themselves freely, promoting emotional well-being in a private setting.
 3. **Group Creation:** Empower users to create and manage their own groups tailored to specific topics or interests. This fosters community support, allowing members to share experiences and insights in a safe and inclusive environment.
 4. **Anonymous Profile:** Engage with the community without revealing your identity. The anonymous profile feature provides a layer of comfort, enabling users to participate freely while safeguarding their personal information.
 5. **AI-Chat Companion: (Upcoming)** A virtual assistant designed to offer personalized support, engaging users in conversations that promote mental health awareness and provide guidance through challenging moments.
@@ -155,9 +155,11 @@ Inspired by the increasing prevalence of mental health disorders in the Philippi
 - [ ] Free Resources (Articles, Blogs, Stories, and Documents)
 
 ## 🚀 Deployed Canister (Mainnet)
+
 - [Easemind](https://llvrf-giaaa-aaaal-amqwa-cai.icp0.io/)
 
 ## 👩‍💻 Developers
+
 - [Alexander John M. Camaddo](https://github.com/Sypth) (Backend Developer)
 
 - [Gabriel Alfonso M. Gatbonton](https://github.com/gabrielgatbonton) (Frontend Developer)
@@ -167,4 +169,5 @@ Inspired by the increasing prevalence of mental health disorders in the Philippi
 - [Tracy Chiel Brandy H. Tolentino](https://github.com/Tracy-Tolentino) (UX Designer)
 
 ## 👨‍🏫 Coach
+
 - [Prince Charles M. Clemente](https://github.com/PrinceCharles47) (QA & Coach)
