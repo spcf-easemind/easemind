@@ -98,7 +98,7 @@ export default function SurveyModal({ form, opened, onClose, onSubmit }) {
         blur: 5,
       }}
       radius="lg"
-      size={500}
+    size={600}
       padding={0}
       withCloseButton={false}
     >

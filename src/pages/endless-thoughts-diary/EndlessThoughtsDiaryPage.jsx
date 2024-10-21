@@ -136,7 +136,7 @@ export default function EndlessThoughtsDiaryPage() {
         <Button onClick={toggleWarning} variant="light">
           Cancel
         </Button>
-        <Button onClick={onDeleteConfirm} loading={loading}>
+        <Button onClick={onDeleteConfirm} loading={false}>
           Delete
         </Button>
       </WarningModal>

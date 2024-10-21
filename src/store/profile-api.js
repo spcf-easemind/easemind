@@ -70,14 +70,14 @@ export const useProfileAPIStore = create((set, get) => ({
   },
 
   deleteUser: async () => {
-    const deleteUserFn = useUsersStore.getState().deleteUserInfo;
+    const deleteUserFn = useAuthenticationStore.getState().deleteUserInfo;
     const response = await deleteUserFn();
 
     if (response) {
-      const deleteUserMessage = useUsersStore.getState().message;
+      const deleteUserMessage = useAuthenticationStore.getState().message;
       return { type: "success", message: deleteUserMessage };
     } else {
-      const deleteUserMessage = useUsersStore.getState().message;
+      const deleteUserMessage = useAuthenticationStore.getState().message;
       return { type: "error", message: deleteUserMessage };
     }
   },

@@ -219,18 +219,21 @@ export default function DisplayCard({
 
           {/* Data */}
           <SimpleGrid cols={2}>
-            {instance.joinedGroups.map(({ key, data }) => {
-              const memberCount = `${data.membersCount} members`;
-              return (
-                <GroupMemberCard
-                  image={data.groupImageUrl}
-                  name={data.name}
-                  role={memberCount}
-                  bg="sky-blue.0"
-                  radius="md"
-                />
-              );
-            })}
+            {instance.joinedGroups.map(
+              ({ key, membersCount, groupImageUrl, name }) => {
+                const memberCount = `${membersCount} members`;
+                return (
+                  <GroupMemberCard
+                    key={key}
+                    image={groupImageUrl}
+                    name={name}
+                    role={memberCount}
+                    bg="sky-blue.0"
+                    radius="md"
+                  />
+                );
+              }
+            )}
           </SimpleGrid>
         </Box>
       </Grid.Col>

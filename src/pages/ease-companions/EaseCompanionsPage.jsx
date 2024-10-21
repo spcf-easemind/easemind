@@ -2,46 +2,44 @@ import { Box, Paper } from "@mantine/core";
 import HeadingCard from "../../components/headings/HeadingCard.jsx";
 import GroupGrid from "../../components/grid/GroupGrid.jsx";
 import { useNavigate } from "react-router-dom";
+import { useUsersAPIStore } from "../../store/users-api.js";
+import { useShallow } from "zustand/shallow";
+import { useEffect, useMemo } from "react";
 
 const header = {
   title: "Ease Companions",
   description: null,
 };
-
-const groupData = [
-  {
-    name: "Gabriel Gatbonton",
-    role: "Ease Companion",
-    pronouns: "He/Him",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet quae a labore eligendi beatae ex sit esse, quia necessitatibus eius.",
-    categories: [
-      {
-        key: "-38hWqfQzWvD4bNNabkHj",
-        data: {
-          name: "Self-Doubt",
-        },
-      },
-      {
-        key: "knsiR3xOwL2-zzfrUd0R-",
-        data: {
-          name: "Self-Sabotage",
-        },
-      },
-      {
-        key: "xc3SGIFUdTqBbiAhYu7O-",
-        data: {
-          name: "Insecurity",
-        },
-      },
-    ],
-  },
-];
-
 export default function EaseCompanionsPage() {
   const navigate = useNavigate();
-  function handleSelect() {
-    navigate("/ease-companion/1");
+
+  const { fetchUserCompanionsFn, userCompanions } = useUsersAPIStore(
+    useShallow((state) => ({
+      fetchUserCompanionsFn: state.fetchUserCompanions,
+      userCompanions: state.userCompanions,
+    }))
+  );
+
+  useEffect(() => {
+    fetchUserCompanionsFn();
+  }, []);
+
+  const computedUserCompanions = useMemo(() => {
+    return userCompanions.map(({ user, userCompanionOverview }) => {
+      return {
+        key: user.key,
+        name: user.fullName,
+        role: user.role,
+        groupImageUrl: user.profileImageUrl,
+        pronouns: user.pronouns,
+        description: userCompanionOverview.description,
+        categories: userCompanionOverview.categories,
+      };
+    });
+  }, [userCompanions]);
+
+  function handleSelect(ref) {
+    navigate(`/ease-companion/${ref}`);
   }
 
   function handleConnect() {
@@ -54,7 +52,7 @@ export default function EaseCompanionsPage() {
 
       <Box mt={18}>
         <GroupGrid
-          groupData={groupData}
+          groupData={computedUserCompanions}
           type="companion"
           onSelect={handleSelect}
           onButtonClick={handleConnect}

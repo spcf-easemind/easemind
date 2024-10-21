@@ -126,7 +126,6 @@ export const useGroupAPIStore = create((set, get) => ({
       }));
     }
   },
-
   createGroup: async (formData) => {
     const createGroupFn = useGroupStore.getState().createGroup;
     const response = await createGroupFn(formData);
