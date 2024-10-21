@@ -1,7 +1,6 @@
 import ChatPage from "../../pages/ChatPage.jsx";
 import HomePage from "../../pages/HomePage.jsx";
 
-
 // Loaders
 import { ChatLoader } from "../loaders/ChatLoader.jsx";
 
@@ -11,17 +10,9 @@ const mainRoutes = [
     element: <HomePage />,
   },
   {
-    path: "/chat",
+    path: "/chat/:chatRef?",
     element: <ChatPage />,
-    loader: ChatLoader,
-    children: [
-      {
-        path: ":chatRef",
-        element: <div />,
-      },
-    ],
   },
-
 ];
 
 export default mainRoutes;

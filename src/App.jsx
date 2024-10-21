@@ -148,8 +148,7 @@ function App() {
 
   const chatValues = useMemo(() => {
     const pathsWithoutPadding = [
-      "/chat",
-      "/chat/:chatRef",
+      "/chat/:chatRef?",
       "/internet-identity",
       "/login",
     ];

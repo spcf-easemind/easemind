@@ -49,6 +49,7 @@ export default function ChatPage() {
     queryAsideData,
     queryChatData,
     findNewChatCompanion,
+    fetchChats,
     loading,
   } = useChatStore(
     useShallow((state) => ({
@@ -61,6 +62,7 @@ export default function ChatPage() {
       queryChatData: state.queryChatData,
       findNewChatCompanion: state.findNewChatCompanion,
       loading: state.loading,
+      fetchChats: state.fetchChats,
     }))
   );
 
@@ -74,6 +76,12 @@ export default function ChatPage() {
   //   }
   //   fetch();
   // }, []);
+
+  useEffect(() => {
+    fetchChats(loggedUser.key);
+  }, []);
+
+  console.log(chat);
 
   // Event Listener
   const { header, chatMessages } = useListener({

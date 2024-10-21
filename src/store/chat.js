@@ -7,6 +7,7 @@ import { ref, onValue, off } from "firebase/database";
 import {
   listChats,
   createNewChat,
+  createNewGroup,
   sendMessage,
   uploadMedia,
   serializeChatPageData,
@@ -118,19 +119,20 @@ export const useChatStore = create((set, get) => ({
 
     // Fetch all users from juno database
     const users = await fetchUsersFn();
+    const usersResponse = useUsersStore.getState().data;
 
     // Get a random user that logged in user has not chatted with
-    const randomUser = get().setAvailableUsers(chattedUsers, users);
+    const randomUser = get().setAvailableUsers(chattedUsers, usersResponse);
 
     // Create a new users object with the random user
     const usersData = {
       [randomUser.key]: {
         name: randomUser.data.fullName,
-        image: randomUser.data?.image || null,
+        image: randomUser.data?.profileImageUrl || null,
       },
       [loggedInUser.key]: {
         name: loggedInUser.fullName,
-        image: loggedInUser?.image || null,
+        image: loggedInUser?.profileImageUrl || null,
       },
     };
 
@@ -139,6 +141,17 @@ export const useChatStore = create((set, get) => ({
 
     set(() => ({ loading: false }));
     return response;
+  },
+
+  createGroupChat: async (groupKey, formData) => {
+    const db = database;
+    await createNewGroup(db, groupKey, formData)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   },
 
   listenForChats: (loggedInUserId) => {
@@ -241,8 +254,8 @@ export const useChatStore = create((set, get) => ({
     if (chatRef) {
       const response = await queryChatData(db, chatRef);
       const users = await fetchUsersFn();
-      const serializedData = get().setChatPageData(response, users);
-
+      const userResponse = useUsersStore.getState().data;
+      const serializedData = get().setChatPageData(response, userResponse);
       const asideResponse = await get().queryAsideData(
         chatRef,
         serializedData.header.type
