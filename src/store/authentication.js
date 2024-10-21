@@ -88,7 +88,8 @@ export const useAuthenticationStore = create(
         if (userCredential && user) {
           user.data.status = "offline";
           userCredential.data.status = "offline";
-
+          user.data.lastUpdated = convertTimestamps(user);
+          userCredential.data.lastUpdated = convertTimestamps(userCredential);
           await setDoc({
             collection: "users",
             doc: {
