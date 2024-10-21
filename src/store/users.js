@@ -76,6 +76,7 @@ export const useUsersStore = create((set) => ({
             profileImageUrl: placeholderImageUrl,
             key,
             fullName: formData.fullName,
+            pronouns: "",
             status: "offline",
             role: formData.role,
             companionOverviewKey: key,
@@ -523,6 +524,7 @@ export const useUsersStore = create((set) => ({
 
         user.data.profileImageUrl = profileImageUrl;
         user.data.fullName = formData.fullName;
+        user.data.pronouns = formData.pronouns;
 
         await setDoc({
           collection: "users",
@@ -888,11 +890,6 @@ export const useUsersStore = create((set) => ({
           user.data.role === "EaseCompanion" &&
           user.data.status === "online"
         ) {
-          const userCredential = await getDoc({
-            collection: "userCredentials",
-            key: user.key,
-          });
-
           const userCompanionOverview = await getDoc({
             collection: "userCompanionOverviews",
             key: user.key,
