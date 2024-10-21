@@ -1,7 +1,21 @@
-import { Paper } from "@mantine/core";
+import { Paper, Container } from "@mantine/core";
+
+import HeadlineComponent from "./HeadlineComponent";
+import AboutSection from "./AboutSection";
+import FeaturesServicesSection from "./FeaturesServicesSection";
+import GalleryTeamSection from "./GalleryTeamSection";
+import FAQContactSection from "./FAQContactSection";
 
 export default function LandingPage() {
-  return <Paper>
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem aspernatur reiciendis quam dicta quod illo alias debitis unde, culpa in quisquam quas ut commodi veniam ratione ipsum? Atque, similique eligendi!
-  </Paper>;
+  return (
+    <Paper>
+      <HeadlineComponent />
+      <Container size="xl">
+        <AboutSection />
+        <FeaturesServicesSection />
+        <GalleryTeamSection />
+        <FAQContactSection />
+      </Container>
+    </Paper>
+  );
 }

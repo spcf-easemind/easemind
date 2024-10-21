@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { AppShell, Container } from "@mantine/core";
 
 // Components
-import Header from "./components/headers/Header.jsx";
+import Header from "./components/headers/LandingPageHeader.jsx";
 import MainHeader from "./components/headers/MainHeader.jsx";
 import ChatNavigation from "./components/navigations/ChatNavigation.jsx";
 import HomeNavigation from "./components/navigations/HomeNavigation.jsx";
@@ -128,7 +128,7 @@ function App() {
 
   const withContainer = useMemo(() => {
     let withoutContainer = [];
-    const mainRoutes = ["/home", "/chat/:chatRef?"];
+    const mainRoutes = ["/home", "/chat/:chatRef?", '/'];
     const mapNavRoutes = navRoutes.map(({ path }) => path);
 
     withoutContainer = [...mainRoutes, ...mapNavRoutes];
@@ -151,6 +151,7 @@ function App() {
       "/chat/:chatRef?",
       "/internet-identity",
       "/login",
+      "/"
     ];
     return pathsWithoutPadding.some(
       (path) => routeMatcher(path, location.pathname) === path
