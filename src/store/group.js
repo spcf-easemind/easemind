@@ -590,6 +590,56 @@ export const useGroupStore = create((set) => ({
     }
   },
 
+  deleteAllGroups: async () => {
+    set(() => ({
+      groupData: null,
+      groupMessage: "Loading...",
+      groupLoading: true,
+    }));
+
+    try {
+      const allGroups = await listDocs({
+        collection: "groups",
+      });
+
+      const allUserGroups = await listDocs({
+        collection: "userGroups",
+      });
+
+      for (const group of allGroups.items) {
+        await deleteDoc({
+          collection: "groups",
+          doc: group,
+        });
+
+        console.log("Group deleted successfully!");
+      }
+
+      for (const userGroup of allUserGroups.items) {
+        await deleteDoc({
+          collection: "userGroups",
+          doc: userGroup,
+        });
+
+        console.log("User group deleted successfully!");
+      }
+      set(() => ({
+        groupData: null,
+        groupMessage: "All groups deleted successfully!",
+        groupLoading: false,
+      }));
+      return true;
+    } catch (error) {
+      console.error("Error deleting all groups:", error);
+      set(() => ({
+        groupData: null,
+        groupMessage:
+          error.message || "An error occurred while deleting all groups",
+        groupLoading: false,
+      }));
+    }
+  },
+
   getAvailableGroup: async (formData) => {
     set(() => ({
       groupData: null,

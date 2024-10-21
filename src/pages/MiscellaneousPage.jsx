@@ -106,6 +106,7 @@ export default function MiscellaneousPage() {
     editGroupInfoFn,
     removeMemberFn,
     deleteGroupFn,
+    deleteAllGroupsFn,
     getAvailableGroupFn,
     getAllAvailableGroupsFn,
     joinUserGroupFn,
@@ -127,6 +128,7 @@ export default function MiscellaneousPage() {
       editGroupInfoFn: state.editGroupInfo,
       removeMemberFn: state.removeMember,
       deleteGroupFn: state.deleteGroup,
+      deleteAllGroupsFn: state.deleteAllGroups,
       getAllAvailableGroupsFn: state.getAllAvailableGroups,
       joinUserGroupFn: state.joinUserGroup,
       userGroupPendingApprovalFn: state.userGroupPendingApproval,
@@ -168,14 +170,18 @@ export default function MiscellaneousPage() {
     diaryMessage,
     diaryLoading,
     createThoughtsFn,
-    getUserThoughtDiariesFn,
+    getAllUserThoughtDiariesFn,
+    getUserThoughtDiaryFn,
+    deleteUserThoughtDiaryFn,
   } = useDiariesStore(
     useShallow((state) => ({
       diaryData: state.diaryData,
       diaryMessage: state.diaryMessage,
       diaryLoading: state.diaryLoading,
       createThoughtsFn: state.createThoughts,
-      getUserThoughtDiariesFn: state.getUserThoughtDiaries,
+      getAllUserThoughtDiariesFn: state.getAllUserThoughtDiaries,
+      getUserThoughtDiaryFn: state.getUserThoughtDiary,
+      deleteUserThoughtDiaryFn: state.deleteUserThoughtDiary,
     }))
   );
 
@@ -819,6 +825,7 @@ export default function MiscellaneousPage() {
       setIsUploading(false);
     }
   };
+
   const handleDeleteGroup = async () => {
     const formData = {
       groupKey: "e163XMKdWgtwKMPAlesle",
@@ -833,6 +840,21 @@ export default function MiscellaneousPage() {
       }
     } catch (error) {
       console.error("Error deleting user group:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleDeleteAllGroups = async () => {
+    try {
+      const deleteSuccess = await deleteAllGroupsFn();
+      if (deleteSuccess) {
+        console.log("All User Groups deleted successfully!");
+      } else {
+        console.error("Failed to delete all user groups");
+      }
+    } catch (error) {
+      console.error("Error deleting all user groups:", error);
     } finally {
       setIsUploading(false);
     }
@@ -1129,7 +1151,7 @@ export default function MiscellaneousPage() {
   const handleCreateThoughts = async (values) => {
     const { files } = values;
     const formData = {
-      userKey: "Kc-vC3qsRa5uHYnuDErS9",
+      userKey: "hBtU7J5fwRANStli3gzUK",
       thoughtDiaryInfo: {
         title: "My Thoughts Diary",
         description: "This is a diary of my thoughts and feelings.",
@@ -1150,13 +1172,13 @@ export default function MiscellaneousPage() {
     }
   };
 
-  const handleGetUserThoughtDiaries = async () => {
+  const handleGetAllUserThoughtDiaries = async () => {
     const formData = {
-      userKey: "Kc-vC3qsRa5uHYnuDErS9",
+      userKey: "hBtU7J5fwRANStli3gzUK",
     };
 
     try {
-      const getSuccess = await getUserThoughtDiariesFn(formData);
+      const getSuccess = await getAllUserThoughtDiariesFn(formData);
       if (getSuccess) {
         console.log("User thoughts diary fetched successfully!", diaryData);
       } else {
@@ -1164,6 +1186,44 @@ export default function MiscellaneousPage() {
       }
     } catch (error) {
       console.error("Error fetching user thoughts:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleGetUserThoughtDiary = async () => {
+    const formData = {
+      userKey: "hBtU7J5fwRANStli3gzUK",
+    };
+
+    try {
+      const getSuccess = await getUserThoughtDiaryFn(formData);
+      if (getSuccess) {
+        console.log("User thoughts diary fetched successfully!", diaryData);
+      } else {
+        console.error("Failed to fetch user thoughts diary");
+      }
+    } catch (error) {
+      console.error("Error fetching user thoughts:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleDeleteUserThoughtDiary = async () => {
+    const formData = {
+      userKey: "hBtU7J5fwRANStli3gzUK",
+    };
+
+    try {
+      const deleteSuccess = await deleteUserThoughtDiaryFn(formData);
+      if (deleteSuccess) {
+        console.log("User thoughts diary deleted successfully!");
+      } else {
+        console.error("Failed to delete user thoughts diary");
+      }
+    } catch (error) {
+      console.error("Error deleting user thoughts diary:", error);
     } finally {
       setIsUploading(false);
     }
@@ -1331,6 +1391,9 @@ export default function MiscellaneousPage() {
         <Button onClick={handleDeleteGroup} loading={groupLoading}>
           Delete Group
         </Button>
+        <Button onClick={handleDeleteAllGroups} loading={groupLoading}>
+          Delete All Group
+        </Button>
         <Button onClick={handleGetAllAvailableGroups} loading={groupLoading}>
           View Available Group
         </Button>
@@ -1418,8 +1481,14 @@ export default function MiscellaneousPage() {
         <Button onClick={handleCreateThoughts} loading={diaryLoading}>
           Create Thoughts
         </Button>
-        <Button onClick={handleGetUserThoughtDiaries} loading={diaryLoading}>
+        <Button onClick={handleGetAllUserThoughtDiaries} loading={diaryLoading}>
+          Get All User Thought Diaries
+        </Button>
+        <Button onClick={handleGetUserThoughtDiary} loading={diaryLoading}>
           Get User Thought Diaries
+        </Button>
+        <Button onClick={handleDeleteUserThoughtDiary} loading={diaryLoading}>
+          Delete User Thought Diary
         </Button>
       </Group>
       <form onSubmit={form.onSubmit(handleCreateThoughts)}>
