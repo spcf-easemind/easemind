@@ -305,28 +305,22 @@ export const useGroupStore = create((set) => ({
     }));
 
     try {
-      // const userGroup = await getDoc({
-      //   collection: "userGroups",
-      //   key: formData.userKey,
-      // });
-
-      // const userGroupArray = [];
-      // for (const groupOfUser of userGroup.data.groups) {
-      //   const group = await getDoc({
-      //     collection: "groups",
-      //     key: groupOfUser.key,
-      //   });
-
-      //   if (userGroup.key != group.data.owner.key) {
-      //     userGroupArray.push(group);
-      //   }
-      // }
-
-      const userGroups = {
+      const userGroup = await getDoc({
         collection: "userGroups",
-      };
+        key: formData.userKey,
+      });
 
-      console.log(userGroups);
+      const userGroupArray = [];
+      for (const groupOfUser of userGroup.data.groups) {
+        const group = await getDoc({
+          collection: "groups",
+          key: groupOfUser.key,
+        });
+
+        if (userGroup.key != group.data.owner.key) {
+          userGroupArray.push(group);
+        }
+      }
 
       set(() => ({
         groupData: userGroupArray,
@@ -616,9 +610,20 @@ export const useGroupStore = create((set) => ({
       }
 
       for (const userGroup of allUserGroups.items) {
-        await deleteDoc({
+        const userGroupData = await getDoc({
           collection: "userGroups",
-          doc: userGroup,
+          key: userGroup.key,
+        });
+
+        userGroupData.data.groups = [];
+
+        await setDoc({
+          collection: "userGroups",
+          doc: {
+            key: userGroupData.key,
+            data: userGroupData.data,
+            version: userGroupData.version,
+          },
         });
 
         console.log("User group deleted successfully!");
