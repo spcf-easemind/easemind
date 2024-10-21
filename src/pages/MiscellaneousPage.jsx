@@ -103,6 +103,7 @@ export default function MiscellaneousPage() {
     getGroupFn,
     getAllGroupsFn,
     getUserGroupFn,
+    getUserJoinedGroupsFn,
     editGroupInfoFn,
     removeMemberFn,
     deleteGroupFn,
@@ -125,6 +126,7 @@ export default function MiscellaneousPage() {
       getGroupFn: state.getGroup,
       getAllGroupsFn: state.getAllGroups,
       getUserGroupFn: state.getUserGroup,
+      getUserJoinedGroupsFn: state.getUserJoinedGroups,
       editGroupInfoFn: state.editGroupInfo,
       removeMemberFn: state.removeMember,
       deleteGroupFn: state.deleteGroup,
@@ -738,7 +740,7 @@ export default function MiscellaneousPage() {
   };
   const handleGetUserGroup = async () => {
     const formData = {
-      userKey: "Kc-vC3qsRa5uHYnuDErS9",
+      userKey: "yhND1FxKCv-SxDgXHiWVo",
     };
     try {
       const getSuccess = await getUserGroupFn(formData);
@@ -751,6 +753,24 @@ export default function MiscellaneousPage() {
       }
     } catch (error) {
       console.error("Error fetching groups:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleGetUserJoinedGroupsFn = async () => {
+    const formData = {
+      userKey: "yhND1FxKCv-SxDgXHiWVo",
+    };
+    try {
+      const getSuccess = await getUserJoinedGroupsFn(formData);
+      if (getSuccess) {
+        console.log("All User Joined Groups Fetched Successfully!", groupData);
+      } else {
+        console.error("Failed to fetch user joined groups");
+      }
+    } catch (error) {
+      console.error("Error fetching user joined groups:", error);
     } finally {
       setIsUploading(false);
     }
@@ -828,7 +848,7 @@ export default function MiscellaneousPage() {
 
   const handleDeleteGroup = async () => {
     const formData = {
-      groupKey: "e163XMKdWgtwKMPAlesle",
+      groupKey: "xFsWGEf9y1Vv5EoqxST6A",
     };
 
     try {
@@ -1193,7 +1213,7 @@ export default function MiscellaneousPage() {
 
   const handleGetUserThoughtDiary = async () => {
     const formData = {
-      userKey: "hBtU7J5fwRANStli3gzUK",
+      userKey: "yhND1FxKCv-SxDgXHiWVo",
     };
 
     try {
@@ -1381,6 +1401,9 @@ export default function MiscellaneousPage() {
         </Button>
         <Button onClick={handleGetUserGroup} loading={groupLoading}>
           Get User Group
+        </Button>
+        <Button onClick={handleGetUserJoinedGroupsFn} loading={groupLoading}>
+          Get User Joined Group
         </Button>
         <Button onClick={handleEditGroupInfo} loading={groupLoading}>
           Edit Group Info

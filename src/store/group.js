@@ -340,6 +340,46 @@ export const useGroupStore = create((set) => ({
     }
   },
 
+  getUserJoinedGroups: async (formData) => {
+    set(() => ({
+      groupData: null,
+      groupMessage: "Loading...",
+      groupLoading: true,
+    }));
+    try {
+      const userGroup = await getDoc({
+        collection: "userGroups",
+        key: formData.userKey,
+      });
+
+      const userGroupArray = [];
+      for (const groupOfUser of userGroup.data.groups) {
+        const group = await getDoc({
+          collection: "groups",
+          key: groupOfUser.key,
+        });
+
+        userGroupArray.push(group.data);
+      }
+
+      set(() => ({
+        groupData: userGroupArray,
+        groupMessage: "User Group List",
+        groupLoading: false,
+      }));
+      return true;
+    } catch (error) {
+      console.error("Error updating user info:", error);
+      set(() => ({
+        groupData: null,
+        groupMessage:
+          error.message || "An error occurred while updating user data",
+        groupLoading: false,
+      }));
+      return;
+    }
+  },
+
   editGroupInfo: async (formData) => {
     set(() => ({
       groupData: null,
@@ -526,6 +566,11 @@ export const useGroupStore = create((set) => ({
           key: formData.groupKey,
         });
 
+        const groupPendingMembers = await getDoc({
+          collection: "groupPendingMembers",
+          key: formData.groupKey,
+        });
+
         for (const groupMember of group.data.members) {
           const userGroup = await getDoc({
             collection: "userGroups",
@@ -551,6 +596,32 @@ export const useGroupStore = create((set) => ({
           });
           console.log("This group has been removed on the user list of groups");
         }
+
+        const ownerGroup = await getDoc({
+          collection: "userGroups",
+          key: group.data.owner.key,
+        });
+
+        let updateOwnerGroups = [];
+        for (const group of ownerGroup.data.groups) {
+          if (group.key != formData.groupKey) {
+            updateOwnerGroups.push(group);
+          }
+        }
+        ownerGroup.data.groups = updateOwnerGroups;
+        await setDoc({
+          collection: "userGroups",
+          doc: {
+            key: ownerGroup.key,
+            data: ownerGroup.data,
+            version: ownerGroup.version,
+          },
+        });
+
+        await deleteDoc({
+          collection: "groupPendingMembers",
+          doc: groupPendingMembers,
+        });
 
         await deleteDoc({
           collection: "groups",
@@ -599,6 +670,19 @@ export const useGroupStore = create((set) => ({
       const allUserGroups = await listDocs({
         collection: "userGroups",
       });
+
+      const allGroupPendingMembers = await listDocs({
+        collection: "groupPendingMembers",
+      });
+
+      for (const groupPendingMember of allGroupPendingMembers.items) {
+        await deleteDoc({
+          collection: "groupPendingMembers",
+          doc: groupPendingMember,
+        });
+
+        console.log("Group pending members deleted successfully!");
+      }
 
       for (const group of allGroups.items) {
         await deleteDoc({
