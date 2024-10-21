@@ -442,6 +442,8 @@ export const useAuthenticationStore = create(
                     anonymousStatus: true,
                     pronouns: userCredential.data.pronouns,
                   },
+                  message: "User set as anonymous",
+                  loading: false,
                 },
               }));
             } else {
@@ -457,6 +459,8 @@ export const useAuthenticationStore = create(
                     pronouns: userCredential.data.pronouns,
                     anonymousStatus: false,
                   },
+                  message: "User set as non-anonymous",
+                  loading: false,
                 },
               }));
             }
