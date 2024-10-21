@@ -164,7 +164,7 @@ Inspired by the increasing prevalence of mental health disorders in the Philippi
 
 - [Rhymeses Cortez](https://github.com/Ribitises) (Frontend Developer)
 
-- [Tracy Chiel Brandy H. Tolentino]() (UX Designer)
+- [Tracy Chiel Brandy H. Tolentino](https://github.com/Tracy-Tolentino) (UX Designer)
 
 ## 👨‍🏫 Coach
 - [Prince Charles M. Clemente](https://github.com/PrinceCharles47) (QA & Coach)
