@@ -54,9 +54,7 @@ export default function EditGroupPage() {
   }, []);
 
   useEffect(() => {
-    if (ownedGroup) {
-      formInitialize();
-    }
+    formInitialize();
   }, [ownedGroup]);
 
   const usersEnum = useMemo(() => {
@@ -158,6 +156,8 @@ export default function EditGroupPage() {
         fullName: item.data.fullName,
         key: item.key,
         lastUpdated: item.data.lastUpdated,
+        profileImageUrl: item.data.profileImageUrl,
+        pronouns: item.data.pronouns,
         role: item.data.role,
         status: item.data.status,
         groupRole: "Group Member",
@@ -176,6 +176,7 @@ export default function EditGroupPage() {
 
     if (response.type === "success") {
       notificationsFn.success(id, response.message);
+      setSavedForm(null);
       navigate(`/owned-group/${ownedGroupRef}`);
     } else {
       notificationsFn.error(id, response.message);

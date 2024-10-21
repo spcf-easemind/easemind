@@ -41,11 +41,7 @@ export default function OwnedGroupsViewPage() {
   }
 
   async function handleModalClick() {
-    const response = await removeGroupMemberFn(
-      loggedInUserKey,
-      ownedGroupRef,
-      modalTarget.key
-    );
+    const response = await removeGroupMemberFn(ownedGroupRef, modalTarget.key);
 
     toggle();
 

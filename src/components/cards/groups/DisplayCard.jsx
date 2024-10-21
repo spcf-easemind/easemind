@@ -151,8 +151,9 @@ export default function DisplayCard({
                 image={member.profilePath}
                 name={member.fullName}
                 role={member.groupRole}
-                bg="gray.0"
+                className={classes.groupMembersCard}
                 key={member.key}
+                
               >
                 {type === "owned" && member.groupRole !== "Group Admin" && (
                   <Button

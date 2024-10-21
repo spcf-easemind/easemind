@@ -10,6 +10,8 @@ import {
   Group,
   Tabs,
   Button,
+  useMantineColorScheme,
+  useComputedColorScheme,
 } from "@mantine/core";
 import { IconChevronLeft, IconSearch } from "@tabler/icons-react";
 import classes from "./GroupControlCard.module.css";
@@ -53,6 +55,10 @@ export default function GroupControlCard({
   onPhotoControlClick,
 }) {
   const navigate = useNavigate();
+
+  const { colorScheme } = useMantineColorScheme();
+  const computedColorScheme = useComputedColorScheme(colorScheme);
+  const iconColor = computedColorScheme === "dark" ? "white" : "black";
 
   // Enums
   const { fetchInterestsEnumFn, interestsEnum } = useEnumsStore(
@@ -239,11 +245,11 @@ export default function GroupControlCard({
       : null;
 
   return (
-    <Card withBorder bg="gray.0">
+    <Card withBorder className={classes.cardBg}>
       <Box ta="center" pos="relative">
         <ActionIcon
           variant="transparent"
-          color="black"
+          color={iconColor}
           pos="absolute"
           top={0}
           left={0}
