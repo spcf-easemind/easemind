@@ -2,7 +2,7 @@
   <img src="/assets/easemind-wallpaper.png" width="100%"/><br>
 </div>
 
-# <img src="https://llvrf-giaaa-aaaal-amqwa-cai.icp0.io/miscImages/logo.png" width="24" height="20" alt="Globe"/> Easemind:
+# <img src="/assets/easemind-logo.png" width="24" height="20" alt="Globe"/> Easemind:
 
 **EaseMind** is a student-led initiative that serves as a platform for users to connect and freely express their feelings, providing comfort and understanding to one another. Dedicated to creating a digital safe and secure environment, EaseMind offers tools to promote mental health growth. By integrating blockchain technology (ICP), it ensures the security of users' data and interactions.
 
