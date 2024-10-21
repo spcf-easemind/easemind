@@ -64,8 +64,6 @@ export default function ChatPage() {
   }
 
   const navChats = useMemo(() => {
-    console.log("Recomputing");
-    console.log(getNavChats());
     return getNavChats();
   }, [chat]);
 

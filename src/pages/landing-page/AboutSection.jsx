@@ -12,7 +12,6 @@ import {
   ThemeIcon,
 } from "@mantine/core";
 
-
 import PicturePlaceholder from "../../assets/images/background_images/LandingPage-bg.jpg";
 import IconQualityService from "../../assets/images/landing_page/icons/quality_service.png";
 import IconUserPrivacy from "../../assets/images/landing_page/icons/user_privacy.png";
@@ -23,6 +22,7 @@ import IconInadequate from "../../assets/images/landing_page/icons/inadequate.pn
 import IconIncrease from "../../assets/images/landing_page/icons/increase.png";
 import IconSupression from "../../assets/images/landing_page/icons/supression.png";
 import IconUnproductive from "../../assets/images/landing_page/icons/unproductive.png";
+import Logo from "../../assets/landing/Logo.png";
 
 export default function AboutSection() {
   return (
@@ -65,7 +65,7 @@ export default function AboutSection() {
             </Group>
           </Stack>
         </Box>
-        <Image src={PicturePlaceholder} h={450} w={550} radius="md" />
+        <Image src={Logo} h={450} w={550} radius="md" />
       </Flex>
 
       <Box py={130}>
@@ -88,7 +88,11 @@ export default function AboutSection() {
           <SimpleGrid cols={3} verticalSpacing={75}>
             <Card
               withBorder
-              style={{ position: "relative", overflow: "visible", paddingTop: "50px" }}
+              style={{
+                position: "relative",
+                overflow: "visible",
+                paddingTop: "50px",
+              }}
             >
               <Flex justify="center">
                 <ThemeIcon
@@ -112,7 +116,11 @@ export default function AboutSection() {
             </Card>
             <Card
               withBorder
-              style={{ position: "relative", overflow: "visible", paddingTop: "50px" }}
+              style={{
+                position: "relative",
+                overflow: "visible",
+                paddingTop: "50px",
+              }}
             >
               <Flex justify="center">
                 <ThemeIcon
@@ -135,7 +143,11 @@ export default function AboutSection() {
             </Card>
             <Card
               withBorder
-              style={{ position: "relative", overflow: "visible", paddingTop: "45px" }}
+              style={{
+                position: "relative",
+                overflow: "visible",
+                paddingTop: "45px",
+              }}
             >
               <Flex justify="center">
                 <ThemeIcon
@@ -159,7 +171,11 @@ export default function AboutSection() {
             </Card>
             <Card
               withBorder
-              style={{ position: "relative", overflow: "visible", paddingTop: "50px" }}
+              style={{
+                position: "relative",
+                overflow: "visible",
+                paddingTop: "50px",
+              }}
             >
               <Flex justify="center">
                 <ThemeIcon
@@ -183,7 +199,11 @@ export default function AboutSection() {
             </Card>
             <Card
               withBorder
-              style={{ position: "relative", overflow: "visible", paddingTop: "50px" }}
+              style={{
+                position: "relative",
+                overflow: "visible",
+                paddingTop: "50px",
+              }}
             >
               <Flex justify="center">
                 <ThemeIcon
@@ -208,7 +228,11 @@ export default function AboutSection() {
             </Card>
             <Card
               withBorder
-              style={{ position: "relative", overflow: "visible", paddingTop: "60px" }}
+              style={{
+                position: "relative",
+                overflow: "visible",
+                paddingTop: "60px",
+              }}
             >
               <Flex justify="center">
                 <ThemeIcon

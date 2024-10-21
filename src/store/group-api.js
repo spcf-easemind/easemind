@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { useGroupStore } from "./group";
+import { useChatStore } from "./chat";
 export const useGroupAPIStore = create((set, get) => ({
   loading: false,
 
@@ -14,6 +15,8 @@ export const useGroupAPIStore = create((set, get) => ({
 
   pendingApprovals: [],
   pendingMembers: [],
+
+  groupChats: [],
 
   // Owned Groups
   fetchOwnedGroups: async (loggedInUserId) => {
@@ -126,12 +129,32 @@ export const useGroupAPIStore = create((set, get) => ({
       }));
     }
   },
+
+  // Chat Groups
+  fetchGroupChats: async (userKey) => {
+    const formData = { userKey: userKey };
+    const fetchGroupChatsFn = useGroupStore.getState().getUserJoinedGroups;
+    const response = await fetchGroupChatsFn(formData);
+
+    if (response) {
+      const groupData = useGroupStore.getState().groupData;
+      set(() => ({
+        groupChats: groupData,
+      }));
+    }
+  },
+
   createGroup: async (formData) => {
     const createGroupFn = useGroupStore.getState().createGroup;
     const response = await createGroupFn(formData);
 
     if (response) {
       const groupKey = useGroupStore.getState().groupData;
+
+      // Firebase Chats
+      const createInstanceOnFirebase = useChatStore.getState().createGroupChat;
+      await createInstanceOnFirebase(groupKey, formData);
+
       const fetchGroupMessage = useGroupStore.getState().groupMessage;
       return { type: "success", message: fetchGroupMessage, key: groupKey };
     } else {
@@ -165,7 +188,11 @@ export const useGroupAPIStore = create((set, get) => ({
         loading: false,
       }));
       const fetchGroupMessage = useGroupStore.getState().groupMessage;
-      return { type: "success", message: fetchGroupMessage, key: ownedGroupRef };
+      return {
+        type: "success",
+        message: fetchGroupMessage,
+        key: ownedGroupRef,
+      };
     } else {
       set(() => ({
         loading: false,

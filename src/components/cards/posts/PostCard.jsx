@@ -55,16 +55,13 @@ export default function PostCard({ onPopoverSelect, type }) {
 
         <Box>
           <Title order={3} mb={12}>
-            Remember, your well-being matters. Take time to meditate, love
-            yourself, and prioritize your mental health......
+            Prioritize Your Well-Being: Mental Health Matters
           </Title>
           <Text lh={1.3}>
-            Remember, your well-being matters. Take time to meditate, love
-            yourself, and prioritize your mental health. Remember, your
-            well-being matters. Take time to meditate, love yourself, and
-            prioritize your mental health. Remember, your well-being matters.
-            Take time to meditate, love yourself, and prioritize your mental
-            health.
+            Mental health is just as important as physical health. Take a moment
+            to check in with yourself, breathe, and prioritize your well-being.
+            Remember, seeking help is a sign of strength, not weakness. You
+            deserve peace and happiness.
           </Text>
         </Box>
 

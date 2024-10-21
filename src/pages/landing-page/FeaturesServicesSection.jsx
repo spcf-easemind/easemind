@@ -11,11 +11,14 @@ import {
   Stack,
 } from "@mantine/core";
 
-
 import PicturePlaceholder from "../../assets/images/background_images/LandingPage-bg.jpg";
-import AnonymousImage from '../../assets/images/landing_page/anonymous.jpg'
-import ConsentImage from '../../assets/images/landing_page/consent.jpg'
-import SecureImage from '../../assets/images/landing_page/secure-message.jpg'
+import AnonymousImage from "../../assets/images/landing_page/anonymous.jpg";
+import ConsentImage from "../../assets/images/landing_page/consent.jpg";
+import SecureImage from "../../assets/images/landing_page/secure-message.jpg";
+import DigitalDiary from "../../assets/landing/DigitalDiary.png";
+import OneOnOneChat from "../../assets/landing/OneOnOneChat.png";
+import OpenForum from "../../assets/landing/OpenForum.png";
+
 
 export default function FeaturesServicesSection() {
   return (
@@ -44,7 +47,7 @@ export default function FeaturesServicesSection() {
           <SimpleGrid cols={3}>
             <Card shadow="xl" radius={15}>
               <Card.Section>
-                <Image src={ConsentImage}/>
+                <Image src={ConsentImage} />
               </Card.Section>
               <Stack>
                 <Title order={3} align="center" mt={10}>
@@ -59,8 +62,8 @@ export default function FeaturesServicesSection() {
               </Stack>
             </Card>
             <Card shadow="xl" radius={15}>
-            <Card.Section>
-                <Image src={SecureImage}/>
+              <Card.Section>
+                <Image src={SecureImage} />
               </Card.Section>
               <Stack>
                 <Title order={3} align="center" mt={10}>
@@ -73,9 +76,9 @@ export default function FeaturesServicesSection() {
                 </Text>
               </Stack>
             </Card>
-            <Card shadow="xl" radius={15}> 
-            <Card.Section>
-                <Image src={AnonymousImage}/>
+            <Card shadow="xl" radius={15}>
+              <Card.Section>
+                <Image src={AnonymousImage} />
               </Card.Section>
               <Stack>
                 <Title order={3} align="center" mt={10}>
@@ -115,7 +118,7 @@ export default function FeaturesServicesSection() {
 
         <Stack gap={100}>
           <Group wrap="no-wrap" gap={45}>
-            <Image src={PicturePlaceholder} w={500} h={500} radius="md" />
+            <Image src={OneOnOneChat} w={500} h={500} radius="md" fit="contain" />
             <Stack>
               <Title order={2}>One-on-one and Support Group Chat Rooms</Title>
               <Text style={{ textAlign: "justify" }}>
@@ -178,11 +181,11 @@ export default function FeaturesServicesSection() {
                 </List.Item>
               </List>
             </Stack>
-            <Image src={PicturePlaceholder} w={500} h={500} radius="md" />
+            <Image src={DigitalDiary} w={500} h={500} radius="md" fit="contain"/>
           </Group>
 
           <Group wrap="no-wrap" gap={45}>
-            <Image src={PicturePlaceholder} w={500} h={500} radius="md" />
+            <Image src={OpenForum} w={500} h={500} radius="md" fit="contain" />
             <Stack>
               <Title order={2}>Open Wall Forum</Title>
               <Text style={{ textAlign: "justify" }}>

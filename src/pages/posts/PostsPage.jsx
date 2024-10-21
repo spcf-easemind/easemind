@@ -17,7 +17,7 @@ const userData = {
   role: "Ease Companion",
   pronouns: "He/Him",
   description:
-    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet quae a labore eligendi beatae ex sit esse, quia necessitatibus eius.",
+    "Your mental health matters. Take time to care for your mind and soul—rest, reflect, and seek support when needed. Remember, it's okay not to be okay, and every step towards healing is progress. You are stronger than you know!",
   categories: [
     {
       key: "-38hWqfQzWvD4bNNabkHj",
@@ -56,36 +56,36 @@ const userData = {
       },
     },
   ],
-  availability: [
-    {
-      day: "Monday",
-      time: "5:00 PM - 8:00 PM",
+  availability: {
+    monday: {
+      startTime: "14:00",
+      endTime: "17:00",
     },
-    {
-      day: "Tuesday",
-      time: "5:00 PM - 8:00 PM",
+    tuesday: {
+      startTime: "",
+      endTime: "",
     },
-    {
-      day: "Wednesday",
-      time: "5:00 PM - 8:00 PM",
+    wednesday: {
+      startTime: "14:00",
+      endTime: "17:00",
     },
-    {
-      day: "Thursday",
-      time: "5:00 PM - 8:00 PM",
+    thursday: {
+      startTime: "",
+      endTime: "",
     },
-    {
-      day: "Friday",
-      time: "5:00 PM - 8:00 PM",
+    friday: {
+      startTime: "14:00",
+      endTime: "17:00",
     },
-    {
-      day: "Saturday",
-      time: "5:00 PM - 8:00 PM",
+    saturday: {
+      startTime: "",
+      endTime: "",
     },
-    {
-      day: "Sunday",
-      time: "Not Available",
+    sunday: {
+      startTime: "",
+      endTime: "",
     },
-  ],
+  },
 };
 
 export default function PostsPage() {

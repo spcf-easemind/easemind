@@ -99,7 +99,7 @@ export default function CreateGroupPage() {
       },
       initialMembers: hasLength(
         {
-          min: 2,
+          min: 1,
         },
         "Please select at least 2 members"
       ),
@@ -118,6 +118,8 @@ export default function CreateGroupPage() {
         role: item.data.role,
         status: item.data.status,
         groupRole: "Group Member",
+        profileImageUrl: item.data.profileImageUrl,
+        pronouns: item.data.pronouns,
       }));
 
     const mappedCategories = formData.initialCategories.map(({ key }) => ({
@@ -132,11 +134,26 @@ export default function CreateGroupPage() {
         lastUpdated: currentUserValue.data.lastUpdated,
         role: currentUserValue.data.role,
         status: currentUserValue.data.status,
+        profileImageUrl: currentUserValue.data.profileImageUrl,
+        pronouns: currentUserValue.data.pronouns,
         groupRole: "Group Admin",
       },
       ...mappedMembers,
     ];
     formData.categories = mappedCategories;
+
+    // const reducedMembers = formData.members.reduce(
+    //   (acc, { profileImageUrl, fullName, key }) => {
+    //     acc[key] = {
+    //       image: profileImageUrl,
+    //       name: fullName,
+    //     };
+    //     return acc;
+    //   },
+    //   {}
+    // );
+
+    // console.log(reducedMembers);
 
     // Remove initial values
     delete formData.initialMembers;
@@ -147,6 +164,7 @@ export default function CreateGroupPage() {
 
     if (response.type === "success") {
       notificationsFn.success(id, response.message);
+      setSavedForm(null);
       navigate(`/owned-group/${response.key}`);
     } else {
       notificationsFn.error(id, response.message);
