@@ -9,7 +9,7 @@ import {
   Tabs,
   Stack,
 } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import IconConnect from "../../assets/icons/chat/IconConnect.svg";
 import IconSearch from "../../assets/icons/chat/IconSearch.svg";
@@ -42,11 +42,11 @@ export default function ChatPage() {
   const [activeChat, setActiveChat] = useState();
 
   // Zustand
-  const { getNavChats, chats } = useChatStore(
+  const { getNavChats, chat } = useChatStore(
     useShallow((state) => ({
       findNewChatFn: state.findNewChat,
       getNavChats: state.getNavChats,
-      chats: state.chats,
+      chat: state.chat,
     }))
   );
 
@@ -62,6 +62,12 @@ export default function ChatPage() {
     navigate("/chat/" + id);
     setActiveChat(id);
   }
+
+  const navChats = useMemo(() => {
+    console.log("Recomputing");
+    console.log(getNavChats());
+    return getNavChats();
+  }, [chat]);
 
   const tabsHeader = tabsAttributes.map((item) => {
     const isActive = activeTab === item.value;
@@ -90,7 +96,7 @@ export default function ChatPage() {
       <Tabs.Panel value={item.value} key={item.value}>
         <Stack mt={16} gap={8}>
           {item.label === "Peers"
-            ? getNavChats().privateChat.map((chat) => (
+            ? navChats.privateChat.map((chat) => (
                 <ChatList
                   {...chat}
                   key={chat.id}
@@ -98,7 +104,7 @@ export default function ChatPage() {
                   activeChat={activeChat}
                 />
               ))
-            : getNavChats().groupChat.map((chat) => (
+            : navChats.groupChat.map((chat) => (
                 <ChatList
                   {...chat}
                   key={chat.id}

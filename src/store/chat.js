@@ -19,6 +19,7 @@ import {
 } from "../functions/firebase.js";
 
 import { serializer } from "../utils/serializer.js";
+import { useGroupStore } from "./group.js";
 
 export const useChatStore = create((set, get) => ({
   chats: [],
@@ -249,19 +250,14 @@ export const useChatStore = create((set, get) => ({
 
   // Query
   queryChatData: async (chatRef) => {
+    const loggedInUserKey = useAuthenticationStore.getState().user.data.key;
     const db = database;
     const fetchUsersFn = useUsersStore.getState().getAllUsers;
+    const fetchGroupUsersFn = useGroupStore.getState().getUserJoinedGroups;
     if (chatRef) {
       const response = await queryChatData(db, chatRef);
       await fetchUsersFn();
       const userResponse = useUsersStore.getState().data;
-
-      //Members Serialization
-      const members = userResponse.map(({ data }) => ({
-        name: data.fullName,
-        image: data.profileImageUrl,
-        role: data.role,
-      }));
 
       // Main Serialization
       const serializedData = get().setChatPageData(response, userResponse);
@@ -269,6 +265,23 @@ export const useChatStore = create((set, get) => ({
         chatRef,
         serializedData.header.type
       );
+
+      let members = [];
+
+      if (serializedData.header.type === "group") {
+        await fetchGroupUsersFn({ userKey: loggedInUserKey });
+        const groupResponse = useGroupStore.getState().groupData;
+        //Members Serialization
+        const finalData = groupResponse.find(({ key }) => key === chatRef);
+        members = finalData.members.map(
+          ({ fullName, profileImageUrl, groupRole, key }) => ({
+            name: fullName,
+            image: profileImageUrl,
+            role: groupRole,
+            key: key,
+          })
+        );
+      }
 
       set((state) => ({
         chat: {

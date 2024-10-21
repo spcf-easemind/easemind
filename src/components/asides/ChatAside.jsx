@@ -31,6 +31,7 @@ import { useAuthenticationStore } from "../../store/authentication.js";
 import { useChatStore } from "../../store/chat.js";
 import { useShallow } from "zustand/shallow";
 import { useMemo } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 const dropdownFormat = [
   {
@@ -61,6 +62,8 @@ const dropdownFormat = [
 ];
 
 export default function AsidePage() {
+  const { chatRef } = useParams();
+  const navigate = useNavigate();
   const loggedUser = useAuthenticationStore((state) => state.user.data);
   const toggleChatModalFn = useDialogStore((state) => state.toggleChatModal);
   const { chat } = useChatStore(
@@ -167,8 +170,21 @@ export default function AsidePage() {
     </UnstyledButton>
   );
 
-  const viewButton = header.type && (
-    <Button mt={8} variant="light">
+  function handleViewGroup() {
+    if (header.type === "group") {
+      const whatRole = asideData.members.find(
+        (item) => item.key === loggedUser.key
+      ).role;
+      if (whatRole === "Group Admin") {
+        navigate(`owned-group/${chatRef}`);
+      } else {
+        navigate(`joined-group/${chatRef}`);
+      }
+    }
+  }
+
+  const viewButton = header.type === "group" && (
+    <Button mt={8} variant="light" onClick={handleViewGroup}>
       {header.type === "private" ? "View Profile" : "View Group"}
     </Button>
   );
