@@ -5,3 +5,10 @@
     var(--mantine-color-dark-6)
   );
 }
+
+.cardImage {
+  background: light-dark(
+    url(../../assets/icons/buttons/IconPlusBox.svg),
+    url(../../assets/icons/buttons/IconPlusBoxDark.svg) 
+  ) no-repeat center center/contain;
+}

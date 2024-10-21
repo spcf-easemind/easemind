@@ -1,5 +1,4 @@
-import { Card, Group, Image, Text } from "@mantine/core";
-import IconPlusBox from "../../assets/icons/buttons/IconPlusBox.svg";
+import { Box, Card, Group, Text } from "@mantine/core";
 import classes from "./CreateButtonCard.module.css";
 export default function CreateButtonCard({
   onClick,
@@ -22,12 +21,12 @@ export default function CreateButtonCard({
       onClick={onClick}
     >
       <Group>
-        <Image
-          src={IconPlusBox}
+        <Box
+          className={classes.cardImage}
           alt="Create a group"
           w={imageSize}
           h={imageSize}
-        />
+        ></Box>
         <Text size={size}>{children}</Text>
       </Group>
     </Card>
