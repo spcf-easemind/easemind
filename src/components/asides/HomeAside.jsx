@@ -1,6 +1,5 @@
 import {
   Title,
-  Group,
   Anchor,
   ScrollArea,
   Stack,
@@ -14,7 +13,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import QuoteBox from "./QuoteBox";
 import PillButton from "../buttons/PillButton.jsx";
-import ChatList from "../chat/ChatList.jsx";
+import GroupMemberCard from "../cards/groups/GroupMemberCard.jsx";
+import classes from "./HomeAside.module.css";
 
 import {
   PILL_ATTRIBUTES,
@@ -102,7 +102,12 @@ export default function HomeAside() {
         </Title>
         <Stack gap={10} mb={8}>
           {attribute.choices.map((choice) => (
-            <ChatList {...choice} key={choice.id} />
+            <GroupMemberCard
+              className={classes.groupCard}
+              name={choice.userName}
+              image={choice.userImage}
+              role={choice.text}
+            />
           ))}
         </Stack>
         <Flex justify="center">

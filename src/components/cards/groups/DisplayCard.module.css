@@ -1,0 +1,13 @@
+.availabilityCard {
+  background-color: light-dark(
+    var(--mantine-primary-color-0),
+    var(--mantine-color-dark-5)
+  );
+}
+
+.joinedGroupsCard {
+  background-color: light-dark(
+    var(--mantine-primary-color-0),
+    var(--mantine-color-dark-5)
+  );
+}

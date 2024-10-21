@@ -13,7 +13,7 @@ export default function CommunityGroupViewPage() {
 
   const loggedInUserKey = useAuthenticationStore(
     (state) => state.user.data?.key
-  );P
+  );
 
   const { fetchCommunityGroupFn, communityGroup, loading, joinGroupFn } =
     useGroupAPIStore(

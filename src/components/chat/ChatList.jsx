@@ -32,18 +32,11 @@ export default function ChatList({
     return format(date, "kk:mm");
   };
 
-  // Checks if this components is in the Home Aside or not
-  const isHomeAside = time === undefined;
-
   return (
     <UnstyledButton
-    p={10}
+      p={10}
       w="100%"
       className={classes.chatStyling}
-      style={{
-        backgroundColor: isHomeAside && "var(--mantine-primary-color-0)",
-        borderRadius: isHomeAside && "10px",
-      }}
       data-active={activeChat === id || undefined}
       key={id}
       onClick={() => onSelectChat(id)}

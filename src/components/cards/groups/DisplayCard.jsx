@@ -17,6 +17,7 @@ import ActionsBox from "../../ActionsBox.jsx";
 import { useMemo } from "react";
 import { IconDotsVertical } from "@tabler/icons-react";
 import { EDIT_OPTION } from "../../../static/popover.js";
+import classes from "./DisplayCard.module.css";
 
 const MAX_PILLS = 3;
 
@@ -186,7 +187,7 @@ export default function DisplayCard({
             Availability
           </Title>
 
-          <Card bg="sky-blue.0">
+          <Card className={classes.availabilityCard}>
             <SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 7 }}>
               {mappedAvailability.map(({ day, startTime, endTime }) => {
                 const formattedDay = day.charAt(0).toUpperCase() + day.slice(1);
@@ -224,11 +225,11 @@ export default function DisplayCard({
                 const memberCount = `${membersCount} members`;
                 return (
                   <GroupMemberCard
+                    className={classes.joinedGroupsCard}
                     key={key}
                     image={groupImageUrl}
                     name={name}
                     role={memberCount}
-                    bg="sky-blue.0"
                     radius="md"
                   />
                 );

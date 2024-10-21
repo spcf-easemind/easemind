@@ -2,12 +2,13 @@ import { Card, Group, Stack, Title, Text, Divider, Box } from "@mantine/core";
 import ActionsBox from "../../ActionsBox";
 import { IconDotsVertical } from "@tabler/icons-react";
 import { EDIT_DELETE } from "../../../static/popover";
+import classes from "./DiaryCard.module.css";
 
 export default function DiaryCard({ onClick }) {
   const popoverOptions = EDIT_DELETE;
 
   return (
-    <Card bg="gray.0" radius="lg" withBorder>
+    <Card className={classes.cardBg} radius="lg" withBorder>
       <Box pos="relative">
         <Group wrap="no-wrap">
           <Stack gap={8} align="center" py={16} px={32}>
