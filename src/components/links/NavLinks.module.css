@@ -2,7 +2,7 @@
   @mixin hover {
     background-color: light-dark(
       var(--mantine-primary-color-0),
-      var(--mantine-color-dark-6)
+      rgba(0, 0, 255, 0.1)
     );
   }
 
@@ -18,6 +18,9 @@
 .logoutStyling {
   color: var(--mantine-color-red-6);
   @mixin hover {
-    background-color: var(--mantine-color-red-0);
+    background-color: light-dark(
+      var(--mantine-color-red-0),
+      rgba(255, 0, 0, 0.1)
+    );
   }
 }

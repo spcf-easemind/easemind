@@ -7,6 +7,7 @@ import { useAuthenticationStore } from "../../store/authentication";
 import { useShallow } from "zustand/shallow";
 import { useEffect, useMemo } from "react";
 import { notificationsFn } from "../../utils/notifications";
+import classes from "./EaseCompanionOverviewPage.module.css";
 
 export default function EaseCompanionOverviewPage() {
   const [opened, { toggle }] = useDisclosure();
@@ -28,8 +29,6 @@ export default function EaseCompanionOverviewPage() {
   useEffect(() => {
     fetchEaseCompanionOverviewFn(loggedInUser.key);
   }, []);
-
-  console.log(easeCompanionOverview);
 
   const userData = useMemo(() => {
     if (easeCompanionOverview) {
@@ -83,7 +82,7 @@ export default function EaseCompanionOverviewPage() {
             type="overview"
             button={{ buttonLabel: null, loading: false }}
             onButtonClick={handlePopoverClick}
-            bg="gray.0"
+            classes={classes.cardBg}
           />
         </Box>
         <UserModal

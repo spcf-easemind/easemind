@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { useAuthenticationStore } from "../../store/authentication";
 import { useShallow } from "zustand/shallow";
 import { notificationsFn } from "../../utils/notifications";
+import classes from "./AnonymousNotifications.module.css";
 
 export default function AnonymousNotifications() {
   const { setAnonymousUserFn, loggedInUser, message, loading } =
@@ -56,7 +57,7 @@ export default function AnonymousNotifications() {
         px={20}
         py={28}
         mx="auto"
-        bg="gray.0"
+        className={classes.cardBg}
         withBorder
         radius="md"
         maw={800}
@@ -83,7 +84,7 @@ export default function AnonymousNotifications() {
         px={20}
         py={28}
         mx="auto"
-        bg="gray.0"
+        className={classes.cardBg}
         withBorder
         radius="md"
         maw={800}

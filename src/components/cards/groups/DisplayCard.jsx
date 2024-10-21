@@ -9,6 +9,8 @@ import {
   Grid,
   Avatar,
   SimpleGrid,
+  useMantineColorScheme,
+  useComputedColorScheme,
 } from "@mantine/core";
 
 import Pill from "../../pills/Pill.jsx";
@@ -42,6 +44,10 @@ export default function DisplayCard({
   onLeaveBtnClick,
   ...props
 }) {
+  const { colorScheme } = useMantineColorScheme();
+  const computedColorScheme = useComputedColorScheme(colorScheme);
+  const iconColor = computedColorScheme === "dark" ? "white" : "black";
+
   function handleClick(ref) {
     onSelect(ref);
   }
@@ -280,7 +286,7 @@ export default function DisplayCard({
         onClick={(option) => onButtonClick(option, "1")}
         options={popoverOptions}
       >
-        <IconDotsVertical size={30} stroke={1.5} />
+        <IconDotsVertical color={iconColor} size={30} stroke={1.5} />
       </ActionsBox>
     ) : (
       <Button

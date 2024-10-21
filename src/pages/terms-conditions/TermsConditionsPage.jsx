@@ -1,5 +1,6 @@
 import { Card } from "@mantine/core";
 import TermsAndConditions from "../../components/terms/TermsAndConditions";
+import classes from "./TermsConditionsPage.module.css";
 
 export default function TermsConditionsPage() {
   return (
@@ -8,7 +9,7 @@ export default function TermsConditionsPage() {
         px={20}
         py={28}
         mx="auto"
-        bg="gray.0"
+        className={classes.cardBg}
         withBorder
         radius="md"
         maw={800}

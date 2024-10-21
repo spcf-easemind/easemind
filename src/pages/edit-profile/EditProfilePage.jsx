@@ -20,6 +20,7 @@ import { parseISO, getDate, getYear, getMonth, format, parse } from "date-fns";
 import { notificationsFn } from "../../utils/notifications";
 import { useDisclosure } from "@mantine/hooks";
 import WarningModal from "../../components/modals/WarningModal";
+import classes from "./EditProfilePage.module.css";
 
 const warningModal = {
   title: "Delete Account?",
@@ -185,10 +186,10 @@ export default function EditProfilePage() {
           px={20}
           py={28}
           mx="auto"
-          bg="gray.0"
           withBorder
           radius="md"
           maw={800}
+          className={classes.cardBg}
         >
           <Title ta="center" order={3}>
             Edit Profile
@@ -277,7 +278,7 @@ export default function EditProfilePage() {
           px={20}
           py={28}
           mx="auto"
-          bg="gray.0"
+          className={classes.cardBg}
           withBorder
           radius="md"
           maw={800}

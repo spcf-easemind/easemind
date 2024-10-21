@@ -5,6 +5,7 @@ import { useEffect, useMemo } from "react";
 import PhotoControlCard from "../../components/cards/PhotoControlCard";
 import { useFormStore } from "../../store/form";
 import { useNavigate } from "react-router-dom";
+import classes from "./EditProfilePage.module.css";
 
 export default function EditProfilePhotoPage() {
   const navigate = useNavigate();
@@ -49,7 +50,7 @@ export default function EditProfilePhotoPage() {
       px={20}
       py={28}
       mx="auto"
-      bg="gray.0"
+      className={classes.cardBg}
       withBorder
       radius="md"
       maw={800}

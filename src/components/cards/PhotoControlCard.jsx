@@ -13,6 +13,7 @@ import {
 import { IconChevronLeft } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import classes from "./PhotoControlCard.module.css";
 
 export default function PhotoControlCard({ images, onSubmit }) {
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ export default function PhotoControlCard({ images, onSubmit }) {
   });
 
   return (
-    <Card withBorder bg="gray.0" ta="center">
+    <Card className={classes.cardBg} ta="center">
       <Box pos="relative">
         <ActionIcon
           onClick={() => navigate(-1)}
