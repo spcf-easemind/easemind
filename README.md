@@ -36,11 +36,15 @@ Inspired by the increasing prevalence of mental health disorders in the Philippi
 
 ## How It Works
 
-1. Connect with Available Companions:
-2. Endless Thoughts Diary: 
-3. Group Creation
-4. Anonymous Profile
-5. 
+1. **Connect with Available Companions:** Discover and interact with like-minded individuals who share similar interests and mental health journeys. Our platform facilitates connections, allowing users to engage in meaningful conversations and build supportive relationships
+2. **Endless Thoughts Diary:** Utilize your personal diary space to document your thoughts, feelings, and reflections. This feature encourages users to express themselves freely, promoting emotional well-being in a private setting. 
+3. **Group Creation:** Empower users to create and manage their own groups tailored to specific topics or interests. This fosters community support, allowing members to share experiences and insights in a safe and inclusive environment.
+4. **Anonymous Profile:** Engage with the community without revealing your identity. The anonymous profile feature provides a layer of comfort, enabling users to participate freely while safeguarding their personal information.
+5. **AI-Chat Companion: (Upcoming)** A virtual assistant designed to offer personalized support, engaging users in conversations that promote mental health awareness and provide guidance through challenging moments.
+6. **Video Call on Groups: (Upcoming)** Facilitate real-time video communication within group settings, enhancing the sense of connection and support among users.
+7. **Mood Tracking: (Upcoming)** A feature that enables users to log and reflect on their moods, offering insights into their emotional patterns and promoting self-awareness.
+8. **Task-Based Rage Release: (Upcoming)** Interactive tasks designed to help users manage and release built-up emotions in a constructive manner, fostering resilience and emotional balance.
+9. **Charity Donations & Event Participation: (Upcoming)** Opportunities for users to contribute to charitable causes, fostering community engagement and social responsibility.
 
 ## Installation
 
@@ -139,14 +143,16 @@ Inspired by the increasing prevalence of mental health disorders in the Philippi
 - [x] One-On-One Chat
 - [x] Group Chat
 - [x] Manage Profile
-- [x] Image Sharing
+- [x] Chat and Group Image Sharing
 - [ ] Crypto Wallets Integration
 - [ ] Achievements
 - [ ] Titles
 - [x] Medical Professional Volunteers
 - [ ] Charity Donations
 - [ ] Charity Event Participations
-- [x] Filtering of Contents According to User Preference
+- [ ] Filtering of Contents According to User Preference
+- [ ] Mobile App Integration (Android & iOS)
+- [ ] Free Resources (Articles, Blogs, Stories, and Documents)
 
 ## Deployed Canister (Mainnet)
 - [Easemind](https://llvrf-giaaa-aaaal-amqwa-cai.icp0.io/)
