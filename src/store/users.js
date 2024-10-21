@@ -550,7 +550,7 @@ export const useUsersStore = create((set) => ({
         await setDoc({
           collection: "anonymousUsers",
           doc: {
-            key,
+            key: anonymousUser.key,
             data: anonymousUser.data,
             version: anonymousUser.version,
           },
