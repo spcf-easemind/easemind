@@ -73,6 +73,51 @@ export async function createNewChat(db, { chatName = "", users }) {
   return response;
 }
 
+export async function createNewGroup(
+  db,
+  groupKey,
+  { name, groupProfilePath, members }
+) {
+  // Create a new group chat
+  const chatRef = databaseRef(db, `chats/${groupKey}`);
+
+  const reducedMembers = members.reduce(
+    (acc, { profileImageUrl, fullName, key }) => {
+      acc[key] = {
+        image: profileImageUrl,
+        name: fullName,
+      };
+      return acc;
+    },
+    {}
+  );
+
+  const groupData = {
+    id: groupKey,
+    chatName: name,
+    chatImage: groupProfilePath,
+    users: reducedMembers,
+    type: "group",
+    createdAt: serverTimestamp(),
+    messages: [],
+  };
+
+  const response = await setFirebase(chatRef, groupData)
+    .then(() => {
+      return {
+        status: 201,
+        message: "Group chat created successfully!",
+        data: { ...groupData, id: groupKey },
+      };
+    })
+    .catch((error) => {
+      console.error("Error creating group chat: ", error);
+      throw new Error("Error creating group chat!");
+    });
+
+  return response;
+}
+
 export async function sendMessage(db, chatRef, { userKey, message, type }) {
   // // Boilerplate
   // const allChats = get().chats;
@@ -150,6 +195,7 @@ export function serializeChatPageData(chat, loggedInUserId, users) {
         name: data.chatName,
         image: data.chatImage,
         lastSeen: "Active now",
+        type: data.type,
       };
     }
 
@@ -170,39 +216,40 @@ export function serializeNavData(allChats, loggedInUserId) {
       ? serializer.serializeMessages(chat.messages).slice(-1)[0]
       : null;
 
+    // Determine users
+    const chatUsers = chat.users;
+    const displayUsers = () => {
+      const users = Object.keys(chatUsers);
+
+      const loggedIn = users.filter((item) => item === loggedInUserId);
+      const targetUser = users.filter((item) => item !== loggedInUserId);
+
+      return {
+        users: users,
+        loggedIn: chatUsers[loggedIn],
+        targetUser: chatUsers[targetUser],
+      };
+    };
+
+    const isLastMessageResponse = () => {
+      const whichUser = lastMessage
+        ? displayUsers().users.filter((item) => item === lastMessage.userId)
+        : null;
+
+      const lastMessageUser = chatUsers[whichUser];
+
+      if (mediaTypes.includes(lastMessage?.type)) {
+        return `${lastMessageUser.name}: ${lastMessage.type}`;
+      } else {
+        return lastMessage
+          ? `${lastMessageUser.name}: ${lastMessage.message}`
+          : "Message now!";
+      }
+    };
+
+    const isLastMessageTime = lastMessage ? lastMessage.time : chat.createdAt;
+
     if (chat.type === "private") {
-      const chatUsers = chat.users;
-      const displayUsers = () => {
-        const users = Object.keys(chatUsers);
-
-        const loggedIn = users.filter((item) => item === loggedInUserId);
-        const targetUser = users.filter((item) => item !== loggedInUserId);
-
-        return {
-          users: users,
-          loggedIn: chatUsers[loggedIn],
-          targetUser: chatUsers[targetUser],
-        };
-      };
-
-      const isLastMessageResponse = () => {
-        const whichUser = lastMessage
-          ? displayUsers().users.filter((item) => item === lastMessage.userId)
-          : null;
-
-        const lastMessageUser = chatUsers[whichUser];
-
-        if (mediaTypes.includes(lastMessage?.type)) {
-          return `${lastMessageUser.name}: ${lastMessage.type}`;
-        } else {
-          return lastMessage
-            ? `${lastMessageUser.name}: ${lastMessage.message}`
-            : "Message now!";
-        }
-      };
-
-      const isLastMessageTime = lastMessage ? lastMessage.time : chat.createdAt;
-
       privateChat.push({
         id: chat.id,
         userName: displayUsers().targetUser.name,
@@ -311,8 +358,6 @@ export async function uploadMedia(
     type: type, // 'image', 'video', 'file', etc.
     createdAt: serverTimestamp(),
   };
-
-  console.log(messageData)
 
   const response = await setFirebase(newMessageRef, messageData)
     .then(() => {

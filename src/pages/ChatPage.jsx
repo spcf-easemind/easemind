@@ -66,22 +66,9 @@ export default function ChatPage() {
     }))
   );
 
-  // const fetchAllUsers = useUsersStore((state) => state.getAllUsers);
-  // const users = useUsersStore((state) => state.data);
-
-  // useEffect(() => {
-  //   async function fetch() {
-  //     await fetchAllUsers();
-  //     // console.log(users);
-  //   }
-  //   fetch();
-  // }, []);
-
   useEffect(() => {
     fetchChats(loggedUser.key);
   }, []);
-
-  console.log(chat);
 
   // Event Listener
   const { header, chatMessages } = useListener({
@@ -91,7 +78,7 @@ export default function ChatPage() {
     listenerFn: listenForMessages,
     unsubscribeFn: unsubscribeFromChat,
   });
-
+  
   // Variables
   const inputRef = useRef();
 

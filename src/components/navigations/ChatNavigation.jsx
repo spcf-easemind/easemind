@@ -11,12 +11,12 @@ import {
 } from "@mantine/core";
 import { useEffect, useState } from "react";
 
-import IconConnect from "../../assets/icons/chat/IconConnect.svg"
-import IconSearch from "../../assets/icons/chat/IconSearch.svg"
+import IconConnect from "../../assets/icons/chat/IconConnect.svg";
+import IconSearch from "../../assets/icons/chat/IconSearch.svg";
 
-import classes from "../chat/ChatList.module.css"
+import classes from "../chat/ChatList.module.css";
 
-import ChatList from "../chat/ChatList"
+import ChatList from "../chat/ChatList";
 
 import { useChatStore } from "../../store/chat";
 import { useShallow } from "zustand/shallow";
@@ -42,7 +42,7 @@ export default function ChatPage() {
   const [activeChat, setActiveChat] = useState();
 
   // Zustand
-  const { findNewChatFn, getNavChats, chats } = useChatStore(
+  const { getNavChats, chats } = useChatStore(
     useShallow((state) => ({
       findNewChatFn: state.findNewChat,
       getNavChats: state.getNavChats,
@@ -118,9 +118,7 @@ export default function ChatPage() {
   return (
     <>
       <Group w="100%" justify="space-between">
-        <Title size={navbarTitleFontSize}>
-          Messages
-        </Title>
+        <Title size={navbarTitleFontSize}>Messages</Title>
         <Tooltip label="Connect with someone" position="bottom">
           <UnstyledButton onClick={findChatModalFn}>
             <Image src={IconConnect} w={30} />

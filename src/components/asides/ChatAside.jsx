@@ -8,6 +8,7 @@ import {
   Group,
   Text,
   Avatar,
+  Button,
 } from "@mantine/core";
 
 import DropDown from "../DropDown.jsx";
@@ -81,7 +82,7 @@ export default function AsidePage() {
           )
           .map((item) => ({
             ...item,
-            data: asideData[item.dataKey],
+            data: asideData[item.dataKey] || [],
           }))
       : null;
   }, [asideData, header]);
@@ -104,7 +105,7 @@ export default function AsidePage() {
         </Gallery>
       );
     };
-    const VideoComponent = (instance) => <VideoList />;
+    const VideoComponent = (instance) => <VideoList videos={instance.data} />;
     const LinkComponent = (instance) => <LinkList links={instance.data} />;
     const DocumentComponent = (instance) => (
       <DocumentList documents={instance.data} />
@@ -166,6 +167,12 @@ export default function AsidePage() {
     </UnstyledButton>
   );
 
+  const viewButton = header.type && (
+    <Button mt={8} variant="light">
+      {header.type === "private" ? "View Profile" : "View Group"}
+    </Button>
+  );
+
   return (
     <Stack align="center" h="inherit" py={36}>
       <Box ta="center">
@@ -182,9 +189,11 @@ export default function AsidePage() {
         <Title ta="center" order={3}>
           {header.name}
         </Title>
+
+        {viewButton}
       </Box>
 
-      <Stack w="100%" gap={8}>
+      <Stack mt={16} w="100%" gap={8}>
         {dropdownInstances}
         {leaveButton}
       </Stack>

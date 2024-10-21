@@ -32,7 +32,7 @@ export const useChatStore = create((set, get) => ({
     },
     chatMessages: [],
     asideDataPage: {
-      users: [],
+      members: [],
       images: [],
       documents: [],
       videos: [],
@@ -253,8 +253,17 @@ export const useChatStore = create((set, get) => ({
     const fetchUsersFn = useUsersStore.getState().getAllUsers;
     if (chatRef) {
       const response = await queryChatData(db, chatRef);
-      const users = await fetchUsersFn();
+      await fetchUsersFn();
       const userResponse = useUsersStore.getState().data;
+
+      //Members Serialization
+      const members = userResponse.map(({ data }) => ({
+        name: data.fullName,
+        image: data.profileImageUrl,
+        role: data.role,
+      }));
+
+      // Main Serialization
       const serializedData = get().setChatPageData(response, userResponse);
       const asideResponse = await get().queryAsideData(
         chatRef,
@@ -267,6 +276,7 @@ export const useChatStore = create((set, get) => ({
           ...serializedData,
           asideDataPage: {
             ...state.chat.asideDataPage,
+            members,
             ...asideResponse,
           },
         },
@@ -296,7 +306,7 @@ export const useChatStore = create((set, get) => ({
     const db = database;
     const chatTypes = {
       private: ["image", "video", "link", "document"],
-      group: ["users", "image", "video", "link", "document"],
+      group: ["image", "video", "link", "document"],
     };
 
     const queries = await chatTypes[type].reduce(

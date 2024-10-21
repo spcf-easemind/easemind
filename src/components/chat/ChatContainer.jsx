@@ -91,14 +91,14 @@ export default function ChatContainer({ data }) {
   return (
     <Flex gap={16} align="end" justify={justify} direction={direction}>
       {withMessageData && (
-        <Avatar src={userAlgo(chatRef).image} w={36} h={36} radius="md" />
+        <Avatar src={userAlgo(chatRef)?.image} w={36} h={36} radius="md" />
       )}
 
       <ChatBox mb={2} maw="60%">
         {withMessageData && (
           <Group gap={8} ml={6} mb={4}>
             <Text size="sm" fw={500}>
-              {userAlgo(chatRef).name}
+              {userAlgo(chatRef)?.name}
             </Text>
             <Text size="sm" c="dimmed" fw={400}>
               {computedCreatedAt()}
