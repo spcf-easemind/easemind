@@ -96,6 +96,10 @@ const navRoutes = [
     path: "/owned-group/edit/:ownedGroupRef",
     element: <EditGroupPage />,
   },
+  {
+    path: "/owned-group/edit/:ownedGroupRef/change-photo",
+    element: <PhotoControlPage />,
+  },
 
   // Joined Groups
   {

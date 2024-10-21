@@ -27,7 +27,7 @@ export default function PhotoControlPage() {
 
   function handleImageSubmit(image) {
     setSavedForm({ groupProfilePath: image });
-    navigate("/owned-group/create");
+    navigate(-1);
   }
 
   const imageValue = useMemo(() => {

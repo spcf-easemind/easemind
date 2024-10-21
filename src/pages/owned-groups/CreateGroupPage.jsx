@@ -28,10 +28,11 @@ export default function CreateGroupPage() {
 
   const createGroupFn = useGroupAPIStore((state) => state.createGroup);
 
-  const { savedForm, setSavedForm } = useFormStore(
+  const { savedForm, setSavedForm, resetForm } = useFormStore(
     useShallow((state) => ({
       savedForm: state.form,
       setSavedForm: state.setForm,
+      resetForm: state.resetForm,
     }))
   );
 
@@ -163,8 +164,9 @@ export default function CreateGroupPage() {
     const response = await createGroupFn(formData);
 
     if (response.type === "success") {
+      form.reset();
       notificationsFn.success(id, response.message);
-      setSavedForm(null);
+      resetForm();
       navigate(`/owned-group/${response.key}`);
     } else {
       notificationsFn.error(id, response.message);

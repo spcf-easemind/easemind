@@ -54,7 +54,9 @@ export default function EditGroupPage() {
   }, []);
 
   useEffect(() => {
-    formInitialize();
+    if (ownedGroup) {
+      formInitialize();
+    }
   }, [ownedGroup]);
 
   const usersEnum = useMemo(() => {
@@ -73,10 +75,11 @@ export default function EditGroupPage() {
     return [];
   }, [users, ownedGroup]);
 
-  const { savedForm, setSavedForm } = useFormStore(
+  const { savedForm, setSavedForm, resetForm } = useFormStore(
     useShallow((state) => ({
       savedForm: state.form,
       setSavedForm: state.setForm,
+      resetForm: state.resetForm,
     }))
   );
 
@@ -175,8 +178,9 @@ export default function EditGroupPage() {
     const response = await updateGroupFn(updatedFormData);
 
     if (response.type === "success") {
+      form.reset();
       notificationsFn.success(id, response.message);
-      setSavedForm(null);
+      resetForm();
       navigate(`/owned-group/${ownedGroupRef}`);
     } else {
       notificationsFn.error(id, response.message);
@@ -198,7 +202,7 @@ export default function EditGroupPage() {
   // Reroutes
   function handleChangePhotoClick() {
     setSavedForm(form.getValues());
-    navigate("/owned-group/change-photo");
+    navigate(`/owned-group/edit/${ownedGroupRef}/change-photo`);
   }
 
   return (
