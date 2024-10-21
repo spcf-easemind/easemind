@@ -173,6 +173,8 @@ export const useAuthenticationStore = create(
 
             items.items[0].data.lastUpdated = convertTimestamps(items.items[0]);
 
+            user.data.lastUpdated = convertTimestamps(user);
+
             await setDoc({
               collection: "users",
               doc: {
