@@ -46,7 +46,7 @@ Inspired by the increasing prevalence of mental health disorders in the Philippi
 8. **Task-Based Rage Release: (Upcoming)** Interactive tasks designed to help users manage and release built-up emotions in a constructive manner, fostering resilience and emotional balance.
 9. **Charity Donations & Event Participation: (Upcoming)** Opportunities for users to contribute to charitable causes, fostering community engagement and social responsibility.
 
-## Demo
+## 🎥 Demo
 
 - Login with Internet Identity
 
@@ -123,22 +123,18 @@ Inspired by the increasing prevalence of mental health disorders in the Philippi
 - EaseCompanion (Volunteer) Modifying Overview
 
 <img src="/assets/step-12.gif" width="60%" />
-
+ 
 ---
 
 - User Changing Password
 
 <img src="/assets/step-13.gif" width="60%" />
 
----
-
-- Activating Anonymous Mode
-
 <img src="/assets/step-13_2.gif" width="60%" />
 
 ---
 
-- Choosing Mood on Endless Thought Diary
+- Activating Anonymous Mode
 
 <img src="/assets/step-14.gif" width="60%" />
 
@@ -146,7 +142,7 @@ Inspired by the increasing prevalence of mental health disorders in the Philippi
 
 ---
 
-- Creating Thoughts Simulation
+- Choosing Mood on Endless Thought Diary and Creating Thoughts Simulation
 
 <img src="/assets/step-15.gif" width="60%" />
 
