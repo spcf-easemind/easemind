@@ -46,6 +46,122 @@ Inspired by the increasing prevalence of mental health disorders in the Philippi
 8. **Task-Based Rage Release: (Upcoming)** Interactive tasks designed to help users manage and release built-up emotions in a constructive manner, fostering resilience and emotional balance.
 9. **Charity Donations & Event Participation: (Upcoming)** Opportunities for users to contribute to charitable causes, fostering community engagement and social responsibility.
 
+## Demo
+
+- Login with Internet Identity
+
+<img src="/assets/step-1.gif" width="60%" />
+
+---
+
+- Sign Up for EaseBuddy (User)
+
+<img src="/assets/step-2.gif" width="60%" />
+
+---
+
+- Sign Up for EaseCompanion (Volunteer)
+
+<img src="/assets/step-3.gif" width="60%" />
+
+---
+
+- Finding EaseCompanion for One-on-One Chat
+
+<img src="/assets/step-4.gif" width="60%" />
+
+---
+
+- One-on-One Chat
+
+<img src="/assets/step-5.gif" width="60%" />
+
+---
+
+- Creating Group
+
+<img src="/assets/step-6.gif" width="60%" />
+
+---
+
+- Modifying Group Info
+
+<img src="/assets/step-7.gif" width="60%" />
+
+---
+
+- Adding Members to the Group
+
+<img src="/assets/step-8.gif" width="60%" />
+
+---
+
+- Removing Members from Group
+
+<img src="/assets/step-9.gif" width="60%" />
+
+---
+
+- Joining Group
+
+  - User POV
+
+  <img src="/assets/step-10.gif" width="60%" />
+
+  - Group Admin POV
+
+  <img src="/assets/step-10_2.gif" width="60%" />
+
+---
+
+- Simulating Group Chat
+
+<img src="/assets/step-11.gif" width="60%" />
+
+---
+
+- EaseCompanion (Volunteer) Modifying Overview
+
+<img src="/assets/step-12.gif" width="60%" />
+
+---
+
+- User Changing Password
+
+<img src="/assets/step-13.gif" width="60%" />
+
+---
+
+- Activating Anonymous Mode
+
+<img src="/assets/step-13_2.gif" width="60%" />
+
+---
+
+- Choosing Mood on Endless Thought Diary
+
+<img src="/assets/step-14.gif" width="60%" />
+
+<img src="/assets/step-14_2.gif" width="60%" />
+
+---
+
+- Creating Thoughts Simulation
+
+<img src="/assets/step-15.gif" width="60%" />
+
+---
+
+- User Logout
+
+<img src="/assets/step-16.gif" width="60%" />
+
+---
+
+- Delete Account
+
+<img src="/assets/step-17.gif" width="60%" />
+
 ## 🔧 Installation
 
 ### Prerequisites
