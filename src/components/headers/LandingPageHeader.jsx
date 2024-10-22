@@ -9,33 +9,33 @@ import EaseMind from "../../assets/logos/EaseMindVersion2.svg";
 
 // Styles
 import classes from "./LandingPageHeader.module.css";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const data = [
   {
     name: "Home",
-    route: "/",
+    route: "home",
   },
   {
     name: "About Us",
-    route: "/",
+    route: "about-us",
   },
   {
     name: "Features",
-    route: "/",
+    route: "features",
   },
   {
     name: "Services",
-    route: "/",
+    route: "services",
   },
 
   {
     name: "Team",
-    route: "/",
+    route: "team",
   },
   {
     name: "Contact",
-    route: "/",
+    route: "contact",
   },
 ];
 
@@ -43,6 +43,7 @@ export default function Header() {
   const [active, setActive] = useState();
   const toggleDialogFn = useDialogStore((state) => state.toggleDialog);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const TitleComponent = Title.withProps({
     order: 3,
@@ -57,6 +58,10 @@ export default function Header() {
     </Group>
   );
 
+  const scrollToSection = (id) => {
+    document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+  };
+
   const menuLinks = data.map((item) => (
     <Anchor
       visibleFrom="sm"
@@ -66,6 +71,7 @@ export default function Header() {
       onClick={(event) => {
         event.preventDefault();
         setActive(item.name);
+        scrollToSection(item.route);
       }}
     >
       {item.name}
@@ -73,11 +79,17 @@ export default function Header() {
   ));
 
   function handleButtonClick() {
-
+    if (location.pathname === "/login") {
+      toggleDialogFn();
+    } else {
+      navigate("/login");
+    }
   }
 
   const ButtonInstance = (
-    <Button onClick={() => toggleDialogFn()} ml={3}>Get Started</Button>
+    <Button onClick={handleButtonClick} ml={3}>
+      Get Started
+    </Button>
   );
 
   return (
@@ -85,8 +97,7 @@ export default function Header() {
       <Box maw="200">{TitleSection}</Box>
 
       <Group justify="end">
-        {menuLinks}{" "}
-        {ButtonInstance}
+        {menuLinks} {ButtonInstance}
       </Group>
 
       {/* <Box maw="200" ta="end">

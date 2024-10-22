@@ -18,7 +18,7 @@ import RhymesesCortez from "../../assets/images/landing_page/team/rhymeses_corte
 export default function GalleryTeamSection() {
   return (
     <>
-      <Box pb={130}>
+      <Box id="team" pb={130}>
         <Box mb={50}>
           <Title
             order={1}

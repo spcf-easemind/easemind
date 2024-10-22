@@ -27,7 +27,7 @@ import Logo from "../../assets/landing/Logo.png";
 export default function AboutSection() {
   return (
     <>
-      <Flex gap={24} pt={50} direction="row">
+      <Flex gap={24} pt={50} direction="row" id="about-us">
         <Box>
           <Title order={1} py={10} c="var(--mantine-color-dark-8)">
             About Us

@@ -23,7 +23,7 @@ import OpenForum from "../../assets/landing/OpenForum.png";
 export default function FeaturesServicesSection() {
   return (
     <>
-      <Box pb={130}>
+      <Box id="features" pb={130}>
         <Box mb={50}>
           <Title
             order={1}
@@ -94,7 +94,7 @@ export default function FeaturesServicesSection() {
         </Group>
       </Box>
 
-      <Box pb={130}>
+      <Box id="services" pb={130}>
         <Box mb={50}>
           <Title
             order={1}

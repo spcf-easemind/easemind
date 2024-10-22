@@ -115,7 +115,7 @@ export default function FAQContactSection() {
         </Stack>
       </Box>
 
-      <Box pb={150}>
+      <Box pb={150} id="contact">
         <Box pb={50}>
           <Title
             order={1}
