@@ -66,9 +66,6 @@ export default function ChatPage() {
     }))
   );
 
-  useEffect(() => {
-    fetchChats(loggedUser.key);
-  }, []);
 
   // Event Listener
   const { header, chatMessages } = useListener({

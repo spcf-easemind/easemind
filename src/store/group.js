@@ -441,6 +441,7 @@ export const useGroupStore = create((set) => ({
             });
 
             group.data.members.push(newMember);
+
           }
         }
         group.data.membersCount = group.data.members.length;

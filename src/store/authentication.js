@@ -108,10 +108,6 @@ export const useAuthenticationStore = create(
             },
           });
 
-          await signOut();
-
-          // sessionStorage.removeItem('authentication');
-
           set(() => ({
             user: {
               identity_provider: null,
@@ -120,6 +116,10 @@ export const useAuthenticationStore = create(
             message: "Logout Successfully!",
             loading: false,
           }));
+
+          await signOut();
+
+          // sessionStorage.removeItem('authentication');
           return true;
         } else {
           set(() => ({
@@ -207,9 +207,9 @@ export const useAuthenticationStore = create(
                     anonymousStatus: anonymousUser.data.status,
                     pronouns: items.items[0].data.pronouns,
                   },
-                  loading: false,
-                  message: "Login Successfully!",
                 },
+                loading: false,
+                message: "Login Successfully!",
               }));
             } else {
               set((state) => ({

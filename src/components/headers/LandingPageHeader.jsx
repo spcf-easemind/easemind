@@ -5,7 +5,7 @@ import { useDialogStore } from "../../store/dialog";
 import { Button, Group, Box, Title, Image, Anchor } from "@mantine/core";
 
 // SVGs
-import EaseMind from "../../assets/logos/EaseMind.svg";
+import EaseMind from "../../assets/logos/EaseMindVersion2.svg";
 
 // Styles
 import classes from "./LandingPageHeader.module.css";

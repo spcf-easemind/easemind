@@ -215,7 +215,6 @@ export function serializeNavData(allChats, loggedInUserId) {
     const lastMessage = chat.messages
       ? serializer.serializeMessages(chat.messages).slice(-1)[0]
       : null;
-
     // Determine users
     const chatUsers = chat.users;
     const displayUsers = () => {

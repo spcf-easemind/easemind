@@ -22,6 +22,8 @@ import { useChatStore } from "../../store/chat";
 import { useShallow } from "zustand/shallow";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDialogStore } from "../../store/dialog";
+import { serializeNavData } from "../../functions/firebase";
+import { useAuthenticationStore } from "../../store/authentication";
 // import useListener from "../hooks/useListener";
 
 const tabsAttributes = [
@@ -41,11 +43,16 @@ export default function ChatPage() {
   const [activeTab, setActiveTab] = useState("peers");
   const [activeChat, setActiveChat] = useState();
 
+  const loggedInUserId = useAuthenticationStore(
+    (state) => state.user.data?.key
+  );
+
   // Zustand
-  const { getNavChats, chat } = useChatStore(
+  const { getNavChats, chats, fetchChats, chat } = useChatStore(
     useShallow((state) => ({
-      findNewChatFn: state.findNewChat,
       getNavChats: state.getNavChats,
+      chats: state.chats,
+      fetchChats: state.fetchChats,
       chat: state.chat,
     }))
   );
@@ -63,9 +70,15 @@ export default function ChatPage() {
     setActiveChat(id);
   }
 
-  const navChats = useMemo(() => {
-    return getNavChats();
+  useEffect(() => {
+    fetchChats(loggedInUserId);
   }, [chat]);
+
+  const chatData = useMemo(() => {
+    if (chats) {
+      return serializeNavData(chats, loggedInUserId);
+    }
+  }, [chats]);
 
   const tabsHeader = tabsAttributes.map((item) => {
     const isActive = activeTab === item.value;
@@ -94,7 +107,7 @@ export default function ChatPage() {
       <Tabs.Panel value={item.value} key={item.value}>
         <Stack mt={16} gap={8}>
           {item.label === "Peers"
-            ? navChats.privateChat.map((chat) => (
+            ? chatData.privateChat.map((chat) => (
                 <ChatList
                   {...chat}
                   key={chat.id}
@@ -102,7 +115,7 @@ export default function ChatPage() {
                   activeChat={activeChat}
                 />
               ))
-            : navChats.groupChat.map((chat) => (
+            : chatData.groupChat.map((chat) => (
                 <ChatList
                   {...chat}
                   key={chat.id}

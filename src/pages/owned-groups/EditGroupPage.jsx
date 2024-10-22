@@ -178,8 +178,8 @@ export default function EditGroupPage() {
     const response = await updateGroupFn(updatedFormData);
 
     if (response.type === "success") {
-      form.reset();
       notificationsFn.success(id, response.message);
+      form.reset();
       resetForm();
       navigate(`/owned-group/${ownedGroupRef}`);
     } else {

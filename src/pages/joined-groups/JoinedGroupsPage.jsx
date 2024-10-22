@@ -33,8 +33,8 @@ export default function JoinedGroupsPage() {
     navigate(`/joined-group/${ref}`);
   }
 
-  function handleButtonClick() {
-    console.log("View Chat");
+  function handleButtonClick(ref) {
+    navigate(`/chat/${ref}`);
   }
 
   return (

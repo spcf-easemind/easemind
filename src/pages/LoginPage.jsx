@@ -39,7 +39,7 @@ export default function LoginPage() {
     userSignUpFn,
     getAllUsersFn,
     getUserInfoFn,
-    deleteUserInfoFn,
+
     createSuperAdminFn,
     message,
     deleteAllUsers,
@@ -49,11 +49,15 @@ export default function LoginPage() {
       userSignUpFn: state.userSignUp,
       getAllUsersFn: state.getAllUsers,
       getUserInfoFn: state.getUserInfo,
-      deleteUserInfoFn: state.deleteUserInfo,
+
       createSuperAdminFn: state.createSuperAdmin,
       message: state.message,
       deleteAllUsers: state.deleteAllUsers,
     }))
+  );
+
+  const deleteUserInfoFn = useAuthenticationStore(
+    (state) => state.deleteUserInfo
   );
 
   const { groupData, getUserGroupFn } = useGroupStore(
@@ -90,8 +94,8 @@ export default function LoginPage() {
     // deleteUserInfoFn();
     // createSuperAdminFn();
     // deleteAllUsers();
-    console.log(message);
-    console.log(data);
+    // console.log(message);
+    // console.log(data);
   }, []);
 
   const loginForm = useForm({

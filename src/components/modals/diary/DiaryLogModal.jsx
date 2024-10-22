@@ -35,7 +35,7 @@ export default function DiaryLogModal({
             rows={6}
           />
 
-          <Button mt={18} fullWidth size="md" radius="md" color="sky-blue.5">
+          <Button mt={18} fullWidth size="md" radius="md" color="sky-blue.5"onClick={onClose}>
             {whichLabel}
           </Button>
         </form>
